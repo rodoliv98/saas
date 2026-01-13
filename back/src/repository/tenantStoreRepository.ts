@@ -1,0 +1,77 @@
+import { PrismaClient } from "../generated/prisma/client"
+import { ProdutosWSabores } from "../controllers/tenantProductsController";
+import { ITenantData } from "../controllers/tenantStoreController";
+import { CustomError } from "../middlewares/errorHandler";
+import { DeliveryCode } from "../types/entities/delivery-code-entitie";
+import { ActivationCodeDTO, SlugType } from "../types/types-index";
+
+export interface ITenantStoreRepository {
+  getData (slug: SlugType): Promise<ITenantData | null>;
+  getProducts (id: string): Promise<ProdutosWSabores[] | null>;
+  isOpen (id: string): Promise<ITenantData | null>;
+  patchIsOpen (data: boolean, tenantId: string): Promise<ITenantData>;
+  createDeliveryCode (activationCode: ActivationCodeDTO): Promise<DeliveryCode>;
+}
+
+const prisma = new PrismaClient();
+
+export class TenantStoreRepository implements ITenantStoreRepository {
+  async getData (slug: SlugType) {
+    return prisma.tenant.findFirst({
+      where: {
+        tenantSlug: slug 
+      }
+    });
+  }
+
+  async getProducts (id: string) {
+    return prisma.produtos.findMany({
+      where: {
+        tenantId: id
+      },
+      include: {
+        sabores: true
+      }
+    });
+  }
+
+  async isOpen (id: string) {
+    return prisma.tenant.findFirst({
+      where: {
+        id: id
+      }
+    });
+  }
+
+  async patchIsOpen (data: boolean, tenantId: string) {
+    try {
+      return prisma.tenant.update({
+        where: {
+          id: tenantId
+        },
+        data: {
+          isOpen: data
+        }
+      });
+      
+    } catch (err) {
+      if ((err as any).code === 'P2025') {
+        throw new CustomError('Tenant não encontrado', 404, 'TENANT_NOT_FOUND');
+      }
+
+      throw err;
+    }
+  }
+  
+  async createDeliveryCode (activationCode: ActivationCodeDTO) {
+    return prisma.codigos_Ativacao.create({
+      data: {
+        codigo: activationCode.code,
+        tenant_id: activationCode.tenant_id,
+        utilizado: activationCode.utilizado,
+        created_at: new Date(),
+        expire_date: activationCode.expire_date
+      }
+    })
+  }
+}

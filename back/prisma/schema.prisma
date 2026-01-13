@@ -1,0 +1,259 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("POSTGRES_URL")
+}
+
+model Users {
+  id           String    @id @default(cuid())
+  nomeCompleto String
+  email        String
+  senha        String
+  pedidos      Pedidos[]
+
+  @@map("users")
+}
+
+model Tenant {
+  id                   String             @id @default(cuid())
+  nomeFantasia         String?
+  razaoSocial          String
+  CNPJ                 String             @unique
+  inscricaoEstadual    String?
+  nomeRepresentante    String
+  CPF                  String             @unique
+  email                String             @unique
+  senha                String
+  telefone             String
+  endereco             String
+  numero               String
+  complemento          String?
+  bairro               String
+  municipio            String
+  estado               String
+  CEP                  String
+  tenantSlug           String             @unique
+  whatsapp             String
+  diasFuncionamento    String
+  horarioFuncionamento String
+  tempoPreparo         String
+  taxaEntrega          Decimal            @db.Decimal(10, 2)
+  admin                Boolean            @default(false)
+  isOpen               Boolean            @default(false)
+  pin                  String?            @unique @db.VarChar(6)
+  trial                DateTime?          @db.Timestamp(6)
+  assinaturas          assinaturas[]
+  codigos_ativacao     Codigos_Ativacao[]
+  entregadores         Entregadores[]
+  pagamentos           pagamentos[]
+  pagamentos_logs      pagamentos_logs[]
+  orders               Pedidos[]
+  produtos             Produtos[]
+  sabores              Sabores[]
+
+  @@map("tenant")
+}
+
+model Entregadores {
+  id                String           @id @default(cuid()) @db.VarChar(30)
+  tenant_id         String           @db.VarChar(50)
+  chat_id           BigInt           @unique
+  codigo_ativ_usado String           @unique @db.VarChar(50)
+  nome_telegram     String           @db.VarChar(100)
+  ativo             Boolean          @default(true)
+  cadastrado_em     DateTime         @default(now()) @db.Timestamp(6)
+  codigos_ativacao  Codigos_Ativacao @relation(fields: [codigo_ativ_usado], references: [codigo], onDelete: Cascade, onUpdate: NoAction, map: "fk_entregadores_codigo")
+  tenant            Tenant           @relation(fields: [tenant_id], references: [id], map: "fk_entregadores_tenant")
+
+  @@index([chat_id], map: "idx_entregadores_chat_id")
+  @@index([tenant_id], map: "idx_entregadores_tenant")
+  @@map("entregadores")
+}
+
+model Codigos_Ativacao {
+  id           String        @id @default(cuid()) @db.VarChar(30)
+  codigo       String        @unique @db.VarChar(50)
+  tenant_id    String        @db.VarChar(50)
+  utilizado    Boolean       @default(false)
+  created_at   DateTime      @default(now()) @db.Timestamp(6)
+  usado_em     DateTime?     @db.Timestamp(6)
+  expire_date  DateTime      @db.Timestamp(6)
+  tenant       Tenant        @relation(fields: [tenant_id], references: [id], map: "fk_codigos_tenant")
+  entregadores Entregadores?
+
+  @@index([expire_date], map: "idx_codigos_")
+  @@index([tenant_id], map: "idx_codigos_tenant")
+  @@index([tenant_id, utilizado], map: "idx_codigos_utilizado")
+  @@map("codigos_ativacao")
+}
+
+model Produtos {
+  id           String              @id @default(cuid())
+  tenantId     String
+  nomeProduto  String
+  descProduto  String
+  categoria    String
+  precoProduto Decimal             @db.Decimal(10, 2)
+  imageUrl     String
+  pedidosItens Itens_dos_Pedidos[]
+  tenant       Tenant              @relation(fields: [tenantId], references: [id])
+  sabores      Sabores[]
+
+  @@map("produtos")
+}
+
+model Sabores {
+  id           String   @id @default(cuid())
+  produtoId    String
+  nomeProduto  String
+  descProduto  String
+  categoria    String
+  precoProduto Decimal  @db.Decimal(10, 2)
+  imageUrl     String
+  tenantId     String
+  produto      Produtos @relation(fields: [produtoId], references: [id])
+  tenant       Tenant   @relation(fields: [tenantId], references: [id])
+
+  @@map("sabores")
+}
+
+model Itens_dos_Pedidos {
+  id              String       @id @default(cuid())
+  produtoId       String
+  pedidosId       String
+  nomeProduto     String
+  descProduto     String
+  categoria       String
+  quantidade      Int
+  precoProduto    Decimal      @db.Decimal(10, 2)
+  subTotal        Decimal      @db.Decimal(10, 2)
+  imageUrl        String
+  itensAdicionais Adicionais[]
+  pedidos         Pedidos      @relation(fields: [pedidosId], references: [id], onDelete: Cascade)
+  produtos        Produtos     @relation(fields: [produtoId], references: [id])
+
+  @@map("itens_dos_pedidos")
+}
+
+model Adicionais {
+  id                String            @id @default(cuid())
+  itens_dos_pedidos String
+  nomeProduto       String
+  descProduto       String
+  categoria         String
+  precoProduto      Decimal           @db.Decimal(10, 2)
+  itens_pedidos     Itens_dos_Pedidos @relation(fields: [itens_dos_pedidos], references: [id])
+
+  @@map("adicionais")
+}
+
+model Pedidos {
+  id              String              @id @default(cuid())
+  tenantSlug      String
+  nomeCompleto    String
+  endereco        String
+  bairro          String
+  cep             String
+  numero          String
+  complemento     String?
+  whatsapp        String
+  formaPagamento  String
+  tipoEntrega     String
+  taxaEntrega     Decimal             @db.Decimal(10, 2)
+  totalOrderPrice Decimal             @db.Decimal(10, 2)
+  observacao      String?
+  status          PedidosStatus       @default(pendente)
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+  userId          String
+  pin             String?             @db.VarChar(6)
+  short_id        String?             @unique @db.VarChar(20)
+  finished        Boolean             @default(false)
+  pedidosItens    Itens_dos_Pedidos[]
+  tenant          Tenant              @relation(fields: [tenantSlug], references: [tenantSlug])
+  users           Users               @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("pedidos")
+}
+
+model pagamentos {
+  id              Int               @id @default(autoincrement())
+  tenantId        String            @db.VarChar(255)
+  externalId      String            @unique @db.VarChar(255)
+  amount          Int
+  status          String            @db.VarChar(50)
+  method          String            @default("pix") @db.VarChar(50)
+  brCode          String
+  proof           String?           @db.VarChar(255)
+  description     String            @db.VarChar(255)
+  platformFee     Int
+  createdAt       DateTime          @default(now()) @db.Timestamp(6)
+  updatedAt       DateTime          @default(now()) @db.Timestamp(6)
+  expiresAt       DateTime          @db.Timestamp(6)
+  assinaturas     assinaturas[]
+  tenant          Tenant            @relation(fields: [tenantId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_pagamentos_tenant")
+  pagamentos_logs pagamentos_logs[]
+
+  @@index([createdAt], map: "idx_pagamentos_tenant_created_at")
+  @@index([tenantId, status], map: "idx_pagamentos_tenant_status")
+}
+
+model pagamentos_logs {
+  id         Int        @id @default(autoincrement())
+  chargeId   Int
+  tenantId   String     @db.VarChar(255)
+  eventType  String     @db.VarChar(50)
+  details    Json
+  createdAt  DateTime   @default(now()) @db.Timestamp(6)
+  pagamentos pagamentos @relation(fields: [chargeId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_pagamentos_logs_cobrancas")
+  tenant     Tenant     @relation(fields: [tenantId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_pagamentos_logs_tenant")
+
+  @@index([chargeId], map: "idx_pagamentos_logs_charge_id")
+  @@index([tenantId], map: "idx_pagamentos_logs_tenant_id")
+}
+
+model assinaturas {
+  id         Int                @id @default(autoincrement())
+  tenantId   String             @db.VarChar(255)
+  chargeId   Int
+  planType   String             @db.VarChar(50)
+  startDate  DateTime           @default(now()) @db.Timestamp(6)
+  endDate    DateTime           @db.Timestamp(6)
+  status     assinaturas_status @default(active)
+  createdAt  DateTime           @default(now()) @db.Timestamp(6)
+  pagamentos pagamentos         @relation(fields: [chargeId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_assinaturas_charge_id")
+  tenant     Tenant             @relation(fields: [tenantId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_assinaturas_tenant_id")
+
+  @@index([chargeId], map: "idx_assinaturas_charge_id")
+  @@index([planType], map: "idx_assinaturas_plan_type")
+  @@index([status], map: "idx_assinaturas_status")
+  @@index([tenantId], map: "idx_assinaturas_tenant_id")
+}
+
+model planos {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique @db.VarChar(50)
+  price     Json
+  features  Json
+  createdAt DateTime @default(now()) @db.Timestamp(6)
+  updatedAt DateTime @db.Timestamp(6)
+}
+
+enum PedidosStatus {
+  pendente
+  preparando
+  pronto
+  entregando
+  concluido
+  cancelado
+}
+
+enum assinaturas_status {
+  active
+  expired
+  cancelled
+}

@@ -1,0 +1,13 @@
+# Keep environment variables out of version control
+.env
+plan.md
+plan.txt
+
+# folders
+node_modules
+/dist
+
+# files
+hook.js
+fix-imports.mjs
+/src/generated/prisma

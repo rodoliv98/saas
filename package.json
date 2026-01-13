@@ -1,0 +1,6 @@
+{
+  "scripts": {
+    "dev:up": "docker compose --profile dev up",
+    "dev:down": "docker compose --profile dev down"
+  }
+}
