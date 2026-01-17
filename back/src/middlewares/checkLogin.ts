@@ -4,8 +4,9 @@ import { JwtPayload } from "jsonwebtoken";
 
 export function checkLogin (req: Request, res: Response, next: NextFunction) {
   const token = req.headers.authorization?.split(' ')[1];
-  //const cookie = req.cookies.accessToken;
-  if (!token) return res.status(401).json({ msg: 'Não autenticado' });
+  if (!token) {
+    return res.status(401).json({ msg: 'Não autenticado' });
+  }
 
   const decoded = verifyToken(token) as JwtPayload;
   req.tenant = decoded.tenantId;

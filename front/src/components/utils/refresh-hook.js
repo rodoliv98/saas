@@ -5,12 +5,19 @@ import api from "../../../intercepter/intercepter";
 export function useRefreshHook () {
   const { login, token } = useAuth();
   const redirect = useNavigate();
-  
+
   const refreshHook = async (method, url, data) => {
+    
+    const makeConfig = (currentToken) => ({
+      headers: { Authorization: `Bearer ${currentToken}` }
+    });
+
     try {
+      const config = makeConfig(token);
+
       const res = data === undefined 
-      ? await api[method](url, { headers: { Authorization: `Bearer ${token}` } })
-      : await api[method](url, data, { headers: { Authorization: `Bearer ${token}` } });
+      ? await api[method](url, config)
+      : await api[method](url, data, config);
 
       return res;
 
@@ -19,16 +26,19 @@ export function useRefreshHook () {
         try {
           const refreshRes = await api.post('/refresh');
           const newToken = refreshRes.data.token;
+
           if (newToken) {
             login(newToken);
-            
+
+            const newConfig = makeConfig(newToken);
+
             const retryRes = data === undefined
-            ? await api[method](url, { headers: { Authorization: `Bearer ${newToken}` } })
-            : await api[method](url, data, { headers: { Authorization: `Bearer ${newToken}` } });
-            
+            ? await api[method](url, newConfig)
+            : await api[method](url, data, newConfig);
+
             if (retryRes.statusText === 'OK') {
               return retryRes;
-            } 
+            }
           
           }
         } catch (secErr) {

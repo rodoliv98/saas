@@ -16,6 +16,7 @@ interface PatchTenantFromService {
   whatsapp: string;
   horarioFuncionamento: string;
   tempoPreparo: string;
+  pin: string;
 }
 
 export interface ITenantDataRepository {
@@ -87,7 +88,7 @@ export class TenantDataRepository implements ITenantDataRepository {
       throw new CustomError('Tenant não encontrado', 404, ErrorCode.TENANT_NOT_FOUND);
     }
 
-    if (tenant.pin !== null) {
+    if (tenant.pin && tenant.pin !== data.pin) {
       throw new CustomError('Pin já foi cadastrado', 400, ErrorCode.BAD_REQUEST);
     }
     

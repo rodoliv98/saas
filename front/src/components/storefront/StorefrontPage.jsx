@@ -127,7 +127,7 @@ const TenantStore = () => {
   const removeAllFromCart = (productId) => {
     setCart(prevCart => prevCart.filter(item => item.id !== productId));
   };
-
+  // aqui
   const getCartTotal = () => {
     return cart.reduce((total, item) => total + (item.totalPrice * item.quantity), 0);
   };

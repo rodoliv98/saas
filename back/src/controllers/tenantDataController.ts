@@ -55,6 +55,7 @@ export class TenantDataController {
     
     try {
       const parsedData = patchTenantDataSchema.parse(req.body);
+      console.log(parsedData);
       const updatedData = await this.service.patchData(tenantId, parsedData);
 
       return res.status(200).json(updatedData);

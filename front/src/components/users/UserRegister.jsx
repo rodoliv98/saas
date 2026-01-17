@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { Eye, EyeClosed } from "lucide-react";
-import api from '../../../intercepter/intercepter';
 import { useAuth } from "../auth/AuthProvider";
 import { useRefreshHook } from "../utils/refresh-hook";
 

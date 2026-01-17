@@ -51,11 +51,11 @@ function ProductModalStore({ product, isOpen, onClose, onAddToCart, isStoreOpen 
       }
     });
   };
-
+  // removido o * quantity
   const getTotalPrice = () => {
     const basePrice = product.precoProduto;
     const saboresPrice = sabores.reduce((total, sabor) => total + Number(sabor.precoProduto), 0);
-    return (basePrice + saboresPrice) * quantity;
+    return basePrice + saboresPrice;
   };
 
   const handleAddToCart = () => {

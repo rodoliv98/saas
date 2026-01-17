@@ -1,5 +1,6 @@
 {
   "scripts": {
+    "db:dev": "docker exec -it db psql -U root postgres -d meu-banco",
     "dev:up": "docker compose --profile dev up",
     "dev:down": "docker compose --profile dev down"
   }
