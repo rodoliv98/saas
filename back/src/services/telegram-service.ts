@@ -4,6 +4,7 @@ import { TelegramRepo } from "../repository/telegram-repo";
 import { ErrorCode } from "../types/constants/error-codes-constants";
 import { DeliveryManDTO } from "../types/dtos/delivery-register-dto";
 import { UpdateDeliveryDTO } from "../types/dtos/delivery-update-dto";
+import { OrdersDelivery } from "../types/entities/orders-data";
 import { UpdatedDelivery } from "../types/entities/updated-delivery";
 import { botAnswer } from "../utils/bot-answer";
 
@@ -68,8 +69,8 @@ export class TelegramService {
 
     return { code: lowerCode, status: lowerStatus } as UpdateDeliveryDTO;
   }
-
-  private formatData (arr: OrdersForDelivery[]) {
+  // finalizar a formatação
+  private formatData (arr: OrdersDelivery[]) {
     const header = `*Você tem ${arr.length} entregas*\n\n`;
     let footer = `\n\nPara marcar um pedido como concluido digite o ID do pedido com o novo status dele separado por dois pontos :\n`;
     footer += `Exemplo wca21w:concluido`;
@@ -84,6 +85,17 @@ export class TelegramService {
       msg += `Número da casa: *${a.numero}*\n`;
       a.complemento ? msg += `Complemento: *${a.complemento}*\n` : null;
       msg += `---------------------------------\n`;
+      msg += `*DETALHES DO PEDIDO*\n`;
+      msg += `---------------------------------\n`;
+      a.pedidosItens.forEach((item) => {
+        msg += `Produto: ${item.nomeProduto}\n`,
+        msg += `Quantidade: ${item.quantidade}\n`,
+        item.itensAdicionais.forEach((add) => {
+          msg += `ADICIONAIS\n`,
+          msg += `${add.nomeProduto}\n`
+        });
+        msg += `---------------------------------\n`;
+      })
       msg += `Forma de pagamento: *${a.formaPagamento.toUpperCase()}*\n`;
       msg += `Valor do pedido: *${a.totalOrderPrice}*\n`;
       

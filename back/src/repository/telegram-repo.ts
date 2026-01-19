@@ -1,18 +1,39 @@
 import { PrismaClient } from "../generated/prisma/client";
-import { OrdersForDelivery } from "../interfaces/tenant-interfaces/tenant-inter-index";
 import { CustomError } from "../middlewares/errorHandler";
 import { ErrorCode } from "../types/constants/error-codes-constants";
 import { RegisterDeliveryManDTO } from "../types/dtos/delivery-register-dto";
 import { UpdateDeliveryDTO } from "../types/dtos/delivery-update-dto";
+import { OrdersDelivery } from "../types/entities/orders-data";
 
 const prisma = new PrismaClient();
 
 export class TelegramRepo {
-  async getOrders (pin: string): Promise<OrdersForDelivery[]> {
+  async getOrders (pin: string): Promise<OrdersDelivery[]> {
     return prisma.pedidos.findMany({
       where: {
         pin,
         status: 'pronto'
+      },
+      select: {
+        short_id: true,
+        nomeCompleto: true,
+        endereco: true,
+        bairro: true,
+        numero: true,
+        complemento: true,
+        formaPagamento: true,
+        totalOrderPrice: true,
+        pedidosItens: {
+          select: {
+            nomeProduto: true,
+            quantidade: true,
+            itensAdicionais: {
+              select: {
+                nomeProduto: true,
+              }
+            }
+          }
+        }
       }
     })
   }
