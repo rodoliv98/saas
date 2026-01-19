@@ -62,7 +62,8 @@ export class TenantStoreService implements ITenantStoreService {
 
   private createExpireDate () {
     const now = new Date();
-    const expireDate = new Date(now.getTime() + 15 * 60 * 1000);
+    const FIFTTEEN_MINS_IN_MS = 15 * 60 * 1000; 
+    const expireDate = new Date(now.getTime() + FIFTTEEN_MINS_IN_MS);
 
     return expireDate;
   }

@@ -67,7 +67,7 @@ model Entregadores {
   ativo             Boolean          @default(true)
   cadastrado_em     DateTime         @default(now()) @db.Timestamp(6)
   codigos_ativacao  Codigos_Ativacao @relation(fields: [codigo_ativ_usado], references: [codigo], onDelete: Cascade, onUpdate: NoAction, map: "fk_entregadores_codigo")
-  tenant            Tenant           @relation(fields: [tenant_id], references: [id], map: "fk_entregadores_tenant")
+  tenant            Tenant           @relation(fields: [tenant_id], references: [id], onDelete: Cascade, map: "fk_entregadores_tenant")
 
   @@index([chat_id], map: "idx_entregadores_chat_id")
   @@index([tenant_id], map: "idx_entregadores_tenant")
@@ -82,7 +82,7 @@ model Codigos_Ativacao {
   created_at   DateTime      @default(now()) @db.Timestamp(6)
   usado_em     DateTime?     @db.Timestamp(6)
   expire_date  DateTime      @db.Timestamp(6)
-  tenant       Tenant        @relation(fields: [tenant_id], references: [id], map: "fk_codigos_tenant")
+  tenant       Tenant        @relation(fields: [tenant_id], references: [id], onDelete: Cascade, map: "fk_codigos_tenant")
   entregadores Entregadores?
 
   @@index([expire_date], map: "idx_codigos_")
@@ -100,7 +100,7 @@ model Produtos {
   precoProduto Decimal             @db.Decimal(10, 2)
   imageUrl     String
   pedidosItens Itens_dos_Pedidos[]
-  tenant       Tenant              @relation(fields: [tenantId], references: [id])
+  tenant       Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   sabores      Sabores[]
 
   @@map("produtos")
@@ -115,8 +115,8 @@ model Sabores {
   precoProduto Decimal  @db.Decimal(10, 2)
   imageUrl     String
   tenantId     String
-  produto      Produtos @relation(fields: [produtoId], references: [id])
-  tenant       Tenant   @relation(fields: [tenantId], references: [id])
+  produto      Produtos @relation(fields: [produtoId], references: [id], onDelete: Cascade)
+  tenant       Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
 
   @@map("sabores")
 }
@@ -134,7 +134,7 @@ model Itens_dos_Pedidos {
   imageUrl        String
   itensAdicionais Adicionais[]
   pedidos         Pedidos      @relation(fields: [pedidosId], references: [id], onDelete: Cascade)
-  produtos        Produtos     @relation(fields: [produtoId], references: [id])
+  produtos        Produtos     @relation(fields: [produtoId], references: [id], onDelete: Cascade)
 
   @@map("itens_dos_pedidos")
 }
@@ -146,7 +146,7 @@ model Adicionais {
   descProduto       String
   categoria         String
   precoProduto      Decimal           @db.Decimal(10, 2)
-  itens_pedidos     Itens_dos_Pedidos @relation(fields: [itens_dos_pedidos], references: [id])
+  itens_pedidos     Itens_dos_Pedidos @relation(fields: [itens_dos_pedidos], references: [id], onDelete: Cascade)
 
   @@map("adicionais")
 }
@@ -174,7 +174,7 @@ model Pedidos {
   short_id        String?             @unique @db.VarChar(20)
   finished        Boolean             @default(false)
   pedidosItens    Itens_dos_Pedidos[]
-  tenant          Tenant              @relation(fields: [tenantSlug], references: [tenantSlug])
+  tenant          Tenant              @relation(fields: [tenantSlug], references: [tenantSlug], onDelete: Cascade)
   users           Users               @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("pedidos")

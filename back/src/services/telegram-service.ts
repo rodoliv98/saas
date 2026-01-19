@@ -69,7 +69,7 @@ export class TelegramService {
 
     return { code: lowerCode, status: lowerStatus } as UpdateDeliveryDTO;
   }
-  // finalizar a formatação
+
   private formatData (arr: OrdersDelivery[]) {
     const header = `*Você tem ${arr.length} entregas*\n\n`;
     let footer = `\n\nPara marcar um pedido como concluido digite o ID do pedido com o novo status dele separado por dois pontos :\n`;
