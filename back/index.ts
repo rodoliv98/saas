@@ -5,6 +5,7 @@ import tenantProducts from './src/routes/tenantProductsRoutes';
 import loginRoutes from './src/api/login/loginRoutes';
 import registerRoutes from './src/routes/registerRoutes';
 import tenantData from './src/routes/tenantData';
+import tenantHome from './src/api/tenant-home/tenant-home-routes'
 import tenantStore from './src/routes/tenantStoreRoute';
 import tenantFlavors from './src/routes/tenantFlavorsRoutes';
 import orderRoutes from './src/api/orders/ordersRoutes';
@@ -53,6 +54,7 @@ app.use('/', paymentRoutes);
 app.use('/', tenantProducts);
 app.use('/', loginRoutes);
 app.use('/', registerRoutes);
+app.use('/', tenantHome);
 app.use('/', tenantData);
 app.use('/', orderRoutes);
 app.use('/', tenantFlavors);

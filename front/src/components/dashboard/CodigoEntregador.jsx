@@ -17,12 +17,6 @@ function CodigoEntregador() {
     setError(null);
     
     try {
-      /* const res = await axios.post('http://localhost:3000/tenant-delivery-code', {}, {
-        headers: {
-          "Content-Type": 'application/json',
-          "Authorization": `Bearer ${token}`
-        }
-      }); */
       const res = await refreshHook('post', '/tenant-delivery-code', {});
       setCode(res.data.code);
       console.log(res);

@@ -42,6 +42,7 @@ function Cadastro () {
     const [isLoading, setIsLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const [apiMessage, setApiMessage] = useState("");
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -179,27 +180,27 @@ function Cadastro () {
         form.taxaEntrega = Number(form.taxaEntrega);
 
         setIsLoading(true);
+        setApiMessage("");
         try {
-            //console.log(form);
             const res = await api.post('/register', form);
-            console.log(res.data);
+            setApiMessage(res.data?.msg || "Cadastro realizado com sucesso!");
         } catch (err) {
             console.log(err);
-            const error = err.response.data.validationError;
-						const fieldError = err.response.data.error;
+            const error = err.response?.data?.validationError;
+            const fieldError = err.response?.data?.error;
 
             if (error === true) {
-							const message = err.response.data.error.map(err => err.message).join(', ');
-							setErrors({ general: message });
+                const message = err.response.data.error.map(err => err.message).join(', ');
+                setErrors({ general: message });
+                setApiMessage(message);
             } 
-						
-						if (err.status === 500 || err.response.status === 500) {
-							setErrors({ general: 'Ocorreu um erro, tente mais tarde' });
-						}
-
-						setErrors({ general: `Já existe uma conta com os dados inseridos no campo ${fieldError}` });
-
-					} finally {
+            if (err.status === 500 || err.response?.status === 500) {
+                setErrors({ general: 'Ocorreu um erro, tente mais tarde' });
+            }
+            if (fieldError) {
+                setErrors({ general: `Já existe uma conta com os dados inseridos no campo ${fieldError}` });
+            }
+        } finally {
             setIsLoading(false);
         }
     };
@@ -462,9 +463,7 @@ function Cadastro () {
 
                 <form onSubmit={handleSubmit} className="space-y-6">
                     {errors.general && <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg text-sm">{errors.general}</div>}
-                    
                     {renderStepContent()}
-
                     <div className="flex items-center justify-between pt-6">
                         {currentStep > 1 ? (
                             <button type="button" onClick={handleBack} className="flex items-center gap-2 bg-transparent text-gray-600 py-3 px-6 rounded-lg font-medium hover:bg-gray-100 transition-colors">
@@ -473,13 +472,30 @@ function Cadastro () {
                             </button>
                         ) : <div></div>}
 
+                        {/* Mensagem da API */}
+                        {apiMessage && (
+                            <div className="flex-1 text-center mx-4">
+                                <p className={`text-sm ${apiMessage.toLowerCase().includes('sucesso') ? 'text-green-600' : 'text-red-600'}`}>{apiMessage}</p>
+                            </div>
+                        )}
+
                         {currentStep < 4 ? (
                             <button type="button" onClick={handleNext} className="bg-red-600 text-white py-3 px-8 rounded-lg font-semibold hover:bg-red-700 transition-colors shadow-md hover:shadow-lg">
                                 Próximo Passo
                             </button>
                         ) : (
-                            <button type="submit" disabled={isLoading} className="bg-green-600 text-white py-3 px-8 rounded-lg font-semibold hover:bg-green-700 transition-colors shadow-md hover:shadow-lg disabled:bg-gray-400 disabled:cursor-not-allowed">
-                                {isLoading ? 'Finalizando...' : 'Finalizar Cadastro'}
+                            <button type="submit" disabled={isLoading} className="flex items-center gap-2 bg-red-600 hober:bg-red-700 text-white py-3 px-8 rounded-lg font-semibold shadow-md hover:from-red-700 hover:to-orange-600 transition-all duration-200 disabled:bg-gray-400 disabled:cursor-not-allowed">
+                                {isLoading ? (
+                                    <>
+                                        <svg className="animate-spin h-5 w-5 mr-2 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path></svg>
+                                        Finalizando...
+                                    </>
+                                ) : (
+                                    <>
+                                        <KeyRound size={20} className="opacity-80" />
+                                        Finalizar Cadastro
+                                    </>
+                                )}
                             </button>
                         )}
                     </div>

@@ -97,7 +97,7 @@ function ConcluirPedidoModal ({ carrinho, setConcluirPedidoModal, taxaEntrega })
     }));
     form.taxaEntrega = taxaEntrega;
     form.totalOrderPrice = Number(form.items.map(item => item.totalPrice).reduce((acc, current) => acc + current, 0).toFixed(2, 0)) + taxaEntrega;
-    
+    form.totalOrderPrice = Number(form.totalOrderPrice.toFixed(2, 0));
     if (form.tipoEntrega === 'retirada') {
       form.totalOrderPrice = Number(form.items.map(item => item.totalPrice).reduce((acc, current) => acc + current, 0).toFixed(2, 0));
       form.taxaEntrega = 0;
@@ -350,7 +350,7 @@ function ConcluirPedidoModal ({ carrinho, setConcluirPedidoModal, taxaEntrega })
                     <div className="text-base text-gray-700 mt-1">Taxa de entrega:</div>
                     <div className="text-lg font-bold text-gray-900">R$ {taxaEntrega.toFixed(2).replace('.', ',')}</div>
                     <div className="text-base text-gray-700 mt-2">Total do pedido:</div>
-                    <div className="text-xl font-extrabold text-red-700">R$ {String(Number(carrinho.map(item => item.totalPrice).reduce((acc, current) => acc + current, 0).toFixed(2)) + taxaEntrega).replace('.', ',')}</div>
+                    <div className="text-xl font-extrabold text-red-700">R$ {Number(carrinho.map(item => item.totalPrice).reduce((acc, current) => acc + current, 0).toFixed(2) + taxaEntrega).toFixed(2, 0).replace('.', ',')}</div>
                   </div>
                 ) : (
                   <div className="text-right">
