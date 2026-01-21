@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Home, Clipboard, Utensils, BarChart2, Settings, LogOut, QrCode } from 'lucide-react';
 import { useRefreshHook } from '../utils/refresh-hook';
 
@@ -6,6 +7,8 @@ function Sidebar({ selectedSection, onSectionChange }) {
     const [isStoreOpen, setIsStoreOpen] = useState();
     const [storeName, setStoreName] = useState();
     const { refreshHook } = useRefreshHook();
+		const redirect = useNavigate();
+
 		const navLinkClass =
         "flex items-center gap-3 px-4 py-3 rounded-md hover:bg-red-50 transition-colors font-medium text-gray-600 w-60";
 
@@ -31,6 +34,16 @@ function Sidebar({ selectedSection, onSectionChange }) {
 				
         await refreshHook('patch', '/tenant-is-open', { isStoreOpen: newValue });
 				
+			} catch (err) {
+				console.log(err);
+			}
+		}
+
+		const handleLogout = async () => {
+			try {
+				await refreshHook('post', '/logout');
+				redirect('/');
+
 			} catch (err) {
 				console.log(err);
 			}
@@ -100,7 +113,7 @@ function Sidebar({ selectedSection, onSectionChange }) {
                     </div>
                 </div>
                 <div className="px-3 pb-3">
-                    <a href="/login" className={navLinkClass}>
+                    <a className={navLinkClass} onClick={handleLogout}>
                         <LogOut size={20} /> <span className="ml-3">Sair</span>
                     </a>
                 </div>

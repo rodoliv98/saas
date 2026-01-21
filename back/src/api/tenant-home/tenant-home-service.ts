@@ -1,8 +1,12 @@
 import { HomeDataDTO } from "./dto/home-data-dto";
-import { TenantHomeRepository } from "./tenant-home-repo";
+import { ITenantHomeRepository } from "./tenant-home-repo";
 
-export class TenantHomeService {
-  constructor (private repo: TenantHomeRepository) {}
+export interface ITenantHomeService {
+  getHomeData (tenantId: string, tenantSlug: string): Promise<HomeDataDTO>; 
+}
+
+export class TenantHomeService implements ITenantHomeService {
+  constructor (private repo: ITenantHomeRepository) {}
   
   async getHomeData (tenantId: string, tenantSlug: string): Promise<HomeDataDTO> {
     const [tenantData, orders] = await Promise.all([
@@ -21,9 +25,9 @@ export class TenantHomeService {
     ? new Date(theTrialTime)
     : new Date(thePlanEndTime + theTrialTime);
 
-    const planType = tenantData.assinaturas.length <= 0 
+    const planType = tenantData.assinaturas.length == 0 
     ? 'Plano Básico'
-    : tenantData.assinaturas[0].planType;
+    : tenantData.assinaturas[0].planType as string;
 
     return {
       tenant: tenantData.nomeRepresentante,

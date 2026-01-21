@@ -1,10 +1,16 @@
 import { PrismaClient } from "../../generated/prisma/client";
 import { CustomError } from "../../middlewares/errorHandler";
 import { ErrorCode } from "../../types/constants/error-codes-constants";
+import { HomeData, HomeOrders } from "./entities/home-entities";
 
 const prisma = new PrismaClient();
 
-export class TenantHomeRepository {
+export interface ITenantHomeRepository {
+  getHomeData (tenantId: string): Promise<HomeData>;
+  getHomeOrders (tenantSlug: string): Promise<HomeOrders[]>
+}
+
+export class TenantHomeRepository implements ITenantHomeRepository {
   async getHomeData (tenantId: string) {
     const tenant = await prisma.tenant.findUnique({
       where: {

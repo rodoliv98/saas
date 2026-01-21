@@ -39,5 +39,16 @@ services:
        - ./front:/app
        - /app/node_modules
 
+  front-nginx:
+    container_name: front_nginx
+    depends_on:
+      - api
+    profiles: ["dev-nginx"]
+    build:
+      context: ./front
+      dockerfile: dockerfile.nginx
+    ports:
+       - '80:80'
+
 volumes:
   postgres_data:

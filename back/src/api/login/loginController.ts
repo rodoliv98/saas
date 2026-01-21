@@ -52,15 +52,10 @@ export class LoginController {
   // still have to finish this
   logout (req: Request, res: Response, next: NextFunction) {
     res
-    .clearCookie('accessToken', {
-        httpOnly: process.env.NODE_ENV === 'production',
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: process.env.NODE_ENV === 'production' ? "none" : "none",
-    })
     .clearCookie('refreshToken', {
-        httpOnly: process.env.NODE_ENV === 'production',
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: process.env.NODE_ENV === 'production' ? "none" : "none",
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
     })
     .status(200)
     .json({ message: 'Logout realizado com sucesso' });

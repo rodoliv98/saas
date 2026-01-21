@@ -22,7 +22,7 @@ export function useRefreshHook () {
       return res;
 
     } catch (err) {
-      if (err.status === 401) {
+      if (err.response.data.code === "NOT_AUTHORIZED") {
         try {
           const refreshRes = await api.post('/refresh');
           const newToken = refreshRes.data.token;

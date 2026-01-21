@@ -90,17 +90,6 @@ const ProductCard = ({ product, reloadPage }) => {
         </div>
         
         <p className="text-gray-600 text-sm mb-3 line-clamp-2">{product.descProduto}</p>
-        
-        <div className="flex items-center text-sm text-gray-500 space-x-4">
-          <div className="flex items-center">
-            <Ruler className="w-4 h-4 mr-1" />
-            <span>{product.tamanho}</span>
-          </div>
-          <div className="flex items-center">
-            <Clock className="w-4 h-4 mr-1" />
-            <span>{product.tempoPreparo} min</span>
-          </div>
-        </div>
       </div>
 
       {modalOpen && (

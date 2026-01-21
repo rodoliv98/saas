@@ -22,7 +22,9 @@ import 'dotenv/config'
 const app = express();
 const server = http.createServer(app);
 const corsOptions = {
-  origin: 'http://localhost:5173',
+  origin: process.env.NODE_ENV === 'production'
+  ? 'still have to get a domain'
+  : ['http://localhost:5173', 'http://localhost'],
   credentials: true,
   allowedHeaders: ["Content-Type", "Authorization"]
 }
@@ -33,10 +35,13 @@ app.use(cookieParser());
 
 export const io = new Server(server, {
   cors: {
-    origin: 'http://localhost:5173',
+    origin: process.env.NODE_ENV === 'production'
+    ? 'still have to get a domain'
+    : ['http://localhost:5173', 'http://localhost'],
     methods: ["GET"],
     credentials: true
-  }
+  },
+  transports: ['websocket', 'polling'],
 });
 
 io.on('connection', (socket) => {

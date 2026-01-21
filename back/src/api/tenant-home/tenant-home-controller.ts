@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from "express";
-import { TenantHomeService } from "./tenant-home-service";
+import { ITenantHomeService } from "./tenant-home-service";
 
 export class TenantHomeController {
-  constructor (private service: TenantHomeService) {}
+  constructor (private service: ITenantHomeService) {}
   
   async getHomeData (req: Request, res: Response, next: NextFunction) {
     try {
