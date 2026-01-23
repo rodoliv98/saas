@@ -35,10 +35,10 @@ export class TenantDataController {
         month: Number(req.query.month),
         status: req.query.status
       }
-      
+
       const body = orderReportSchema.parse(obj);
       const orders = await this.service.getOrders(tenantSlug, body);
-      // console.log(orders)
+
       res.status(200).json({ orders: orders });
 
     } catch (err) {

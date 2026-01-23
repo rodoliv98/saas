@@ -5,6 +5,7 @@ import { OrderSchema } from "./types/order-types";
 import { Cuid } from "../../types/types-index";
 import { CustomError } from "../../middlewares/errorHandler";
 import { IGetUserOrders } from "../../interfaces/orders-interfaces/orders-inter-index";
+import { Orders } from "./entities/order-entitie";
 
 const prisma = new PrismaClient();
 
@@ -76,7 +77,7 @@ export interface OrdersFromRepo {
 }
 
 export interface IOrderRepository {
-  getOrders (tenantSlug: string): Promise<OrdersFromRepo[]>;
+  getOrders (tenantSlug: string): Promise<Orders[] | []>;
   getTenantPin (tenantSlug: string): Promise<{ pin: string | null } | null>;
   getUserOrders (userId: string): Promise<IGetUserOrders[]>;
   patchOrders (orderId: Cuid, body: PedidoStatus, tenantSlug: string): Promise<ICreateOrder>;
@@ -85,17 +86,45 @@ export interface IOrderRepository {
   getAditionalsPrice (aditionalsIds: string[]): Promise<PricesFromDB[]>;
 } 
 
+/*
+{
+  nomeCompleto
+  tipoEntrega
+  totalOrderPrice
+  pedidosItens: {
+    nomeProduto
+    quantidade
+    adicionais: {
+      nomeProduto
+    }
+  }
+}
+*/
+
 export class OrderRepository implements IOrderRepository {
   // tem que otimizar tbm
-  async getOrders (tenantSlug: string): Promise<OrdersFromRepo[]> {
+  async getOrders (tenantSlug: string): Promise<Orders[] | []> {
     return prisma.pedidos.findMany({
       where: {
         tenantSlug: tenantSlug
       },
-      include: {
+      select: {
+        id: true,
+        nomeCompleto: true,
+        tipoEntrega: true,
+        totalOrderPrice: true,
+        observacao: true,
+        createdAt: true,
+        status: true,
         pedidosItens: {
-          include: {
-            itensAdicionais: true
+          select: {
+            nomeProduto: true,
+            quantidade: true,
+            itensAdicionais: {
+              select: {
+                nomeProduto: true
+              }
+            }
           }
         }
       }
@@ -197,68 +226,41 @@ export class OrderRepository implements IOrderRepository {
   }
   
   async getProductsPrice (productsIds: string[]): Promise<PricesFromDB[]> {
-    /*
-      usa set aqui para remover duplicatas e não pesquisar
-      o mesmo id no banco desnecessáriamente
-    */
-    const setIds = [...new Set(productsIds)];
-    
-    const productsPrices = await prisma.produtos.findMany({
+    const productsNoDups = await prisma.produtos.findMany({
       where: {
-        id: { in: setIds }
+        id: { in: productsIds } // in = a set remove ids duplicados
       },
       select: {
         id: true,
         precoProduto: true
       }
-    })
-    // cria um map onde o id do produto é a Key e o precoProduto é o Value
-    const mappedIds = new Map(productsPrices.map(p => [p.id, p.precoProduto]));
-    /*
-      retorna um objeto onde o valor de precoProduto
-      vai ser o valor do id correspondente detro do map
-      filter usa uma condição para limpar os undefineds
-    */
-    const prices = productsIds
-      .map(ids => ({ precoProduto: mappedIds.get(ids) }))
-      .filter(
-        (prod): prod is { precoProduto: Decimal } => // retorna isso
-          prod.precoProduto !== undefined // se true
-      )
-
-    return prices;
+    });
+    
+    const mapIds = new Map(productsNoDups.map(prod => [prod.id, prod.precoProduto]));
+    return productsIds.map(id => ({ precoProduto: mapIds.get(id) }))
+                      .filter(
+                      (prod): prod is { precoProduto: Decimal } => // retorna isso
+                        prod.precoProduto !== undefined // se true
+                      );
   }
 
   async getAditionalsPrice (aditionalsIds: string[]): Promise<PricesFromDB[]> {
-    /*
-      usa set aqui para remover duplicatas e não pesquisar
-      o mesmo id no banco desnecessáriamente
-    */
-    const setIds = [...new Set(aditionalsIds)];
-    
-    const aditionalsPrices = await prisma.sabores.findMany({
+    const aditionalNoDups = await prisma.sabores.findMany({
       where: {
-        id: { in: setIds }
+        id: { in: aditionalsIds } // in = a set remove ids duplicados
       },
       select: {
         id: true,
         precoProduto: true
       }
     })
-    // cria um map onde o id do produto é a Key e o precoProduto é o Value
-    const mappedIds = new Map(aditionalsPrices.map(ads => [ads.id, ads.precoProduto]));
-    /*
-      retorna um objeto onde o valor de precoProduto
-      vai ser o valor do id correspondente detro do map
-      filter usa uma condição para limpar os undefineds
-    */
-    const prices = aditionalsIds
-      .map(ids => ({ precoProduto: mappedIds.get(ids) }))
-      .filter(
-        (prod): prod is { precoProduto: Decimal } => // retorna isso
-          prod.precoProduto !== undefined // se true
-      )
-
-    return prices;
+    const mapIds = new Map(aditionalNoDups.map(item => [item.id, item.precoProduto]));
+    const test = aditionalsIds.map(id => ({ precoProduto: mapIds.get(id) }))
+                        .filter(
+                          (prod): prod is { precoProduto: Decimal } => // retorna isso
+                            prod.precoProduto !== undefined // se true
+                        );
+    console.log('aditionals from db: ', test);
+    return test;
   }
 }

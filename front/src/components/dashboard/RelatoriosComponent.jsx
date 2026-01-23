@@ -2,7 +2,9 @@ import { useState } from 'react';
 import { useRefreshHook } from '../utils/refresh-hook';
 
 function RelatoriosComponent () {
-  const [year, setYear] = useState(2025);
+  const currentYear = new Date().getFullYear();
+
+  const [year, setYear] = useState(currentYear);
   const [month, setMonth] = useState(1);
   const [status, setStatus] = useState('concluido'); // novo estado
   const [orders, setOrders] = useState([]);
@@ -28,7 +30,8 @@ function RelatoriosComponent () {
   ];
 
   const years = [
-    { value: 2026, label: '2026' }
+    { value: 2026, label: '2026' },
+    { value: 2027, label: '2027' }
   ];
 
   const handleSubmit = async (e) => {
@@ -67,7 +70,7 @@ function RelatoriosComponent () {
   };
 
   return (
-    <section className="py-12 bg-gray-50">
+    <section className="py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-8">
           <h2 className="text-3xl font-extrabold text-gray-900 mb-2">Relatório de Vendas</h2>
@@ -90,7 +93,7 @@ function RelatoriosComponent () {
               <select
                 id="year"
                 value={year}
-                onChange={(e) => setYear(parseInt(e.target.value, 10))}
+                onChange={(e) => setYear(e.target.value)}
                 className="block w-full px-4 py-2 rounded-lg border border-gray-200 text-gray-900 shadow-sm
                            focus:outline-none focus:ring-2 focus:ring-red-100 focus:border-red-600"
               >
@@ -109,7 +112,7 @@ function RelatoriosComponent () {
               <select
                 id="month"
                 value={month}
-                onChange={(e) => setMonth(parseInt(e.target.value, 10))}
+                onChange={(e) => setMonth(e.target.value)}
                 className="block w-full px-4 py-2 rounded-lg border border-gray-200 text-gray-900 shadow-sm
                            focus:outline-none focus:ring-2 focus:ring-red-100 focus:border-red-600"
               >
