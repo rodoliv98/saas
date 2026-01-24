@@ -1,11 +1,10 @@
 import { useEffect, useState, useRef } from "react"
 import { useRefreshHook } from '../utils/refresh-hook'
 import { io } from 'socket.io-client'
-// os cards precisam ser clicados para exibir os itens adicionais
+
 function PedidosKanban() {
   const [pedidos, setPedidos] = useState([]);
   const [tenant, setTenant] = useState('');
-  const [selectedPedido, setSelectedPedido] = useState(null);
   const [activeTab, setActiveTab] = useState('ativos');
   const [error, setError] = useState('');
   const [currentTime, setCurrentTime] = useState(Date.now());
@@ -59,7 +58,6 @@ function PedidosKanban() {
   }, []);
 
   useEffect(() => {
-    // Socket.io real (descomentar quando integrar)
     const socket = io('http://localhost:3000');
     socket.on('pedido-criado', async (data) => {
       if (data.tenant === tenant) {
@@ -78,24 +76,29 @@ function PedidosKanban() {
     return () => {
       socket.disconnect();
     };
-  }, []);
+  }, [tenant]);
 
   const playNotificationSound = () => {
-    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-    const oscillator = audioContext.createOscillator();
-    const gainNode = audioContext.createGain();
+    try {
+      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+      const audioContext = new AudioContextClass();
+      const oscillator = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
 
-    oscillator.connect(gainNode);
-    gainNode.connect(audioContext.destination);
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContext.destination);
 
-    oscillator.frequency.value = 800;
-    oscillator.type = 'sine';
+      oscillator.frequency.value = 800;
+      oscillator.type = 'sine';
 
-    gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
-    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+      gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
 
-    oscillator.start(audioContext.currentTime);
-    oscillator.stop(audioContext.currentTime + 0.5);
+      oscillator.start(audioContext.currentTime);
+      oscillator.stop(audioContext.currentTime + 0.5);
+    } catch (error) {
+      console.error('Erro ao reproduzir som de notificação:', error);
+    }
   };
 
   const handleUpdateOrder = async (orderId, newStatus) => {
@@ -140,7 +143,6 @@ function PedidosKanban() {
   };
 
   const getCardColorByTime = (createdAt, status) => {
-    // Não aplica cores de tempo em pedidos finalizados
     if (status === 'concluido' || status === 'cancelado') {
       return 'border-gray-200 bg-white';
     }
@@ -261,17 +263,16 @@ function PedidosKanban() {
                       columnPedidos.map(pedido => (
                         <div
                           key={pedido.id}
-                          className={`rounded-lg border-2 shadow-sm hover:shadow-md transition-all cursor-pointer ${getCardColorByTime(pedido.createdAt, pedido.status)}`}
-                          onClick={() => setSelectedPedido(pedido)}
+                          className={`rounded-lg border-2 shadow-sm hover:shadow-md transition-shadow ${getCardColorByTime(pedido.createdAt, pedido.status)}`}
                         >
                           {/* Card Header */}
                           <div className="p-3 border-b border-gray-200">
                             <div className="flex items-start justify-between gap-2">
                               <div className="flex-1 min-w-0">
-                                <h3 className="font-semibold text-gray-900 text-sm truncate">
+                                <h3 className="font-semibold text-gray-900 text-sm">
                                   {pedido.nomeCompleto}
                                 </h3>
-                                <div className="flex items-center gap-2 mt-1">
+                                <div className="flex items-center gap-2 mt-1 flex-wrap">
                                   <span className="text-xs text-gray-500">
                                     #{pedido.id?.slice(-6) || 'N/A'}
                                   </span>
@@ -299,43 +300,68 @@ function PedidosKanban() {
                             </div>
                           </div>
 
-                          {/* Card Body */}
+                          {/* Card Body - Todos os detalhes sempre visíveis */}
                           <div className="p-3">
-                            {/* Itens */}
+                            {/* Todos os itens do pedido */}
                             <div className="mb-3">
-                              <div className="text-xs text-gray-600 space-y-1">
-                                {pedido.pedidosItens?.slice(0, 2).map((item, idx) => (
-                                  <div key={idx} className="flex items-start gap-1">
-                                    <span className="font-medium">{item.quantidade}x</span>
-                                    <span className="truncate">{item.nomeProduto}</span>
-                                    {item.itensAdicionais?.length > 0 && (
-                                      <span className="text-gray-400">+{item.itensAdicionais.length}</span>
-                                    )}
+                              <h4 className="font-bold text-gray-900 text-xs mb-2">Itens do Pedido</h4>
+                              <div className="space-y-2">
+                                {pedido.pedidosItens?.map((item, idx) => (
+                                  <div key={idx} className="bg-gray-50 rounded-lg p-2.5 border border-gray-200">
+                                    <div className="flex items-start gap-2">
+                                      <span className="font-semibold text-xs text-gray-900 flex-shrink-0">
+                                        {item.quantidade}x
+                                      </span>
+                                      <div className="flex-1 min-w-0">
+                                        <p className="font-semibold text-xs text-gray-900">
+                                          {item.nomeProduto}
+                                        </p>
+                                        {item.descProduto && (
+                                          <p className="text-xs text-gray-500 mt-0.5">
+                                            {item.descProduto}
+                                          </p>
+                                        )}
+                                        
+                                        {/* Itens Adicionais */}
+                                        {item.itensAdicionais && item.itensAdicionais.length > 0 && (
+                                          <div className="mt-2 pl-2 border-l-2 border-gray-300">
+                                            <p className="text-xs font-semibold text-gray-600 mb-1">
+                                              Adicionais:
+                                            </p>
+                                            {item.itensAdicionais.map((adicional, addIdx) => (
+                                              <div key={addIdx} className="mb-1">
+                                                <p className="text-xs text-gray-700">
+                                                  + {adicional.nomeProduto}
+                                                </p>
+                                                {adicional.descProduto && (
+                                                  <p className="text-xs text-gray-500 ml-2">
+                                                    {adicional.descProduto}
+                                                  </p>
+                                                )}
+                                              </div>
+                                            ))}
+                                          </div>
+                                        )}
+                                      </div>
+                                    </div>
                                   </div>
                                 ))}
-                                {pedido.pedidosItens?.length > 2 && (
-                                  <div className="text-gray-400">
-                                    +{pedido.pedidosItens.length - 2} item(ns)
-                                  </div>
-                                )}
                               </div>
                             </div>
 
-                            {/* Observação */}
+                            {/* Observação completa */}
                             {pedido.observacao && (
-                              <div className="mb-3 p-2 bg-gray-50 rounded text-xs text-gray-600 border border-gray-200">
-                                <span className="font-medium">Obs:</span> {pedido.observacao}
+                              <div className="mb-3">
+                                <h4 className="font-bold text-gray-900 text-xs mb-2">Observação</h4>
+                                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-2.5">
+                                  <p className="text-xs text-gray-700">{pedido.observacao}</p>
+                                </div>
                               </div>
                             )}
-
                             {/* Status Selector */}
                             <select
                               value={pedido.status}
-                              onChange={(e) => {
-                                e.stopPropagation();
-                                handleUpdateOrder(pedido.id, e.target.value);
-                              }}
-                              onClick={(e) => e.stopPropagation()}
+                              onChange={(e) => handleUpdateOrder(pedido.id, e.target.value)}
                               className="w-full text-xs px-2 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-red-700 focus:border-transparent bg-white font-medium"
                             >
                               {statusOptions.map(option => (
@@ -355,98 +381,6 @@ function PedidosKanban() {
           })}
         </div>
       </div>
-
-      {/* Modal de Detalhes */}
-      {selectedPedido && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
-          onClick={() => setSelectedPedido(null)}
-        >
-          <div
-            className="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Modal Header */}
-            <div className="p-6 border-b border-gray-200 sticky top-0 bg-white">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h2 className="text-xl font-bold text-gray-900">{selectedPedido.nomeCompleto}</h2>
-                  <div className="flex items-center gap-2 mt-1">
-                    <p className="text-sm text-gray-500">Pedido #{selectedPedido.id?.slice(-8)}</p>
-                    <span className="text-gray-400">•</span>
-                    <p className="text-sm text-gray-500 capitalize">{selectedPedido.tipoEntrega}</p>
-                    {selectedPedido.status !== 'concluido' && selectedPedido.status !== 'cancelado' && (
-                      <>
-                        <span className="text-gray-400">•</span>
-                        <p className="text-sm text-gray-500">{getTimeElapsed(selectedPedido.createdAt)}</p>
-                      </>
-                    )}
-                  </div>
-                </div>
-                <button
-                  onClick={() => setSelectedPedido(null)}
-                  className="text-gray-400 hover:text-gray-600 transition-colors"
-                >
-                  <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
-                  </svg>
-                </button>
-              </div>
-            </div>
-
-            {/* Modal Body */}
-            <div className="p-6 space-y-6">
-              {/* Itens do Pedido */}
-              <div>
-                <h3 className="font-bold text-gray-900 mb-3">Itens do Pedido</h3>
-                <div className="space-y-3">
-                  {selectedPedido.pedidosItens?.map((item, index) => (
-                    <div key={index} className="bg-gray-50 rounded-lg p-4 border border-gray-200">
-                      <div className="flex justify-between items-start">
-                        <div className="flex-1">
-                          <div className="flex items-start gap-2">
-                            <span className="font-semibold text-gray-900">{item.quantidade}x</span>
-                            <h4 className="font-semibold text-gray-900">{item.nomeProduto}</h4>
-                          </div>
-                          
-                          {item.itensAdicionais && item.itensAdicionais.length > 0 && (
-                            <div className="mt-2 pl-6 space-y-1">
-                              <p className="text-xs font-semibold text-gray-600">Adicionais:</p>
-                              {item.itensAdicionais.map((adicional, idx) => (
-                                <div key={idx} className="text-sm text-gray-600">
-                                  + {adicional.nomeProduto}
-                                </div>
-                              ))}
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Observação */}
-              {selectedPedido.observacao && (
-                <div>
-                  <h3 className="font-bold text-gray-900 mb-3">Observação</h3>
-                  <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
-                    <p className="text-sm text-gray-700">{selectedPedido.observacao}</p>
-                  </div>
-                </div>
-              )}
-
-              {/* Total */}
-              <div className="bg-red-700 text-white rounded-lg p-4">
-                <div className="flex justify-between items-center text-lg font-bold">
-                  <span>Total do Pedido</span>
-                  <span>{formatPrice(selectedPedido.totalOrderPrice)}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

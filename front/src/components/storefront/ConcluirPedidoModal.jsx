@@ -122,7 +122,7 @@ function ConcluirPedidoModal ({ carrinho, setConcluirPedidoModal, taxaEntrega })
     try {
       await refreshHook('post', '/orders', form);
       redirect('/usuario-perfil');
-      // setConcluirPedidoModal(false);
+      setConcluirPedidoModal(false);
 
     } catch (err) {
       console.log(err);
@@ -133,7 +133,7 @@ function ConcluirPedidoModal ({ carrinho, setConcluirPedidoModal, taxaEntrega })
       setError(err.response.data.error);
     }
 
-    /* setForm({
+    setForm({
       nomeCompleto: '',
       endereco: '',
       bairro: '',
@@ -144,7 +144,7 @@ function ConcluirPedidoModal ({ carrinho, setConcluirPedidoModal, taxaEntrega })
       formaPagamento: '',
       tipoEntrega: '',
       observacao: ''
-    }); */
+    });
   }
 
   return (

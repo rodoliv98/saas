@@ -53,7 +53,8 @@ export class OrdersService implements IOrdersService {
 
   async checkProductsPrices (body: OrderSchema) {
     const itemsIds = body.items.map(item => 
-      Array.from({ length: item.quantidade }, () => item.id)
+      Array.from({ length: item.quantidade }, () => 
+        item.id)
     ).flat();
 
     const aditionalIds = body.items.map(item => 

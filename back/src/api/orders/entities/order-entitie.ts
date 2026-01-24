@@ -10,9 +10,11 @@ export interface Orders {
   status: string;
   pedidosItens: {
     nomeProduto: string;
+    descProduto: string;
     quantidade: number;
     itensAdicionais: {
       nomeProduto: string;
+      descProduto: string;
     }[]
   }[]
 }

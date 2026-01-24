@@ -86,21 +86,6 @@ export interface IOrderRepository {
   getAditionalsPrice (aditionalsIds: string[]): Promise<PricesFromDB[]>;
 } 
 
-/*
-{
-  nomeCompleto
-  tipoEntrega
-  totalOrderPrice
-  pedidosItens: {
-    nomeProduto
-    quantidade
-    adicionais: {
-      nomeProduto
-    }
-  }
-}
-*/
-
 export class OrderRepository implements IOrderRepository {
   // tem que otimizar tbm
   async getOrders (tenantSlug: string): Promise<Orders[] | []> {
@@ -119,10 +104,12 @@ export class OrderRepository implements IOrderRepository {
         pedidosItens: {
           select: {
             nomeProduto: true,
+            descProduto: true,
             quantidade: true,
             itensAdicionais: {
               select: {
-                nomeProduto: true
+                nomeProduto: true,
+                descProduto: true
               }
             }
           }
@@ -255,12 +242,10 @@ export class OrderRepository implements IOrderRepository {
       }
     })
     const mapIds = new Map(aditionalNoDups.map(item => [item.id, item.precoProduto]));
-    const test = aditionalsIds.map(id => ({ precoProduto: mapIds.get(id) }))
+    return aditionalsIds.map(id => ({ precoProduto: mapIds.get(id) }))
                         .filter(
                           (prod): prod is { precoProduto: Decimal } => // retorna isso
                             prod.precoProduto !== undefined // se true
                         );
-    console.log('aditionals from db: ', test);
-    return test;
   }
 }
