@@ -42,26 +42,3 @@ export interface IFormatStoreData {
     }[]
   }[]
 }
-
-export interface OrdersForDelivery {
-  id: string;
-  short_id: string | null;
-  tenantSlug: string;
-  nomeCompleto: string;
-  endereco: string;
-  bairro: string;
-  cep: string;
-  numero: string;
-  complemento: string | null;
-  whatsapp: string;
-  formaPagamento: string;
-  tipoEntrega: string;
-  taxaEntrega: Decimal;
-  totalOrderPrice: Decimal;
-  observacao: string | null;
-  status: PedidoStatus;
-  createdAt: Date;
-  updatedAt: Date;
-  pin: string | null;
-  userId: string;
-}

@@ -11,7 +11,7 @@ import tenantFlavors from './src/routes/tenantFlavorsRoutes';
 import orderRoutes from './src/api/orders/ordersRoutes';
 import userRegister from './src/routes/user-register-routes';
 import userData from './src/routes/user-data-routes';
-import telegram from './src/routes/telegram-routes';
+import telegram from './src/api/telegram/telegram-routes';
 import paymentRoutes from './src/routes/payment-routes';
 import http from 'node:http';
 import { Server } from 'socket.io';
