@@ -44,7 +44,6 @@ const TenantStore = () => {
         setLoading(true);
         
         const res = await api.get(`/${slug}`);
-        //console.log(res);
         setStoreData(res.data.store);
         setProducts(res.data.products || []);
         
@@ -71,15 +70,39 @@ const TenantStore = () => {
     setSelectedProduct(null);
   };
 
+  // Função auxiliar para comparar se dois produtos são idênticos
+  const areProductsIdentical = (product1, product2) => {
+    // Verifica se são o mesmo produto original
+    if (product1.originalId !== product2.originalId) return false;
+    
+    // Verifica sabores
+    const sabores1 = product1.sabores || [];
+    const sabores2 = product2.sabores || [];
+    
+    if (sabores1.length !== sabores2.length) return false;
+    
+    // Se ambos não têm sabores, são idênticos
+    if (sabores1.length === 0) return true;
+    
+    // Compara cada sabor
+    const sabores1Sorted = [...sabores1].sort((a, b) => a.id - b.id);
+    const sabores2Sorted = [...sabores2].sort((a, b) => a.id - b.id);
+    
+    return sabores1Sorted.every((sabor, index) => 
+      sabor.id === sabores2Sorted[index].id
+    );
+  };
+
   const addToCart = (product) => {
     if (!token) {
       redirect(`/usuario-login?redirect=${encodeURIComponent(location.pathname)}`);
+      return;
     }
 
-    // Se o produto não tem sabores, adiciona diretamente
+    // Se o produto não tem sabores, adiciona diretamente ou aumenta quantidade
     if (!product.sabores || product.sabores.length === 0 || product.sabores[0].length === 0) {
       const simpleProduct = {
-        id: `${product.id}-${Date.now()}`,
+        id: `${product.id}-simple`,
         originalId: product.id,
         nomeProduto: product.nomeProduto,
         descProduto: product.descProduto,
@@ -90,7 +113,27 @@ const TenantStore = () => {
         quantity: 1,
         totalPrice: product.precoProduto
       };
-      setCart(prevCart => [...prevCart, simpleProduct]);
+
+      setCart(prevCart => {
+        // Verifica se já existe um produto idêntico no carrinho
+        const existingProductIndex = prevCart.findIndex(item => 
+          areProductsIdentical(item, simpleProduct)
+        );
+
+        if (existingProductIndex !== -1) {
+          // Se já existe, aumenta a quantidade
+          const updatedCart = [...prevCart];
+          updatedCart[existingProductIndex] = {
+            ...updatedCart[existingProductIndex],
+            quantity: updatedCart[existingProductIndex].quantity + 1
+          };
+          return updatedCart;
+        } else {
+          // Se não existe, adiciona novo
+          return [...prevCart, simpleProduct];
+        }
+      });
+
       setToast('Item adicionado ao carrinho!');
       setTimeout(() => setToast(null), 2000);
       return;
@@ -101,7 +144,26 @@ const TenantStore = () => {
   };
 
   const addToCartFromModal = (productWithExtras) => {
-    setCart(prevCart => [...prevCart, productWithExtras]);
+    setCart(prevCart => {
+      // Verifica se já existe um produto idêntico no carrinho
+      const existingProductIndex = prevCart.findIndex(item => 
+        areProductsIdentical(item, productWithExtras)
+      );
+
+      if (existingProductIndex !== -1) {
+        // Se já existe, aumenta a quantidade
+        const updatedCart = [...prevCart];
+        updatedCart[existingProductIndex] = {
+          ...updatedCart[existingProductIndex],
+          quantity: updatedCart[existingProductIndex].quantity + 1
+        };
+        return updatedCart;
+      } else {
+        // Se não existe, adiciona novo
+        return [...prevCart, productWithExtras];
+      }
+    });
+
     setToast('Item adicionado ao carrinho!');
     setTimeout(() => setToast(null), 2000);
   };
@@ -137,7 +199,7 @@ const TenantStore = () => {
   };
 
   const getUniqueItemsCount = () => {
-    return new Set(cart.map(item => item.originalId)).size;
+    return cart.length;
   };
 
   // Filtra categorias que têm produtos
@@ -225,7 +287,7 @@ const TenantStore = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="h-16" /> {/* Espaço para a navbar fixa */}
+      <div className="h-16" />
       
       <style>{`
         .scrollbar-hide {
@@ -332,7 +394,6 @@ const TenantStore = () => {
           {/* Menu de Produtos */}
           <div className="flex-1">
             {selectedCategory === 'all' ? (
-              // Mostra todos os produtos agrupados por categoria
               availableCategories.map((category) => (
                 <div key={category.value} className="mb-8">
                   <h2 className="text-2xl font-bold text-gray-900 mb-6">
@@ -351,7 +412,6 @@ const TenantStore = () => {
                 </div>
               ))
             ) : (
-              // Mostra apenas os produtos da categoria selecionada
               <div className="mb-8">
                 <h2 className="text-2xl font-bold text-gray-900 mb-6">
                   {categories.find(cat => cat.value === selectedCategory)?.label}

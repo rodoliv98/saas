@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from "react"
 import { useRefreshHook } from '../utils/refresh-hook'
 import { io } from 'socket.io-client'
 
-function PedidosKanban() {
+function PedidosDashboard() {
   const [pedidos, setPedidos] = useState([]);
   const [tenant, setTenant] = useState('');
   const [activeTab, setActiveTab] = useState('ativos');
@@ -385,4 +385,4 @@ function PedidosKanban() {
   );
 }
 
-export default PedidosKanban;
+export default PedidosDashboard;

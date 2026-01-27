@@ -73,23 +73,15 @@ function ConcluirPedidoModal ({ carrinho, setConcluirPedidoModal, taxaEntrega })
     }));
   }
 
-  const getTotalPrice = (carrinho, entrega) => {
-    const arr = [];
-
-    for (let i = 0; i < carrinho.length; i++) {
-      const price = carrinho[i].totalPrice * carrinho[i].quantity;
-      arr.push(price);
-    }
-
-    if (entrega) {
-      return arr.reduce((acc, index) => acc + index, 0) + taxaEntrega;
-    }
-
-    return arr.reduce((acc, index) => acc + index, 0);
+  // Calcula o total dos itens do carrinho (sem taxa de entrega)
+  const getTotalItems = (carrinho) => {
+    return carrinho.reduce((acc, item) => {
+      return acc + (item.totalPrice * item.quantity);
+    }, 0);
   }
 
-  const recalculatedTotal = getTotalPrice(carrinho);
-  const recalculatedTotalDelivery = getTotalPrice(carrinho, taxaEntrega);
+  const totalItens = getTotalItems(carrinho);
+  const totalComEntrega = totalItens + taxaEntrega;
 
   const handleSubmit = async () => {
     form.tenantSlug = slug;
@@ -110,15 +102,19 @@ function ConcluirPedidoModal ({ carrinho, setConcluirPedidoModal, taxaEntrega })
         })) 
         :
         [],
-      totalPrice: Number(carr.totalPrice.toFixed(2, 0)),
+      totalPrice: Number(carr.totalPrice.toFixed(2)),
       imageUrl: carr.imageUrl
     }));
-    form.taxaEntrega = taxaEntrega;
-    form.totalOrderPrice = recalculatedTotalDelivery
+    
+    // Define valores baseado no tipo de entrega
     if (form.tipoEntrega === 'retirada') {
-      form.totalOrderPrice = recalculatedTotal
+      form.totalOrderPrice = Number(totalItens.toFixed(2));
       form.taxaEntrega = 0;
+    } else {
+      form.totalOrderPrice = Number(totalComEntrega.toFixed(2));
+      form.taxaEntrega = taxaEntrega;
     }
+
     try {
       await refreshHook('post', '/orders', form);
       redirect('/usuario-perfil');
@@ -352,7 +348,7 @@ function ConcluirPedidoModal ({ carrinho, setConcluirPedidoModal, taxaEntrega })
                 />
               </div>
             </div>
-            {/*R$ {Number(carrinho.map(item => item.totalPrice).reduce((acc, current) => acc + current, 0).toFixed(2) + taxaEntrega).toFixed(2, 0).replace('.', ',')}*/}
+
             {/* Resumo do Pedido */}
             <div className="space-y-4">
               <h3 className="text-lg font-semibold text-gray-900 border-b border-gray-200 pb-2">
@@ -363,16 +359,16 @@ function ConcluirPedidoModal ({ carrinho, setConcluirPedidoModal, taxaEntrega })
                 {entrega === 'delivery' ? (
                   <div className="text-right">
                     <div className="text-base text-gray-700">Total dos itens:</div>
-                    <div className="text-lg font-bold text-gray-900">R$ {carrinho.map(item => item.totalPrice).reduce((acc, current) => acc + current, 0).toFixed(2).replace('.', ',')}</div>
+                    <div className="text-lg font-bold text-gray-900">R$ {totalItens.toFixed(2).replace('.', ',')}</div>
                     <div className="text-base text-gray-700 mt-1">Taxa de entrega:</div>
                     <div className="text-lg font-bold text-gray-900">R$ {taxaEntrega.toFixed(2).replace('.', ',')}</div>
                     <div className="text-base text-gray-700 mt-2">Total do pedido:</div>
-                    <div className="text-xl font-extrabold text-red-700">R$ {recalculatedTotalDelivery}</div>
+                    <div className="text-xl font-extrabold text-red-700">R$ {totalComEntrega.toFixed(2).replace('.', ',')}</div>
                   </div>
                 ) : (
                   <div className="text-right">
                     <div className="text-base text-gray-700">Total do pedido:</div>
-                    <div className="text-xl font-extrabold text-red-700">R$ {recalculatedTotal}</div>
+                    <div className="text-xl font-extrabold text-red-700">R$ {totalItens.toFixed(2).replace('.', ',')}</div>
                   </div>
                 )}
               </div>
