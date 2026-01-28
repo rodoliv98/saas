@@ -1,11 +1,11 @@
 import { CustomError } from "../../middlewares/errorHandler";
 import { ITelegramRepo } from "./telegram-repo";
 import { ErrorCode } from "../../types/constants/error-codes-constants";
-import { DeliveryManDTO } from "../../types/dtos/delivery-register-dto";
-import { UpdateDeliveryDTO } from "../../types/dtos/delivery-update-dto";
-import { OrdersDelivery } from "../../types/entities/orders-data";
-import { UpdatedDelivery } from "../../types/entities/updated-delivery";
+import { DeliveryManDTO } from "./dto/delivery-dtos";
+import { UpdateDeliveryDTO } from "./dto/delivery-dtos";
+import { OrdersDelivery } from "./intities/order-entities";
 import { botAnswer } from "../../utils/bot-answer";
+import { DeliveryUpdate } from "./intities/delivery-entities";
 
 export interface ITelegramService {
   getOrders(pin: string, chat_id: bigint): Promise<string>;
@@ -115,7 +115,7 @@ export class TelegramService implements ITelegramService {
     return header + orders + footer;
   }
 
-  private formatUpdateDelivery (update: UpdatedDelivery) {
+  private formatUpdateDelivery (update: DeliveryUpdate) {
     let msg = `Você atualizou o pedido de: *${update.nomeCompleto}*\n`;
     msg += `endereço: *${update.endereco}*\n`;
     msg += `bairro: *${update.bairro}*\n`;

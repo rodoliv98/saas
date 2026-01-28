@@ -5,7 +5,7 @@ import { ITelegramService } from "./telegram-service";
 // de forma apropriada nos setImmediate
 export class TelegramController {
   constructor (private service: ITelegramService) {}
-  
+  // não coloquei os types que são usados apenas aqui numa nova pasta types
   async getOrders (req: Request, res: Response, next: NextFunction) {
     try {
       const secret = req.headers['x-telegram-bot-api-secret-token'];      // A checagem de tokens é necessária porque o endpoint pode

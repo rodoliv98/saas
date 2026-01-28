@@ -1,19 +1,19 @@
 import { PrismaClient } from "../../generated/prisma/client";
 import { CustomError } from "../../middlewares/errorHandler";
 import { ErrorCode } from "../../types/constants/error-codes-constants";
-import { RegisterDeliveryManDTO } from "../../types/dtos/delivery-register-dto";
-import { UpdateDeliveryDTO } from "../../types/dtos/delivery-update-dto";
-import { OrdersDelivery } from "../../types/entities/orders-data";
+import { RegisterDeliveryManDTO } from "./dto/delivery-dtos";
+import { UpdateDeliveryDTO } from "./dto/delivery-dtos";
+import { OrdersDelivery } from "./intities/order-entities"
 import { ActivationCode } from "./intities/code-entities";
 import { DeliveryMan, DeliveryUpdate } from "./intities/delivery-entities";
 
 const prisma = new PrismaClient();
 
 export interface ITelegramRepo {
-  getOrders(pin: string): Promise<OrdersDelivery[] | [] | null>; // feito
-  updateDeliveryOrder(updateObj: UpdateDeliveryDTO): Promise<DeliveryUpdate>; // feito
-  findDeliveryMan(pin: string, chat_id: bigint): Promise<DeliveryMan | null>; // feito
-  findActivationCode(activationCode: string): Promise<ActivationCode | null>; // feito
+  getOrders(pin: string): Promise<OrdersDelivery[] | [] | null>;
+  updateDeliveryOrder(updateObj: UpdateDeliveryDTO): Promise<DeliveryUpdate>;
+  findDeliveryMan(pin: string, chat_id: bigint): Promise<DeliveryMan | null>;
+  findActivationCode(activationCode: string): Promise<ActivationCode | null>; 
   registerDeliveryMan(data: RegisterDeliveryManDTO): Promise<void>;
 }
 

@@ -1,3 +1,8 @@
+export interface UpdateDeliveryDTO {
+  code: string;
+  status: 'concluido' | 'cancelado'
+};
+
 export interface RegisterDeliveryManDTO {
   nome_telegram: string;
   tenant_id: string;
