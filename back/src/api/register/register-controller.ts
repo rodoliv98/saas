@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
-import { IRegisterService } from "../services/registerService";
-import { registerSchema } from "../schemas/users/user-schemas";
+import { IRegisterService } from "./register-service";
+import { registerSchema } from "../../schemas/users/user-schemas";
 
 export class RegisterController {
 	constructor(private service: IRegisterService) {}

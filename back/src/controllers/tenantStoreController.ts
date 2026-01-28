@@ -34,7 +34,6 @@ export interface ITenantData {
   taxaEntrega: Decimal;
 
   // Informações adicionais
-  admin: boolean;
   isOpen: boolean;
   pin: string | null;
   produtos?: IProdutos[]

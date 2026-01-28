@@ -1,7 +1,7 @@
-import { RegisterController } from "../controllers/registerController";
-import { RegisterService } from "../services/registerService";
-import { RegisterRepository } from "../repository/registerRepository";
-import { dataValidator } from "../middlewares/dataValidator";
+import { RegisterController } from "./register-controller";
+import { RegisterService } from "./register-service";
+import { RegisterRepository } from "./register-repo";
+import { dataValidator } from "../../middlewares/dataValidator";
 import { Router } from "express";
 
 const router = Router();

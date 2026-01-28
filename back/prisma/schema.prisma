@@ -42,7 +42,6 @@ model Tenant {
   horarioFuncionamento String
   tempoPreparo         String
   taxaEntrega          Decimal            @db.Decimal(10, 2)
-  admin                Boolean            @default(false)
   isOpen               Boolean            @default(false)
   pin                  String?            @unique @db.VarChar(6)
   trial                DateTime          @db.Timestamp(6)

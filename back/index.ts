@@ -3,7 +3,7 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import tenantProducts from './src/routes/tenantProductsRoutes';
 import loginRoutes from './src/api/login/loginRoutes';
-import registerRoutes from './src/routes/registerRoutes';
+import registerRoutes from './src/api/register/register-routes';
 import tenantData from './src/routes/tenantData';
 import tenantHome from './src/api/tenant-home/tenant-home-routes'
 import tenantStore from './src/routes/tenantStoreRoute';
@@ -34,6 +34,8 @@ app.use(cors(corsOptions));
 app.use(cookieParser());
 
 export const io = new Server(server, {
+  pingTimeout: 60000,
+  pingInterval: 25000,
   cors: {
     origin: process.env.NODE_ENV === 'production'
     ? 'still have to get a domain'
