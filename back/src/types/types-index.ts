@@ -1,4 +1,4 @@
-import { registerSchema, patchTenantDataSchema, slugSchema, userRegisterSchema } from "../schemas/users/user-schemas";
+import { registerSchema, slugSchema, userRegisterSchema } from "../schemas/users/user-schemas";
 import { orderSchema } from "../schemas/orders/order-schemas";
 import { orderStatusSchema } from "../api/orders/schemas/order-schema";
 import { cuidSchema } from "../schemas/products/products-schemas";
@@ -19,7 +19,6 @@ export type OrderSchema = z.infer<typeof orderSchema>;
 export type PedidoStatus = z.infer<typeof orderStatusSchema>;
 
 // tenant and other types
-export type PatchTenantType = z.infer<typeof patchTenantDataSchema>;
 export type Cuid = z.infer<typeof cuidSchema>;
 export type SlugType = z.infer<typeof slugSchema>;
 export type ActivationCodeDTO = {

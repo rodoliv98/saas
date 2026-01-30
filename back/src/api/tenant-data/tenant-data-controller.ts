@@ -1,7 +1,7 @@
-import { Request, Response, NextFunction } from "express"
-import { ITenantDataService } from "../services/tenantDataService";
-import { patchTenantDataSchema } from "../schemas/users/user-schemas";
-import { orderReportSchema } from "../schemas/orders/order-reports";
+import { Request, Response, NextFunction } from "express";
+import { ITenantDataService } from "./tenant-data-service";
+import { patchTenantDataSchema } from "./schemas/tenant-data-schema";
+import { tenantReportSchema } from "./schemas/tenant-reports-schema";
 
 export class TenantDataController {
   constructor (private service: ITenantDataService) {}
@@ -36,7 +36,7 @@ export class TenantDataController {
         status: req.query.status
       }
 
-      const body = orderReportSchema.parse(obj);
+      const body = tenantReportSchema.parse(obj);
       const orders = await this.service.getOrders(tenantSlug, body);
 
       res.status(200).json({ orders: orders });
@@ -55,7 +55,6 @@ export class TenantDataController {
     
     try {
       const parsedData = patchTenantDataSchema.parse(req.body);
-      console.log(parsedData);
       const updatedData = await this.service.patchData(tenantId, parsedData);
 
       return res.status(200).json(updatedData);

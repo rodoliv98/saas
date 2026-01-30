@@ -1,28 +1,15 @@
-import { PrismaClient } from "../generated/prisma/client"
-import { ITenantData } from "../controllers/tenantStoreController";
-import { CustomError } from "../middlewares/errorHandler";
-import { ErrorCode } from "../types/constants/error-codes-constants";
-import { OrderReportDTO } from "../types/dtos/order-reports-dto";
-import { OrdersData } from "../types/entities/orders-data";
-
-interface PatchTenantFromService {
-  diasFuncionamento: string; // <- service faz stringfy nisso aqui
-  endereco: string;
-  numero: string;
-  complemento: string | null;
-  bairro: string;
-  municipio: string;
-  estado: string;
-  whatsapp: string;
-  horarioFuncionamento: string;
-  tempoPreparo: string;
-  pin: string;
-}
+import { PrismaClient } from "../../generated/prisma/client";
+import { CustomError } from "../../middlewares/errorHandler";
+import { ErrorCode } from "../../types/constants/error-codes-constants";
+import { TenantReportDTO } from "./dto/tenant-reports-dto";
+import { OrdersData } from "./entities/orders-data";
+import { TenantData } from "./entities/tenant-data-entitie";
+import { TenantDataStrDTO } from "./dto/tenant-data-dto";
 
 export interface ITenantDataRepository {
-  getData (tenantId: string): Promise<ITenantData | null>
-  getOrdersData (tenantId: string, dates: OrderReportDTO): Promise<OrdersData[] | []>;
-  patchData (tenantId: string, data: PatchTenantFromService): Promise<ITenantData | null>
+  getData (tenantId: string): Promise<TenantData | null>
+  getOrdersData (tenantId: string, dates: TenantReportDTO): Promise<OrdersData[] | []>;
+  patchData (tenantId: string, data: TenantDataStrDTO): Promise<TenantData | null>
 }
 
 const prisma = new PrismaClient();
@@ -32,12 +19,25 @@ export class TenantDataRepository implements ITenantDataRepository {
     return prisma.tenant.findUnique({
       where: {
         id: tenantId
+      },
+      select: {
+        endereco: true,
+        numero: true,
+        complemento: true,
+        bairro: true,
+        municipio: true,
+        estado: true,
+        whatsapp: true,
+        diasFuncionamento: true,
+        horarioFuncionamento: true,
+        tempoPreparo: true,
+        pin: true
       }
     });
   }
   // por agora não é um problema mas otimizar isso no futuro
   // porque um tenant pode ter 10 mil pedidos e isso vai gargalar
-  async getOrdersData (tenantSlug: string, dates: OrderReportDTO) {
+  async getOrdersData (tenantSlug: string, dates: TenantReportDTO) {
     // o - 1 é porque o mês é 0 indexed
     const startOfMonth = new Date(dates.year, dates.month - 1, 1);
     const endOfMonth = new Date(dates.year, dates.month, 1);
@@ -77,7 +77,7 @@ export class TenantDataRepository implements ITenantDataRepository {
     });
   }
 
-  async patchData (tenantId: string, data: PatchTenantFromService) {
+  async patchData (tenantId: string, data: TenantDataStrDTO) {
     const tenant = await prisma.tenant.findUnique({
       where: {
         id: tenantId
@@ -96,7 +96,20 @@ export class TenantDataRepository implements ITenantDataRepository {
       where: {
         id: tenantId
       },
-      data: data
+      data: data,
+      select: {
+        endereco: true,
+        numero: true,
+        complemento: true,
+        bairro: true,
+        municipio: true,
+        estado: true,
+        whatsapp: true,
+        diasFuncionamento: true,
+        horarioFuncionamento: true,
+        tempoPreparo: true,
+        pin: true
+      }
     });
   }
 }

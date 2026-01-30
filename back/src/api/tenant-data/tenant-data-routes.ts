@@ -1,7 +1,7 @@
-import { TenantDataController } from "../controllers/tenantDataController"
-import { TenantDataService } from "../services/tenantDataService";
-import { TenantDataRepository } from "../repository/tenantDataRepository";
-import { checkLogin } from "../middlewares/checkLogin"
+import { TenantDataController } from "./tenant-data-controller";
+import { TenantDataService } from "./tenant-data-service";
+import { TenantDataRepository } from "./tenant-data-repo";
+import { checkLogin } from "../../middlewares/checkLogin"
 import { Router } from "express"
 
 const router = Router();
