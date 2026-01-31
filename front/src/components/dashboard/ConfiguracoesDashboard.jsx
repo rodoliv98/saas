@@ -12,7 +12,6 @@ function ConfiguracoesDashboard () {
     async function fetchTenantData() {
       try {
         const res = await refreshHook('get', '/tenant-data');
-        console.log(res);
         const diasFunc = JSON.parse(res.data.diasFuncionamento);
         const newRes = { ...res.data, diasFuncionamento: diasFunc };
         setForm(newRes);

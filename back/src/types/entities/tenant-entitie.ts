@@ -1,4 +1,4 @@
-import { Decimal } from "../../generated/prisma/internal/prismaNamespace";
+import { Decimal } from "@prisma/client/runtime/library";
 
 export interface Tenant {
   id: string;
