@@ -16,7 +16,6 @@ function MostrarSabores ({ productId, setOpenMostrarSabores }) {
         setFlavors(res.data);
         
       } catch (err) {
-        console.log(err);
         setError('Ocorreu um erro, reinicie a página ou tente mais tarde.');
       }
     } 

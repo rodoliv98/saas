@@ -38,7 +38,6 @@ function PatchModal ({ modalOpen, setModalOpen, productId, childReloadPage }) {
           setForm(res.data);
 
         } catch (err) {
-          console.log(err);
           setError('Ocorreu um erro, reinicie a página ou tente mais tarde.');
         }
       }
@@ -77,8 +76,7 @@ function PatchModal ({ modalOpen, setModalOpen, productId, childReloadPage }) {
     }
 
     try {
-      const res = await refreshHook('patch', `/products/${productId}`, formData);
-      console.log(res)
+      await refreshHook('patch', `/products/${productId}`, formData);
       setForm({
         nomeProduto: '',
         descProduto: '',
@@ -88,8 +86,6 @@ function PatchModal ({ modalOpen, setModalOpen, productId, childReloadPage }) {
       setImage(null);
       setModalOpen(false);
     } catch (err) {
-      console.log(err);
-
       if (err.response.data.code === "VALIDATION_ERROR") {
         return setError(err.response.data.error.map(err => err.message).join(', '));
       }

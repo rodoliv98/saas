@@ -20,7 +20,6 @@ function PatchSaboresModal({ flavorId, setModalOpen }) {
           setForm(res.data);
   
         } catch (err) {
-          console.log(err);
           setError('Ocorreu um erro, reinicie a página ou tente novamente mais tarde.');
         }
       }
@@ -56,8 +55,6 @@ function PatchSaboresModal({ flavorId, setModalOpen }) {
       await refreshHook('patch', `/flavors/${flavorId}`, form);
       setModalOpen(false);
     } catch (err) {
-      console.log(err);
-
       if (err.response.data.code === "VALIDATION_ERROR") {
         return setError(err.response.data.error.map(err => err.message).join(', '));
       }

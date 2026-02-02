@@ -28,8 +28,6 @@ function UserRegister() {
       login(res.data.token);
       navigate(redirectUrl);
     } catch (err) {
-      console.log(err);
-      
       if (err.response.data.code === "VALIDATION_ERROR") {
         return setError(err.response.data.error.map(e => e.message).join(', \n'));
       }

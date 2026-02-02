@@ -44,12 +44,10 @@ function PedidosDashboard() {
     const fetchOrders = async () => {
       try {
         const res = await refreshHook('get', `/orders`);
-        console.log(res)
         setPedidos(res.data.orders);
         setTenant(res.data.tenant);
         previousOrderCount.current = res.data.orders.length;
       } catch (err) {
-        console.log(err);
         setError('Ocorreu um erro ao carregar os pedidos');
       }
     }
@@ -110,7 +108,6 @@ function PedidosDashboard() {
         pedido.id === orderId ? { ...pedido, status: newStatus } : pedido
       ));
     } catch (err) {
-      console.log(err);
       setError('Erro ao atualizar pedido');
     }
   }

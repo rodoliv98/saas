@@ -17,7 +17,6 @@ function ConfiguracoesDashboard () {
         setForm(newRes);
 
       } catch (err) {
-        console.log(err);
         setError('Ocorreu um erro, reinicie a página ou tente novamente mais tarde.');
       }
     }
@@ -75,7 +74,6 @@ function ConfiguracoesDashboard () {
       }
 
       setError('Ocorreu um erro, reinicie a página ou tente mais tarde.');
-      console.log(err);
     }
   }
   

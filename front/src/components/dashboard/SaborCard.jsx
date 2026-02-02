@@ -9,11 +9,9 @@ function SaborCard ({ flavor, formatPrice, setOpenMostrarSabores }) {
 
   const handleDeleteFlavor = async (flavorId) => {
     try {
-      const res = await refreshHook('delete', `/flavors/${flavorId}`);
+      await refreshHook('delete', `/flavors/${flavorId}`);
       setOpenMostrarSabores(false);
-      console.log(res);
     } catch (err) {
-      console.log(err);
     }
   }
   

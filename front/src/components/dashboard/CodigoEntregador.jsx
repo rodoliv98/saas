@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useRefreshHook } from "../utils/refresh-hook";
-import { useAuth } from "../auth/AuthProvider";
 
 function CodigoEntregador() {
   const [code, setCode] = useState();
@@ -10,8 +9,6 @@ function CodigoEntregador() {
   const [copied, setCopied] = useState(false);
   const { refreshHook } = useRefreshHook();
 
-  const { token } = useAuth();
-
   const handleSubmit = async () => {
     setIsLoading(true);
     setError(null);
@@ -19,10 +16,8 @@ function CodigoEntregador() {
     try {
       const res = await refreshHook('post', '/tenant-delivery-code', {});
       setCode(res.data.code);
-      console.log(res);
       
     } catch (err) {
-      console.log(err);
       setError('Ocorreu um erro, tente novamente.');
     } finally {
       setIsLoading(false);

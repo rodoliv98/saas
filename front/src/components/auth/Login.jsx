@@ -1,4 +1,3 @@
-import api from '../../../intercepter/intercepter'
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, Mail, Store } from 'lucide-react';
@@ -65,7 +64,6 @@ export function Login () {
       redirect('/dashboard');
       
     } catch (error) {
-      console.error('Erro no login:', error);
       setErrors({ general: 'Email ou senha inválidos' });
     } finally {
       setIsLoading(false);

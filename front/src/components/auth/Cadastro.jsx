@@ -185,7 +185,6 @@ function Cadastro () {
             const res = await api.post('/register', form);
             setApiMessage(res.data?.msg || "Cadastro realizado com sucesso!");
         } catch (err) {
-            console.log(err);
             const fieldError = err.response?.data?.error;
 
             if (err.response.data.code === "VALIDATION_ERROR") {

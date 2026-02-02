@@ -35,7 +35,6 @@ function Sidebar({ selectedSection, onSectionChange }) {
         await refreshHook('patch', '/tenant-is-open', { isStoreOpen: newValue });
 				
 			} catch (err) {
-				console.log(err);
 			}
 		}
 
@@ -45,7 +44,6 @@ function Sidebar({ selectedSection, onSectionChange }) {
 				redirect('/');
 
 			} catch (err) {
-				console.log(err);
 			}
 		}
 

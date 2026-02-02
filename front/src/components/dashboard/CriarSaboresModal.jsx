@@ -48,8 +48,7 @@ function CriarSaboresModal({ setSaborModalOpen, productId }) {
     }
 
     try {
-      const res = await refreshHook('post', `/flavors/${productId}`, formData);
-      console.log(res);
+      await refreshHook('post', `/flavors/${productId}`, formData);
       setSaborModalOpen(false);
     
     } catch (err) {

@@ -49,7 +49,7 @@ export class LoginController {
     }
     
   }
-  // still have to finish this
+
   logout (req: Request, res: Response, next: NextFunction) {
     res
     .clearCookie('refreshToken', {

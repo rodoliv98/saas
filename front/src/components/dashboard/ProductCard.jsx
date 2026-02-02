@@ -1,4 +1,4 @@
-import { Edit, Trash2, Ruler, Clock, Plus, Hamburger } from "lucide-react";
+import { Edit, Trash2, Plus, Hamburger } from "lucide-react";
 import PatchModal from "./PatchModal";
 import { useState } from "react";
 import CriarSaboresModal from "./CriarSaboresModal";
@@ -56,10 +56,8 @@ const ProductCard = ({ product, reloadPage }) => {
   
   const handleDelete = async (productId) => {
     try {
-      const res = await refreshHook('delete', `/products/${productId}`);
-      //console.log(res);
+      await refreshHook('delete', `/products/${productId}`);
     } catch (err) {
-      console.log(err);
       setError('Ocorreu um erro, reinicie a página ou tente novamente mais tarde.');
     }
   }

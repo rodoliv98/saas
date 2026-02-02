@@ -52,7 +52,6 @@ function RelatoriosComponent () {
       const url = `/tenant/orders?${params.toString()}`;
 
       const res = await refreshHook('get', url);
-      console.log(res);
       setOrders(res.data.orders);
 
       // Calcular totais para relatório básico

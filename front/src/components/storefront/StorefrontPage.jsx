@@ -48,8 +48,7 @@ const TenantStore = () => {
         setProducts(res.data.products || []);
         
       } catch (err) {
-        console.log(err)
-        setError(err.message);
+        setError('Ocorreu um erro ao carregar a loja. Verifique o link ou tente novamente mais tarde.');
       } finally {
         setLoading(false);
       }
