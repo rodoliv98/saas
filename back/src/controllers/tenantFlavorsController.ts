@@ -2,6 +2,7 @@ import { ITenantFlavorsService } from "../services/tenantFlavorsService";
 import { Request, Response, NextFunction } from "express";
 import { Decimal } from "@prisma/client/runtime/library";
 import { createProductSchema, cuidSchema } from "../schemas/products/products-schemas";
+import { PatchFlavorDTO } from "../api/tenant-flavor/dto/tenant-flavor-dto";
 
 export interface IFlavor {
   id: string;
@@ -18,14 +19,6 @@ export interface FlavorDTO {
   precoProduto: number;
   categoria: string;
   imageUrl: string;
-}
-
-export interface PatchFlavorDTO {
-  nomeProduto?: string;
-  descProduto?: string;
-  precoProduto?: number;
-  categoria?: string;
-  imageUrl?: string;
 }
 
 export interface FlavorHasImage {
@@ -85,6 +78,25 @@ export class TenantFlavorsController {
 
     } catch (err) {
       console.log('Erro no controlador tenant-flavors-controller create method:\n', err);
+      next(err);
+    }
+  }
+
+  async patch (req: Request, res: Response, next: NextFunction) {
+    try {
+      const tenantId = req.tenant;
+      if (!tenantId) {
+        return res.status(401).json({ error: 'Não autorizado' });
+      }
+
+      const flavorId = cuidSchema.parse(req.params.id);
+      const data = createProductSchema.partial().parse(req.body);
+      await this.service.patch({ flavorId, data, tenantId });
+
+      res.status(200).json({ msg: 'Sabor atualizado' });
+
+    } catch (err) {
+      console.log('Erro no controlador tenant-flavors-controller patch method:\n', err);
       next(err);
     }
   }

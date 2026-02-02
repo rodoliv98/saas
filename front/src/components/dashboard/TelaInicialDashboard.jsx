@@ -1,23 +1,14 @@
 import { useEffect, useState } from 'react'
 import { useRefreshHook } from '../utils/refresh-hook'
-
-// Simulando o hook - remova isso e use seu hook real
-/* const useRefreshHook = () => ({
-  refreshHook: async (method, url) => {
-    return {
-      tenant: "Pizzaria Bella Vista",
-      planType: "Básico",
-      ordersQuantity: 28,
-      timeRemaining: new Date(Date.now() + 23 * 24 * 60 * 60 * 1000),
-      totalValue: 1245.50
-    };
-  }
-}); */
-
+// ajustar tamanho do div de assinatura
 function TelaInicialDashboard() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [copied, setCopied] = useState(false);
   const { refreshHook } = useRefreshHook();
+
+  // Link hardcoded por enquanto - você pode substituir depois
+  const storeLink = "https://minhaloja.com.br/loja-exemplo";
 
   useEffect(() => {
     const fetchData = async () => {
@@ -39,6 +30,16 @@ function TelaInicialDashboard() {
     const end = new Date(date);
     const diff = end - now;
     return Math.ceil(diff / (1000 * 60 * 60 * 24));
+  };
+
+  const handleCopyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(storeLink);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error('Erro ao copiar:', err);
+    }
   };
 
   if (loading) {
@@ -76,14 +77,36 @@ function TelaInicialDashboard() {
           </div>
         </div>
 
-        <div className="bg-white p-8 rounded-xl shadow-sm">
-          <h3 className="text-xl font-bold text-gray-900 mb-4">Status da Assinatura</h3>
-          <div className="flex items-center justify-between">
-            <p className="text-gray-600">Seu plano termina em:</p>
-            <div className="text-right">
-              <p className="text-3xl font-bold text-red-700">{daysRemaining} dias</p>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          
+          {/* Card do Status da Assinatura */}
+          <div className="bg-white p-8 rounded-xl shadow-sm">
+            <h3 className="text-xl font-bold text-gray-900 mb-4">Status da Assinatura</h3>
+            <div className="flex items-center justify-between">
+              <p className="text-gray-600">Seu plano termina em:</p>
+              <div className="text-right">
+                <p className="text-3xl font-bold text-red-700">{daysRemaining} dias</p>
+              </div>
             </div>
           </div>
+
+          {/* Card do Link da Loja */}
+          <div className="bg-white p-8 rounded-xl shadow-sm">
+            <h3 className="text-xl font-bold text-gray-900 mb-4">Link da Sua Loja</h3>
+            <p className="text-gray-600 mb-4">
+              Esse é o link da sua loja. Copie ele e use na sua mensagem automática do seu WhatsApp Business.
+            </p>
+            <div className="bg-gray-50 p-4 rounded-lg mb-4 break-all">
+              <p className="text-gray-700 text-sm">{storeLink}</p>
+            </div>
+            <button
+              onClick={handleCopyLink}
+              className="w-full bg-red-700 hover:bg-red-800 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200"
+            >
+              {copied ? '✓ Link Copiado!' : 'Copiar Link'}l
+            </button>
+          </div>
+
         </div>
 
       </div>

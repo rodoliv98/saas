@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express"
 import { ZodError } from "zod"
+import { ErrorCode } from "../types/constants/error-codes-constants";
 
 export class CustomError extends Error {
   public status: number;
@@ -24,7 +25,7 @@ function parseZodError(err: any) {
 export function errorHandler (err: any, _req: Request, res: Response, _next: NextFunction) {
   if (err instanceof ZodError) {
     const simplified = parseZodError(err);
-    return res.status(400).json({ validationError: true, error: simplified });
+    return res.status(400).json({ error: simplified, code: ErrorCode.VALIDATION_ERROR });
   }
 
   if (err.code === 'P2025') {
@@ -42,5 +43,5 @@ export function errorHandler (err: any, _req: Request, res: Response, _next: Nex
     return res.status(500).json({ error: 'Internal Server Error' });
   }
   
-  res.status(err.status).json({ error: err.message });
+  res.status(err.status).json({ error: err.message, code: err.code });
 }

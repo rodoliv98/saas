@@ -62,6 +62,7 @@ function ConfiguracoesDashboard () {
     e.preventDefault();
 
     setError('');
+    setMessage('');
 
     if (form.complemento == '') form.complemento = null;
     
@@ -69,8 +70,7 @@ function ConfiguracoesDashboard () {
       await refreshHook('patch', '/tenant-data', form); 
       setMessage('Dados atualizados');
     } catch (err) {
-      const error = err.response?.data?.validationError ?? false;
-      if (error === true) {
+      if (err.response.data.code === "VALIDATION_ERROR") {
         return setError(err.response.data.error.map(err => err.message).join(', '));
       }
 

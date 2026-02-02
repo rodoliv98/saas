@@ -53,9 +53,7 @@ function CriarSaboresModal({ setSaborModalOpen, productId }) {
       setSaborModalOpen(false);
     
     } catch (err) {
-      console.log('erro que caiu no componente', err);
-      const error = err.response?.data?.validationError ?? false;
-      if (error === true) {
+      if (err.response.data.code === "VALIDATION_ERROR") {
         return setError(err.response.data.error.map(err => err.message).join(', '));
       }
 

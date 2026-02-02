@@ -3,11 +3,15 @@ import { PrismaClient } from "../generated/prisma/client";
 import { FlavorDTO, IFlavor } from "../controllers/tenantFlavorsController";
 import { Cuid } from "../types/types-index";
 import { CustomError } from "../middlewares/errorHandler";
+import { PatchFlavorDTO } from "../api/tenant-flavor/dto/tenant-flavor-dto";
+import { Flavor } from "../api/tenant-flavor/entitie/flavor-entitie";
 
 export interface ITenantFlavorsRepository {
   getFlavors (productId: string): Promise<IFlavor[] | []>;
   getFlavorById (flavorId: string, tenantId: string): Promise<IFlavor | null>;
+  findFlavor (data: Partial<PatchFlavorDTO>): Promise<Flavor | null>;
   create (data: FlavorDTO, productId: Cuid, tenantId: string): Promise<IFlavor>;
+  patch (data: PatchFlavorDTO): Promise<Flavor>;
   delete (productId: Cuid, tenantId: string): Promise<DeletedFlavor>;
 }
 
@@ -41,6 +45,15 @@ export class TenantFlavorsRepository implements ITenantFlavorsRepository {
     });
   }
 
+  async findFlavor (data: Partial<PatchFlavorDTO>) {
+    return prisma.sabores.findFirst({
+      where: {
+        id: data.flavorId,
+        tenantId: data.tenantId
+      }
+    });    
+  }
+
   async create (data: FlavorDTO, productId: Cuid, tenantId: string) {
     return prisma.sabores.create({
       data: {
@@ -53,6 +66,17 @@ export class TenantFlavorsRepository implements ITenantFlavorsRepository {
         tenantId: tenantId
       }
     })
+  }
+
+  async patch (data: PatchFlavorDTO) {
+    return prisma.sabores.update({
+      where: {
+        id: data.flavorId
+      },
+      data: {
+        ...data.data
+      }
+    });
   }
   
   async delete (productId: Cuid, tenantId: string) {

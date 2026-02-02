@@ -53,25 +53,20 @@ function PatchSaboresModal({ flavorId, setModalOpen }) {
   
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     setError('');
 
-    const formData = new FormData();
-    Object.entries(form).forEach(([key, value]) => {
-      formData.append(key, value)
-    });
-
-    if (image !== null) {
-      formData.append('image', image);
-    }
+    form.precoProduto = Number(form.precoProduto);
 
     try {
-      //console.log('form é', form);
-      const res = await refreshHook('post', `/flavors/${productId}`, formData);
-      //console.log(res);
-      setModalOpen(false); // Fechar modal após sucesso
+      await refreshHook('patch', `/flavors/${flavorId}`, form);
+      setModalOpen(false);
     } catch (err) {
       console.log(err);
+
+      if (err.response.data.code === "VALIDATION_ERROR") {
+        return setError(err.response.data.error.map(err => err.message).join(', '));
+      }
+
       setError('Ocorreu um erro, reinicie a página ou tente novamente mais tarde.');
     }
 
@@ -173,7 +168,7 @@ function PatchSaboresModal({ flavorId, setModalOpen }) {
               </div>
             </div>
 
-            <div>
+            {/* <div>
               <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="image">
                 Imagem do sabor (opcional)
               </label>
@@ -195,7 +190,7 @@ function PatchSaboresModal({ flavorId, setModalOpen }) {
                   <span className="text-sm text-gray-600">Arquivo selecionado: {image.name}</span>
                 </div>
               )}
-            </div>
+            </div> */}
 
             <div className="pt-4 border-t">
               <div className="flex justify-between">
