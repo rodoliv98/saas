@@ -186,10 +186,9 @@ function Cadastro () {
             setApiMessage(res.data?.msg || "Cadastro realizado com sucesso!");
         } catch (err) {
             console.log(err);
-            const error = err.response?.data?.validationError;
             const fieldError = err.response?.data?.error;
 
-            if (error === true) {
+            if (err.response.data.code === "VALIDATION_ERROR") {
                 const message = err.response.data.error.map(err => err.message).join(', ');
                 setErrors({ general: message });
                 setApiMessage(message);

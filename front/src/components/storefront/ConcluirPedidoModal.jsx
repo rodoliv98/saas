@@ -122,8 +122,7 @@ function ConcluirPedidoModal ({ carrinho, setConcluirPedidoModal, taxaEntrega })
 
     } catch (err) {
       console.log(err);
-      const error = err.response?.data?.validationError ?? false;
-      if (error === true) {
+      if (err.response.data.code === "VALIDATION_ERROR") {
         return setError(err.response.data.error.map(e => e.message).join(', '));
       }
       setError(err.response.data.error);

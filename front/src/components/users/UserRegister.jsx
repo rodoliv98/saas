@@ -29,7 +29,13 @@ function UserRegister() {
       navigate(redirectUrl);
     } catch (err) {
       console.log(err);
-      setError(err.response.data.error.map(e => e.message).join(', \n'));
+      
+      if (err.response.data.code === "VALIDATION_ERROR") {
+        return setError(err.response.data.error.map(e => e.message).join(', \n'));
+      }
+
+      setError('Erro ao cadastrar. Tente novamente.');
+      
     } finally {
       setLoading(false);
     }

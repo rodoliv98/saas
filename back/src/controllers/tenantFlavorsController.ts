@@ -2,7 +2,6 @@ import { ITenantFlavorsService } from "../services/tenantFlavorsService";
 import { Request, Response, NextFunction } from "express";
 import { Decimal } from "@prisma/client/runtime/library";
 import { createProductSchema, cuidSchema } from "../schemas/products/products-schemas";
-import { PatchFlavorDTO } from "../api/tenant-flavor/dto/tenant-flavor-dto";
 
 export interface IFlavor {
   id: string;
@@ -11,7 +10,7 @@ export interface IFlavor {
   precoProduto: Decimal;
   categoria: string;
   imageUrl: string;
-} 
+}
 
 export interface FlavorDTO {
   nomeProduto: string;

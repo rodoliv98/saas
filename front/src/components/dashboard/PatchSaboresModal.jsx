@@ -5,6 +5,12 @@ import { useRefreshHook } from "../utils/refresh-hook";
 function PatchSaboresModal({ flavorId, setModalOpen }) {
   const { refreshHook } = useRefreshHook();
   const [error, setError] = useState('');
+  const [form, setForm] = useState({
+    nomeProduto: '',
+    descProduto: '',
+    precoProduto: 0,
+    categoria: '',
+  });
 
   useEffect(() => {
     if (flavorId) {
@@ -23,13 +29,6 @@ function PatchSaboresModal({ flavorId, setModalOpen }) {
     }
   }, [])
   
-  const [form, setForm] = useState({
-    nomeProduto: '',
-    descProduto: '',
-    precoProduto: 0,
-    categoria: '',
-  });
-  const [image, setImage] = useState(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -46,10 +45,6 @@ function PatchSaboresModal({ flavorId, setModalOpen }) {
     { value: 'adicional', label: '🧂 Adicional' },
     { value: 'bebida', label: '🥤 Bebida' },
   ];
-
-  const handleImageChange = (e) => {
-    setImage(e.target.files[0]);
-  }
   
   const handleSubmit = async (e) => {
     e.preventDefault();
