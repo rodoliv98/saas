@@ -33,22 +33,22 @@ export const orderSchema = z.object({
     max: 'Número máximo de caracteres para o campo Bairro é 100',
     regex: 'Bairro deve conter apenas letras, espaços e acentos'
   }),
-  cep: z.string()
+  cep: z.string({ message: 'CEP deve ser uma string' })
         .min(10, 'CEP deve ter pelo menos 8 digitos')
         .max(10, 'CEP deve ter no máximo 8 digitos')
         .regex(/^\d{2}\.\d{3}-\d{3}$/, 'Formato do CEP deve ser XXXXX-XX')
         .trim(),
-  numero: z.string()
+  numero: z.string({ message: 'Número deve ser uma string' })
            .min(1, 'Número é obrigatório')
            .max(4, 'Número deve conter no máximo 4 caracteres')
            .regex(/^\d{1,4}$/, 'Número deve conter apenas números')
            .trim(),
-  complemento: z.string()
+  complemento: z.string({ message: 'Complemento deve ser uma string' })
                 .max(100, 'Número máximo de caracteres para o campo Complemento é 100')
                 .trim()
                 .regex(defaultRegex, 'Só são permitidos letras, números, vígulas e pontos no campo Complemento')
                 .optional(),
-  whatsapp: z.string()
+  whatsapp: z.string({ message: 'Número de telefone deve ser uma string' })
              .min(14, 'Número de telefone deve ter o formato (XX) XXXX-XXXX')
              .max(15, 'Número de telefone deve ter o formato (XX) XXXXX-XXXX')
              .regex(/^\(\d{2}\) \d{4,5}-\d{4}$/, 'Número de telefone no formato inválido')
@@ -79,11 +79,11 @@ export const orderSchema = z.object({
   }),
   formaPagamento: z.enum(['cartao', 'pix', 'dinheiro'], { message: 'Forma de pagamento inválida' }),
   tipoEntrega: z.enum(['delivery', 'retirada'], { message: 'Tipo de entrega inválida' }),
-  taxaEntrega: z.number()
+  taxaEntrega: z.number({ message: 'Taxa de entrega deve ser um número' })
                 .min(0, 'Taxa de entrega não pode ser negativa')
                 .max(999.99, 'Taxa de entrega muito alta')
                 .refine((val) => Number.isInteger(Math.round(val * 100)), 'Taxa de entrega deve ter no máximo duas casas decimais'),
-  observacao: z.string()
+  observacao: z.string({ message: 'Observação deve ser uma string' })
                .max(100, 'Número máximo de caracteres para o campo Observação é 100')
                .trim()
                .regex(defaultRegex, 'Só são permitidos letras, números, vígulas e pontos no campo observação')

@@ -14,7 +14,6 @@ function UserNav () {
         const res = await api.post('/refresh');
         login(res.data.token);
       } catch (err) {
-        console.log(err);
         if (!err.response.data.error === 'refreshToken não encontrado') {
           setError('Ocorreu um erro, reinicie a página ou tente mais tarde.');
         }

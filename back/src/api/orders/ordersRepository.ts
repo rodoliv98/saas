@@ -87,9 +87,10 @@ export interface IOrderRepository {
 } 
 
 export class OrderRepository implements IOrderRepository {
-  // tem que otimizar tbm
+  // modificado para totalOrderPrice ser number e não Decimal, para evitar problemas de serialização e facilitar o consumo no front-end. 
+  // O valor é convertido para number antes de retornar os dados.
   async getOrders (tenantSlug: string): Promise<Orders[] | []> {
-    return prisma.pedidos.findMany({
+    const orders = await prisma.pedidos.findMany({
       where: {
         tenantSlug: tenantSlug
       },
@@ -116,6 +117,25 @@ export class OrderRepository implements IOrderRepository {
         }
       }
     });
+
+    return orders.map(order => ({
+      id: order.id,
+      nomeCompleto: order.nomeCompleto,
+      tipoEntrega: order.tipoEntrega,
+      totalOrderPrice: Number(order.totalOrderPrice),
+      observacao: order.observacao,
+      createdAt: order.createdAt,
+      status: order.status,
+      pedidosItens: order.pedidosItens.map(item => ({
+        nomeProduto: item.nomeProduto,
+        descProduto: item.descProduto,
+        quantidade: item.quantidade,
+        itensAdicionais: item.itensAdicionais.map(ads => ({
+          nomeProduto: ads.nomeProduto,
+          descProduto: ads.descProduto
+        }))
+      }))
+    }));
   }
 
   async getTenantPin (tenantSlug: string) {
