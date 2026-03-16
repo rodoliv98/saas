@@ -1,3 +1,8 @@
+import { Link } from "react-router-dom";
+import atumImg from '../assets/atum.png';
+import calabresaImg from '../assets/calabresa.png';
+import pizzariaBellaVista from '../assets/pizzaria-bella-vista.png';
+
 function LandingPage () {
 
 	return (
@@ -14,12 +19,12 @@ function LandingPage () {
 													sem pagar comissões para apps de delivery.
 											</p>
 											<div className="flex flex-col sm:flex-row gap-4">
-													<button className="bg-white text-red-700 px-8 py-4 rounded-lg font-bold text-lg hover:bg-gray-100 transition-colors">
+													<Link to="/cadastro" className="bg-white text-red-700 px-8 py-4 rounded-lg font-bold text-lg hover:bg-gray-100 transition-colors">
 															Começar Teste Grátis
-													</button>
-													<button className="bg-white text-red-700 px-8 py-4 rounded-lg font-bold text-lg hover:bg-gray-100 transition-colors">
+													</Link>
+													<Link to="/loja-exemplo" className="bg-white text-red-700 px-8 py-4 rounded-lg font-bold text-lg hover:bg-gray-100 transition-colors">
 															Ver Demonstração
-													</button>
+													</Link>
 											</div>
 											<div className="mt-8 flex items-center gap-4 text-gray-600">
 													<div className="flex items-center gap-2">
@@ -46,8 +51,8 @@ function LandingPage () {
 											<div className="bg-white rounded-2xl shadow-2xl p-6 transform rotate-2 hover:rotate-0 transition-transform duration-300">
 													<div className="flex items-center justify-between mb-4">
 															<div className="flex items-center gap-3">
-																	<div className="w-12 h-12 bg-red-700 rounded-full flex items-center justify-center">
-																			<span className="text-white font-bold text-lg">P</span>
+																	<div className="w-12 h-12 rounded-full flex items-center justify-center">
+																			<img src={pizzariaBellaVista} alt="PizzariaBellaVista" className="w-12 h-13 rounded-lg" />
 																	</div>
 																	<div>
 																			<h3 className="font-bold text-gray-900">Pizzaria Bella Vista</h3>
@@ -62,10 +67,10 @@ function LandingPage () {
 													<div className="space-y-4">
 															<div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
 																	<div className="flex items-center gap-3">
-																			<img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'%3E%3Ccircle cx='24' cy='24' r='24' fill='%23FFA500'/%3E%3Cpath d='M12 24c0-6.627 5.373-12 12-12s12 5.373 12 12-5.373 12-12 12S12 30.627 12 24z' fill='%23FF6B00'/%3E%3C/svg%3E" alt="Pizza" className="w-12 h-12 rounded-lg" />
+																			<img src={atumImg} alt="Pizza" className="w-12 h-12 rounded-lg" />
 																			<div>
-																					<h4 className="font-semibold text-gray-900">Pizza Margherita</h4>
-																					<p className="text-gray-600 text-sm">Molho, mussarela, tomate, manjericão</p>
+																					<h4 className="font-semibold text-gray-900">Pizza de Atum</h4>
+																					<p className="text-gray-600 text-sm">Molho de tomate, atum e queijo muçarela.</p>
 																			</div>
 																	</div>
 																	<div className="text-right">
@@ -75,10 +80,9 @@ function LandingPage () {
 																			</button>
 																	</div>
 															</div>
-															
 															<div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
 																	<div className="flex items-center gap-3">
-																			<img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'%3E%3Ccircle cx='24' cy='24' r='24' fill='%23FF4500'/%3E%3Cpath d='M12 24c0-6.627 5.373-12 12-12s12 5.373 12 12-5.373 12-12 12S12 30.627 12 24z' fill='%23FF6B00'/%3E%3C/svg%3E" alt="Pizza" className="w-12 h-12 rounded-lg" />
+																			<img src={calabresaImg} alt="Pizza" className="w-12 h-12 rounded-lg" />
 																			<div>
 																					<h4 className="font-semibold text-gray-900">Pizza Calabresa</h4>
 																					<p className="text-gray-600 text-sm">Molho, mussarela, calabresa, cebola</p>
@@ -112,7 +116,7 @@ function LandingPage () {
 					<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 							<div className="grid grid-cols-1 md:grid-cols-4 gap-8">
 									<div className="text-center">
-											<div className="text-4xl font-bold text-red-700 mb-2">7 Dias</div>
+											<div className="text-4xl font-bold text-red-700 mb-2">30 Dias</div>
 											<div className="text-gray-600">Teste Grátis</div>
 									</div>
 									<div className="text-center">
@@ -124,8 +128,8 @@ function LandingPage () {
 											<div className="text-gray-600">Comissão por Pedido</div>
 									</div>
 									<div className="text-center">
-											<div className="text-4xl font-bold text-red-700 mb-2">24/7</div>
-											<div className="text-gray-600">Sistema Disponível</div>
+											<div className="text-4xl font-bold text-red-700 mb-2">Ilimitado</div>
+											<div className="text-gray-600">Limite de Pedidos</div>
 									</div>
 							</div>
 					</div>
@@ -233,7 +237,7 @@ function LandingPage () {
 									</h2>
 									<p className="text-xl text-gray-600 max-w-3xl mx-auto">
 											Escolha o plano ideal para o tamanho do seu comércio. 
-											Teste grátis por 15 dias, sem compromisso.
+											Teste grátis por 30 dias, sem compromisso.
 									</p>
 							</div>
 							
@@ -276,9 +280,9 @@ function LandingPage () {
 															<span className="text-gray-700">Suporte por WhatsApp</span>
 													</li>
 											</ul>
-											<button className="w-full bg-red-700 text-white py-3 rounded-lg font-semibold hover:bg-gray-200 transition-colors" disabled>
+											<Link to="/cadastro" className="w-full bg-red-700 text-white py-3 rounded-lg font-semibold hover:bg-gray-200 transition-colors">
 													Começar Teste Grátis
-											</button>
+											</Link>
 									</div>
 									
 									<div className="bg-white border-2 shadow-xl border-red-700 scale-105 rounded-2xl p-8 hover:border-red-700 transition-colors relative">
@@ -287,9 +291,8 @@ function LandingPage () {
 											</div>
 											<div className="text-center mb-8">
 													<h3 className="text-2xl font-bold text-gray-900 mb-2">Básico</h3>
-													<p className="text-gray-600 mb-4">Para comércios pequenos</p>
 													<div className="text-4xl font-bold text-gray-900 mb-2">
-															R$ 79,90<span className="text-lg text-gray-600">/mês</span>
+															R$ 69,90<span className="text-lg text-gray-600">/mês</span>
 													</div>
 													<p className="text-sm text-gray-600">Até 1.500 pedidos/mês</p>
 											</div>
@@ -322,7 +325,7 @@ function LandingPage () {
 															<svg className="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
 																	<path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"></path>
 															</svg>
-															<span className="text-gray-700">Suporte por Whatsapp</span>
+															<span className="text-gray-700">Sistema KDS</span>
 													</li>
 											</ul>
 											<button className="w-full bg-red-700 text-white py-3 rounded-lg font-semibold hover:bg-gray-200 transition-colors">

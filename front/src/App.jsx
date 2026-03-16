@@ -10,6 +10,7 @@ import UserRegister from "./components/users/UserRegister";
 import UserProfile from "./components/users/UserProfile";
 import AuthProvider from "./components/auth/AuthProvider";
 import UserNav from "./components/users/UserNav";
+import RecoveryPassword from "./components/RecoveryPassword";
 
 const MainLayout = () => {
   return (
@@ -41,6 +42,7 @@ function App () {
             <Route path="/" element={<LandingPage />} />
             <Route path="/login" element={<Login />} />
             <Route path="/cadastro" element={<Cadastro />} />
+            <Route path="/recuperar-senha" element={<RecoveryPassword />} />
           </Route>
           <Route path="/dashboard" element={<Dashboard />} />
 
