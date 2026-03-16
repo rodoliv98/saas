@@ -22,6 +22,10 @@ export class LoginService implements ILoginService {
       throw new CustomError('Nenhum usuário encontrado com esse email', 404, ErrorCode.NOT_FOUND);
     }
 
+    if (tenantOrUser.kind === 'tenant' && !(tenantOrUser as TenantLogin).active) {
+      throw new CustomError('Sua conta ainda não foi ativada, tente mais tarde', 403, ErrorCode.TENANT_INACTIVE);
+    }
+
     const decodedPassword = await bcrypt.compare(data.senha, tenantOrUser.senha);
     if (!decodedPassword) {
       throw new CustomError('Email ou senha inválida', 400, ErrorCode.BAD_REQUEST);

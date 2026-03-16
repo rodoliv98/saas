@@ -45,6 +45,7 @@ model Tenant {
   isOpen               Boolean            @default(false)
   pin                  String?            @unique @db.VarChar(6)
   trial                DateTime          @db.Timestamp(6)
+  active               Boolean            @default(false)
   assinaturas          assinaturas[]
   codigos_ativacao     Codigos_Ativacao[]
   entregadores         Entregadores[]

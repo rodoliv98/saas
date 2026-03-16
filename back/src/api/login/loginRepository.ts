@@ -23,7 +23,8 @@ export class LoginRepository implements ILoginRepository {
       select: {
         id: true,
         senha: true,
-        tenantSlug: true
+        tenantSlug: true,
+        active: true
       }
     });
 

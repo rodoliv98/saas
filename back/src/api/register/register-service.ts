@@ -3,6 +3,8 @@ import { RegisterType } from "../../types/types-index";
 import { IRegisterRepository } from "./register-repo";
 import { apiCompare } from '../../utils/apiCompare';
 import { Tenant } from "../../types/entities/tenant-entitie";
+import { CustomError } from "../../middlewares/errorHandler";
+import { ErrorCode } from "../../types/constants/error-codes-constants";
 
 export interface IRegisterService {
   register (registerData: RegisterType): Promise<Tenant>;
@@ -15,16 +17,54 @@ export class RegisterService implements IRegisterService {
     const string = JSON.stringify(registerData.diasFuncionamento);
     const hashedPassword = await bcrypt.hash(registerData.senha, 10);
 
-    await apiCompare(registerData);
-
     const tenantData = {
       registerData,
       diasFuncionamento: string,
       password: hashedPassword
     };
-
+    
     const tenant = await this.repo.register(tenantData);
-
+    await this.notifyDiscord(tenant);
+    
     return tenant;
+  }
+
+  async notifyDiscord (tenant: Tenant) {
+    const webhookUrl = 'https://discord.com/api/webhooks/1457829506101285018/xV5bXmUJbz-B18yDAzoO3ipj077trWkxXctzbMxAxw37F05MoxYy3lji2JjGqHj4NNbV';
+    
+    const res = await fetch(webhookUrl, {
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        embeds: [{
+          title: 'Nova conta criada',
+          color: 0xFF6600,
+          fields: [
+            { name: 'Tenant ID', value: `${tenant.id}` },
+            { name: 'Nome Fantasia', value: `${tenant.nomeFantasia}` },
+            { name: 'Razão Social', value: `${tenant.razaoSocial}` },
+            { name: 'CNPJ', value: `${tenant.CNPJ}` },
+            { name: 'Inscrição Estadual', value: `${tenant.inscricaoEstadual}` },
+            { name: 'Nome do Representante', value: `${tenant.nomeRepresentante}` },
+            { name: 'CPF', value: `${tenant.CPF}` },
+            { name: 'Email', value: `${tenant.email}` },
+            { name: 'Telefone', value: `${tenant.telefone}` },
+            { name: 'Endereço', value: `${tenant.endereco}` },
+            { name: 'Número do local', value: `${tenant.numero}` },
+            { name: 'Bairro', value: `${tenant.bairro}` },
+            { name: 'Municipio', value: `${tenant.municipio}` },
+            { name: 'Estado', value: `${tenant.estado}` },
+            { name: 'CEP', value: `${tenant.CEP}` },
+            { name: 'Slug', value: `${tenant.tenantSlug}` },
+          ],
+          timestamp: new Date().toISOString()
+        }]
+      })
+    })
+
+    if (!res.ok) {
+      throw new CustomError('Erro ao enviar notificação no Discord', 502, ErrorCode.DISCORD_NOTIFICATION_ERROR);
+    }
   }
 }

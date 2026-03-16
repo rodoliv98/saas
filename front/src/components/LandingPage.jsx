@@ -7,7 +7,7 @@ function LandingPage () {
 							<div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
 									<div className="text-white">
 											<h2 className="text-5xl text-black font-bold mb-6 leading-tight">
-													Automatize os Pedidos do seu Comércio
+													Gerencie os Pedidos do seu Comércio
 											</h2>
 											<p className="text-xl mb-8 text-gray-600">
 													Pare de perder pedidos e clientes! Tenha seu próprio sistema de pedidos online 

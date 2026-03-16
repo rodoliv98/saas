@@ -3,6 +3,7 @@ export type TenantLogin = {
   senha: string;
   tenantSlug: string;
   kind: string;
+  active: boolean;
 }
 
 export type TenantRefresh = Pick<TenantLogin, 'id' | 'tenantSlug'>;
