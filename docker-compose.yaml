@@ -13,7 +13,9 @@ services:
       - "5432:5432"
   
   api:
-    build: ./back
+    build: 
+      context: ./back
+      dockerfile: dockerfile.dev
     container_name: api
     depends_on:
        - db
@@ -45,7 +47,7 @@ services:
       - api
     profiles: ["dev-nginx"]
     build:
-      context: ./front
+      context: ./nginx
       dockerfile: dockerfile.nginx
     ports:
        - '80:80'

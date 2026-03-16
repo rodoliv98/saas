@@ -1,0 +1,43 @@
+services:
+
+  db:
+    image: postgres:15
+    container_name: db
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./db-user-create.sh:/docker-entrypoint-initdb.d/db-user-create.sh
+    expose:
+      - '5432'
+    restart: unless-stopped
+  
+  api:
+    build: 
+      context: ./back
+      dockerfile: dockerfile.prod
+    container_name: api
+    depends_on:
+       - db
+    env_file:
+       - ./back/.env
+    expose:
+       - '3000'
+    restart: unless-stopped
+
+  nginx:
+    container_name: nginx
+    depends_on:
+      - api
+    build:
+      context: ./nginx
+      dockerfile: dockerfile.nginx
+    ports:
+       - '80:80'
+       - '443:443'
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
