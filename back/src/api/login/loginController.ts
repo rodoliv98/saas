@@ -14,7 +14,7 @@ export class LoginController {
       .cookie('refreshToken', refreshToken, {
         httpOnly: process.env.NODE_ENV === 'production' ? true : false,
         secure: true,
-        sameSite: 'none',
+        sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'none',
         maxAge: 7 * 24 * 60 * 60 * 1000
       })
       .status(200)
@@ -35,9 +35,9 @@ export class LoginController {
   
       res
       .cookie('refreshToken', newRefreshToken, {
-        httpOnly: true,
+        httpOnly: process.env.NODE_ENV === 'production' ? true : false,
         secure: true,
-        sameSite: 'none',
+        sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'none',
         maxAge: 7 * 24 * 60 * 60 * 1000
       })
       .status(200)
@@ -47,10 +47,9 @@ export class LoginController {
       console.error('Erro no controlador login-controller refresh method:\n', err);
       next(err);
     }
-    
   }
 
-  logout (req: Request, res: Response, next: NextFunction) {
+  logout (_req: Request, res: Response, _next: NextFunction) {
     res
     .clearCookie('refreshToken', {
         httpOnly: true,

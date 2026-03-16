@@ -7,13 +7,13 @@ export function createLoginToken (id: string, slug?: string) {
 
   const accessToken = slug 
   ? jwt.sign({ tenantId: id, tenantSlug: slug }, secretJWT, {
-    expiresIn: '1d',
+    expiresIn: '5m',
     algorithm: 'HS256',
     issuer: 'api.automatizai.com.br',
     audience: 'automatizai.com.br'
   })
   : jwt.sign({ userId: id }, secretJWT, {
-    expiresIn: '1d',
+    expiresIn: '5m',
     algorithm: 'HS256',
     issuer: 'api.automatizai.com.br',
     audience: 'automatizai.com.br'
