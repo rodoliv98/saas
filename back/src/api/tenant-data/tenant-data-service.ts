@@ -5,11 +5,13 @@ import { TenantReportDTO } from "./dto/tenant-reports-dto";
 import { OrdersData } from "./entities/orders-data";
 import { TenantData } from "./entities/tenant-data-entitie";
 import { TenantDataDTO } from "./dto/tenant-data-dto";
+import { uploadToCloudinary } from "../../utils/uploadToCloudinary";
 
 export interface ITenantDataService {
   getData (tenantId: string): Promise<TenantData>;
   getOrders (tenantSlug: string, dates: TenantReportDTO): Promise<OrdersData[] | []>;
   patchData (tenantId: string, data: TenantDataDTO): Promise<TenantData>;
+  addLogo (tenantId: string, logoUrl: string): Promise<void>;
 }
 
 export class TenantDataService implements ITenantDataService {
@@ -39,5 +41,10 @@ export class TenantDataService implements ITenantDataService {
     }
 
     return updatedData;
+  }
+
+  async addLogo (tenantId: string, logoUrl: string) {
+    const cloudinaryImageUrl = await uploadToCloudinary(logoUrl);
+    return this.repo.addLogo(tenantId, cloudinaryImageUrl);
   }
 }

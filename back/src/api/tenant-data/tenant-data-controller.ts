@@ -64,4 +64,26 @@ export class TenantDataController {
       next(err);
     }
   }
+
+  async addLogo (req: Request, res: Response, next: NextFunction) {
+    const tenantId = req.tenant;
+    if (!tenantId) {
+      return res.status(401).json({ error: 'Não autorizado' });
+    }
+
+    const logoUrl = req.file?.path;
+    if (!logoUrl) {
+      return res.status(400).json({ error: 'Imagem não enviada' });
+    }
+
+    try {
+      await this.service.addLogo(tenantId, logoUrl);
+
+      return res.status(200).json({ message: 'Logo adicionada com sucesso' });
+
+    } catch (err) {
+      console.log('Erro no controlador tenant-data-controller addLogo method:\n', err);
+      next(err);      
+    }
+  }
 }

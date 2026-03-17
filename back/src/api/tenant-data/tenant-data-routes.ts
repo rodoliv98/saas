@@ -3,6 +3,7 @@ import { TenantDataService } from "./tenant-data-service";
 import { TenantDataRepository } from "./tenant-data-repo";
 import { checkLogin } from "../../middlewares/checkLogin"
 import { Router } from "express"
+import { upload } from "../../../cloudinary/multer";
 
 const router = Router();
 const repository = new TenantDataRepository();
@@ -16,6 +17,8 @@ router.get(`/tenant/orders`, checkLogin, controller.getOrders.bind(controller));
 router.post('/tenant-create-payment');
 
 router.patch('/tenant-data', checkLogin, controller.patchData.bind(controller));
+
+router.post('/tenant/logo', checkLogin, upload.single('image'), controller.addLogo.bind(controller));
 
 
 export default router

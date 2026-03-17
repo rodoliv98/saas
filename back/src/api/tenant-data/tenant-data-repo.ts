@@ -7,9 +7,10 @@ import { TenantData } from "./entities/tenant-data-entitie";
 import { TenantDataStrDTO } from "./dto/tenant-data-dto";
 
 export interface ITenantDataRepository {
-  getData (tenantId: string): Promise<TenantData | null>
+  getData (tenantId: string): Promise<TenantData | null>;
   getOrdersData (tenantId: string, dates: TenantReportDTO): Promise<OrdersData[] | []>;
-  patchData (tenantId: string, data: TenantDataStrDTO): Promise<TenantData | null>
+  patchData (tenantId: string, data: TenantDataStrDTO): Promise<TenantData | null>;
+  addLogo (tenantId: string, cloudinaryImageUrl: string): Promise<void>;
 }
 
 const prisma = new PrismaClient();
@@ -111,5 +112,28 @@ export class TenantDataRepository implements ITenantDataRepository {
         pin: true
       }
     });
+  }
+
+  async addLogo (tenantId: string, cloudinaryImageUrl: string) {
+    const tenant = await prisma.tenant.findUnique({
+      where: {
+        id: tenantId
+      }
+    });
+
+    if (!tenant) {
+      throw new CustomError('Tenant não encontrado', 404, ErrorCode.TENANT_NOT_FOUND);
+    }
+
+    await prisma.tenant.update({
+      where: {
+        id: tenantId
+      },
+      data: {
+        logoUrl: cloudinaryImageUrl
+      },
+    });
+
+    return;
   }
 }
