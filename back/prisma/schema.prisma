@@ -25,6 +25,7 @@ model Tenant {
   CNPJ                 String             @unique
   inscricaoEstadual    String?
   nomeRepresentante    String
+  nomeEstabelecimento  String?            @unique // remover o null antes de ir pra prod
   CPF                  String             @unique
   email                String             @unique
   senha                String
@@ -44,8 +45,10 @@ model Tenant {
   taxaEntrega          Decimal            @db.Decimal(10, 2)
   isOpen               Boolean            @default(false)
   pin                  String?            @unique @db.VarChar(6)
-  trial                DateTime          @db.Timestamp(6)
+  trial                DateTime           @db.Timestamp(6)
   active               Boolean            @default(false)
+  logoUrl              String?
+  bannerUrl            String?
   assinaturas          assinaturas[]
   codigos_ativacao     Codigos_Ativacao[]
   entregadores         Entregadores[]

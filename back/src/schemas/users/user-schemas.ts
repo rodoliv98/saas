@@ -3,9 +3,9 @@ import { defaultRegex } from '../products/products-schemas';
 
 
 export const slugSchema = z.string()
-                    .min(5, 'Domínio deve ter no mínimo 5 caracteres')
+                    .min(3, 'Domínio deve ter no mínimo 5 caracteres')
                     .max(100, 'Domínio deve ter no máximo 100 caracteres')
-                    .regex(/^[a-zA-ZáàâãäéèêëíìîïóòôõöúùûüçñÁÀÂÃÄÉÈÊËÍÌÎÏÓÒÔÕÖÚÙÛÜÇÑ0-9-]{5,100}$/, 'É permitido apenas letras maiúsculas, minúsculas, números e hifens')
+                    .regex(/^[a-zA-ZáàâãäéèêëíìîïóòôõöúùûüçñÁÀÂÃÄÉÈÊËÍÌÎÏÓÒÔÕÖÚÙÛÜÇÑ0-9-]{3,100}$/, 'É permitido apenas letras maiúsculas, minúsculas, números e hifens')
                     .trim();
 
 export const registerSchema = z.object({
@@ -97,6 +97,11 @@ export const registerSchema = z.object({
            .regex(/^[A-Z]{2}$/, 'Estado deve conter apenas 2 caracteres'),
   // passo 4
   tenantSlug: slugSchema,
+  nomeEstabelecimento: z.string()
+                        .min(3, 'Nome do estabelecimento deve conter no mínimo 3 caracteres')
+                        .max(50, 'Nome do estabelecimento deve conter no máximo 50 caracteres')
+                        .regex(defaultRegex, 'Nome do estabelecimento deve conter apenas letras e espaços')
+                        .trim(),
   diasFuncionamento: z.array(
     z.string()
     .trim()

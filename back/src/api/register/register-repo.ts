@@ -37,6 +37,7 @@ export class RegisterRepository implements IRegisterRepository {
         estado: tenantData.registerData.estado,
         // passo 4
         tenantSlug: tenantData.registerData.tenantSlug,
+        nomeEstabelecimento: tenantData.registerData.nomeEstabelecimento,
         diasFuncionamento: tenantData.diasFuncionamento,
         horarioFuncionamento: tenantData.registerData.horarioFuncionamento,
         tempoPreparo: tenantData.registerData.tempoPreparo,

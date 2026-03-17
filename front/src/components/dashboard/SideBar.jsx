@@ -51,7 +51,9 @@ function Sidebar({ selectedSection, onSectionChange }) {
         <aside className="h-screen w-64">
             <nav className="h-full flex flex-col bg-white border-r shadow-sm">
                 <div className="p-4 pb-2 flex justify-between items-center">
-                    <img src="/logo.png" className="w-32" alt="Logo" />
+                    <button onClick={() => onSectionChange("inicio")} className="text-4xl text-gray-900 tracking-widest" style={{fontFamily: 'Bebas Neue'}}>
+                        Eldur
+                    </button>
                 </div>
                 <div className="flex-1 px-3">
                     <button

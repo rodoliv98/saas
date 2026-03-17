@@ -31,6 +31,7 @@ function Cadastro () {
 
         // Passo 4 - Configurações
         tenantSlug: '',
+        nomeEstabelecimento: '',
         whatsapp: '',
         diasFuncionamento: [], // ['seg', 'ter', 'qua'...]
         horarioFuncionamento: '', // "18:00-23:00"
@@ -145,6 +146,7 @@ function Cadastro () {
                 break;
             case 4:
                 if (!form.tenantSlug) newErrors.tenantSlug = 'Subdomínio é obrigatório';
+                if (!form.nomeEstabelecimento) newErrors.nomeEstabelecimento = 'Nome do estabelecimento é obrigatório';
                 if (!form.whatsapp) newErrors.whatsapp = 'WhatsApp é obrigatório';
                 if (form.diasFuncionamento.length === 0) newErrors.diasFuncionamento = 'Selecione ao menos um dia';
                 if (!form.horarioFuncionamento) newErrors.horarioFuncionamento = 'Horário de funcionamento é obrigatório';
@@ -348,14 +350,22 @@ function Cadastro () {
                 ];
                 return (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div className="md:col-span-2">
+                        <div>
                             <label htmlFor="tenantSlug" className="block text-sm font-medium text-gray-700 mb-2">Subdomínio *</label>
                             <div className="relative">
                                 <Globe className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                                 <input type="text" id="tenantSlug" name="tenantSlug" value={form.tenantSlug} onChange={handleChange} className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition-colors ${errors.tenantSlug ? 'border-red-500' : 'border-gray-300'}`} placeholder="sua-empresa"/>
                             </div>
-                            <p className="text-xs text-gray-500 mt-1">seusite.com/{form.tenantSlug || 'sua-empresa'}</p>
+                            <p className="text-xs text-gray-500 mt-1">eldur.com.br/{form.tenantSlug || 'sua-empresa'}</p>
                             {errors.tenantSlug && <p className="text-red-500 text-sm mt-1">{errors.tenantSlug}</p>}
+                        </div>
+                        <div>
+                            <label htmlFor="nomeEstabelecimento" className="block text-sm font-medium text-gray-700 mb-2">Nome do Estabelecimento *</label>
+                            <div className="relative">
+                                <Globe className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                                <input type="text" id="nomeEstabelecimento" name="nomeEstabelecimento" value={form.nomeEstabelecimento} onChange={handleChange} className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition-colors ${errors.nomeEstabelecimento ? 'border-red-500' : 'border-gray-300'}`} placeholder="Nome da sua loja"/>
+                            </div>
+                            {errors.nomeEstabelecimento && <p className="text-red-500 text-sm mt-1">{errors.nomeEstabelecimento}</p>}
                         </div>
                         <div>
                             <label htmlFor="whatsapp" className="block text-sm font-medium text-gray-700 mb-2">WhatsApp para Pedidos *</label>
@@ -391,7 +401,7 @@ function Cadastro () {
                                 {errors.horarioFuncionamento && <p className="text-red-500 text-sm mt-1">{errors.horarioFuncionamento}</p>}
                             </div>
                             <div className="w-1/2">
-                                <label htmlFor="taxaEntrega" className="block text-sm font-medium text-gray-700 mb-2">Taxa de Entrega (R$)</label>
+                                <label htmlFor="taxaEntrega" className="block text-sm font-medium text-gray-700 mb-2">Taxa de Entrega (R$) *</label>
                                 <div className="relative">
                                     <Clock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                                     <input
