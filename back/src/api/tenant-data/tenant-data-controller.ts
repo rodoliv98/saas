@@ -79,7 +79,7 @@ export class TenantDataController {
     try {
       await this.service.addLogo(tenantId, logoUrl);
 
-      return res.status(200).json({ message: 'Logo adicionada com sucesso' });
+      res.status(200).json({ message: 'Logo adicionada com sucesso' });
 
     } catch (err) {
       console.log('Erro no controlador tenant-data-controller addLogo method:\n', err);

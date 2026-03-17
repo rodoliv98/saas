@@ -8,7 +8,7 @@ import { ActivationCodeDTO, SlugType } from "../types/types-index";
 export interface ITenantStoreRepository {
   getData (slug: SlugType): Promise<ITenantData | null>;
   getProducts (id: string): Promise<ProdutosWSabores[] | null>;
-  isOpen (id: string): Promise<ITenantData | null>;
+  isOpen (id: string): Promise<Pick <ITenantData, 'isOpen' | 'tenantSlug' | 'logoUrl'> | null>;
   patchIsOpen (data: boolean, tenantId: string): Promise<ITenantData>;
   createDeliveryCode (activationCode: ActivationCodeDTO): Promise<DeliveryCode>;
 }
@@ -39,6 +39,11 @@ export class TenantStoreRepository implements ITenantStoreRepository {
     return prisma.tenant.findFirst({
       where: {
         id: id
+      },
+      select: {
+        isOpen: true,
+        tenantSlug: true,
+        logoUrl: true
       }
     });
   }

@@ -2,10 +2,14 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Home, Clipboard, Utensils, BarChart2, Settings, LogOut, QrCode } from 'lucide-react';
 import { useRefreshHook } from '../utils/refresh-hook';
+import LogoButton from '../utils/dashboard/LogoButton';
+import ModalUploadLogo from './ModalUploadLogo';
 
 function Sidebar({ selectedSection, onSectionChange }) {
     const [isStoreOpen, setIsStoreOpen] = useState();
+    const [logoModalOpen, setLogoModalOpen] = useState(false);
     const [storeName, setStoreName] = useState();
+    const [logoUrl, setLogoUrl] = useState(null);
     const { refreshHook } = useRefreshHook();
 		const redirect = useNavigate();
 
@@ -18,7 +22,8 @@ function Sidebar({ selectedSection, onSectionChange }) {
 					const res = await refreshHook('get', '/tenant-is-open');
           setStoreName(res.data.storeName);
           setIsStoreOpen(res.data.isStoreOpen);
-          
+					setLogoUrl(res.data.logoUrl);
+          console.log(res);
 				} catch (err) {
 					console.log(err);
 				}
@@ -94,9 +99,10 @@ function Sidebar({ selectedSection, onSectionChange }) {
                     </button>
                 </div>
                 <div className="border-t flex p-3">
-                    <div className="w-10 h-10 flex justify-center items-center rounded-md bg-orange-100 text-red-600 font-semibold">
-                        PZ
-                    </div>
+                    <LogoButton 
+                        logoUrl={logoUrl}
+                        onClick={() => setLogoModalOpen(true)} 
+                    />
                     <div className="flex justify-between items-center overflow-hidden transition-all w-40 ml-3">
                         <div className="leading-4">
                             <h4 className="font-semibold">{storeName}</h4>
@@ -117,6 +123,10 @@ function Sidebar({ selectedSection, onSectionChange }) {
                         <LogOut size={20} /> <span className="ml-3">Sair</span>
                     </a>
                 </div>
+                <ModalUploadLogo 
+                    isOpen={logoModalOpen}
+                    onClose={() => setLogoModalOpen(false)}
+                />
             </nav>
         </aside>
     );

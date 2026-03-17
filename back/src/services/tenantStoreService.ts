@@ -38,7 +38,11 @@ export class TenantStoreService implements ITenantStoreService {
       throw new CustomError('Dados não encontrados', 404, ErrorCode.NOT_FOUND);
     }
 
-    return { isStoreOpen: data.isOpen, storeName: data.tenantSlug };
+    return { 
+      isStoreOpen: data.isOpen, 
+      storeName: data.tenantSlug, 
+      logoUrl: data.logoUrl 
+    };
   }
 
   async patchIsOpen (data: boolean, tenantId: string) {
