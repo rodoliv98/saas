@@ -2,7 +2,20 @@ import { useState, useRef } from "react";
 import { X, UploadCloud, ImageIcon } from "lucide-react";
 import { useRefreshHook } from "../utils/refresh-hook";
 
-function ModalUploadLogo({ isOpen, onClose }) {
+const config = {
+  logo: {
+    h2: "Logo do Estabelecimento",
+    div: "Logo enviado com sucesso!",
+    span: "Clique para selecionar o logo",
+  },
+  banner: {
+    h2: "Banner do Estabelecimento",
+    div: "Banner enviado com sucesso!",
+    span: "Clique para selecionar o banner",
+  }
+}
+
+function ModalUploadLogo({ isOpen, type, onClose }) {
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -10,6 +23,8 @@ function ModalUploadLogo({ isOpen, onClose }) {
   const [success, setSuccess] = useState(false);
   const { refreshHook } = useRefreshHook();
   const inputRef = useRef(null);
+
+  const { h2, div, span } = config[type] || config.logo;
 
   // Quando o usuário escolhe um arquivo, guardamos ele e geramos um preview
   function handleImageChange(e) {
@@ -45,9 +60,10 @@ function ModalUploadLogo({ isOpen, onClose }) {
 
     try {
       const formData = new FormData();
-      formData.append("image", image);
+      formData.append(type, image);
 
-      await refreshHook("post", "/tenant/logo", formData);
+      type === "logo" ? await refreshHook("patch", "/tenant/logo", formData)
+                      : await refreshHook("patch", "/tenant/banner", formData);
 
       setSuccess(true);
       handleRemoveImage();
@@ -63,7 +79,7 @@ function ModalUploadLogo({ isOpen, onClose }) {
     handleRemoveImage();
     setError("");
     setSuccess(false);
-    onClose();
+    onClose(null);
   }
 
   if (!isOpen) return null;
@@ -74,7 +90,7 @@ function ModalUploadLogo({ isOpen, onClose }) {
 
         {/* Cabeçalho */}
         <div className="flex justify-between items-center p-4 border-b">
-          <h2 className="text-xl font-semibold text-gray-800">Logo do Estabelecimento</h2>
+          <h2 className="text-xl font-semibold text-gray-800">{h2}</h2>
           <button onClick={handleClose} className="text-gray-500 hover:text-gray-700">
             <X className="w-6 h-6" />
           </button>
@@ -94,7 +110,7 @@ function ModalUploadLogo({ isOpen, onClose }) {
             {/* Feedback de sucesso */}
             {success && (
               <div className="bg-green-50 border border-green-200 text-green-600 px-4 py-3 rounded-lg text-sm">
-                Logo enviado com sucesso!
+                {div}
               </div>
             )}
 
@@ -106,7 +122,7 @@ function ModalUploadLogo({ isOpen, onClose }) {
                 className="flex flex-col items-center justify-center w-full h-48 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors"
               >
                 <UploadCloud className="w-10 h-10 text-gray-400 mb-2" />
-                <span className="text-sm font-medium text-gray-600">Clique para selecionar o logo</span>
+                <span className="text-sm font-medium text-gray-600">{span}</span>
                 <span className="text-xs text-gray-400 mt-1">PNG, JPG ou WEBP</span>
                 <input
                   ref={inputRef}
@@ -157,7 +173,7 @@ function ModalUploadLogo({ isOpen, onClose }) {
                 disabled={loading || !image}
                 className="px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {loading ? "Enviando..." : "Salvar Logo"}
+                {loading ? "Enviando..." : "Enviar"}
               </button>
             </div>
 

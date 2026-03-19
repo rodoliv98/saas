@@ -41,7 +41,8 @@ export class TenantStoreService implements ITenantStoreService {
     return { 
       isStoreOpen: data.isOpen, 
       storeName: data.tenantSlug, 
-      logoUrl: data.logoUrl 
+      logoUrl: data.logoUrl,
+      bannerUrl: data.bannerUrl
     };
   }
 

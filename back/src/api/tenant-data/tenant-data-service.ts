@@ -12,6 +12,7 @@ export interface ITenantDataService {
   getOrders (tenantSlug: string, dates: TenantReportDTO): Promise<OrdersData[] | []>;
   patchData (tenantId: string, data: TenantDataDTO): Promise<TenantData>;
   addLogo (tenantId: string, logoUrl: string): Promise<void>;
+  addBanner (tenantId: string, bannerUrl: string): Promise<void>;
 }
 
 export class TenantDataService implements ITenantDataService {
@@ -46,5 +47,10 @@ export class TenantDataService implements ITenantDataService {
   async addLogo (tenantId: string, logoUrl: string) {
     const cloudinaryImageUrl = await uploadToCloudinary(logoUrl);
     return this.repo.addLogo(tenantId, cloudinaryImageUrl);
+  }
+
+  async addBanner (tenantId: string, bannerUrl: string) {
+    const cloudinaryBannerUrl = await uploadToCloudinary(bannerUrl);
+    return this.repo.addBanner(tenantId, cloudinaryBannerUrl);
   }
 }

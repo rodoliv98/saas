@@ -22,7 +22,7 @@ export function useRefreshHook () {
       return res;
 
     } catch (err) {
-      if (err.response.data.code === "NOT_AUTHORIZED") {
+      if (err.response.data.code === "NOT_AUTHORIZED" || "TOKEN_EXPIRED") {
         try {
           const refreshRes = await api.post('/refresh');
           const newToken = refreshRes.data.token;

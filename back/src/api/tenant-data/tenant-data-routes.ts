@@ -18,7 +18,9 @@ router.post('/tenant-create-payment');
 
 router.patch('/tenant-data', checkLogin, controller.patchData.bind(controller));
 
-router.post('/tenant/logo', checkLogin, upload.single('image'), controller.addLogo.bind(controller));
+router.patch('/tenant/logo', checkLogin, upload.single('logo'), controller.addLogo.bind(controller));
+
+router.patch('/tenant/banner', checkLogin, upload.single('banner'), controller.addBanner.bind(controller));
 
 
 export default router

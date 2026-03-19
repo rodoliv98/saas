@@ -11,6 +11,7 @@ export interface ITenantDataRepository {
   getOrdersData (tenantId: string, dates: TenantReportDTO): Promise<OrdersData[] | []>;
   patchData (tenantId: string, data: TenantDataStrDTO): Promise<TenantData | null>;
   addLogo (tenantId: string, cloudinaryImageUrl: string): Promise<void>;
+  addBanner (tenantId: string, cloudinaryBannerUrl: string): Promise<void>;
 }
 
 const prisma = new PrismaClient();
@@ -131,6 +132,29 @@ export class TenantDataRepository implements ITenantDataRepository {
       },
       data: {
         logoUrl: cloudinaryImageUrl
+      },
+    });
+
+    return;
+  }
+
+  async addBanner (tenantId: string, cloudinaryBannerUrl: string) {
+    const tenant = await prisma.tenant.findUnique({
+      where: {
+        id: tenantId
+      }
+    });
+
+    if (!tenant) {
+      throw new CustomError('Tenant não encontrado', 404, ErrorCode.TENANT_NOT_FOUND);
+    }
+
+    await prisma.tenant.update({
+      where: {
+        id: tenantId
+      },
+      data: {
+        bannerUrl: cloudinaryBannerUrl
       },
     });
 

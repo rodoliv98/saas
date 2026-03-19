@@ -86,4 +86,26 @@ export class TenantDataController {
       next(err);      
     }
   }
+
+  async addBanner (req: Request, res: Response, next: NextFunction) {
+    const tenantId = req.tenant;
+    if (!tenantId) {
+      return res.status(401).json({ error: 'Não autorizado' });
+    }
+
+    const bannerUrl = req.file?.path;
+    if (!bannerUrl) {
+      return res.status(400).json({ error: 'Imagem não enviada' });
+    }
+
+    try {
+      await this.service.addBanner(tenantId, bannerUrl);
+
+      res.status(200).json({ message: 'Banner adicionado com sucesso' });
+
+    } catch (err) {
+      console.log('Erro no controlador tenant-data-controller addBanner method:\n', err);
+      next(err);
+    }
+  }
 }

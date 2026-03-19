@@ -2,15 +2,16 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Home, Clipboard, Utensils, BarChart2, Settings, LogOut, QrCode } from 'lucide-react';
 import { useRefreshHook } from '../utils/refresh-hook';
-import LogoButton from '../utils/dashboard/LogoButton';
 import ModalUploadLogo from './ModalUploadLogo';
+import StoreHeader from '../utils/dashboard/StoreHeader';
 
 function Sidebar({ selectedSection, onSectionChange }) {
     const [isStoreOpen, setIsStoreOpen] = useState();
-    const [logoModalOpen, setLogoModalOpen] = useState(false);
     const [storeName, setStoreName] = useState();
     const [logoUrl, setLogoUrl] = useState(null);
-    const { refreshHook } = useRefreshHook();
+		const [bannerUrl, setBannerUrl] = useState(null);
+    const [uploadType, setUploadType] = useState(null);
+		const { refreshHook } = useRefreshHook();
 		const redirect = useNavigate();
 
 		const navLinkClass =
@@ -23,6 +24,7 @@ function Sidebar({ selectedSection, onSectionChange }) {
           setStoreName(res.data.storeName);
           setIsStoreOpen(res.data.isStoreOpen);
 					setLogoUrl(res.data.logoUrl);
+					setBannerUrl(res.data.bannerUrl);
           console.log(res);
 				} catch (err) {
 					console.log(err);
@@ -99,7 +101,15 @@ function Sidebar({ selectedSection, onSectionChange }) {
                     </button>
                 </div>
                 <div className="border-t flex p-3">
-                    <LogoButton 
+                    <StoreHeader 
+											logoUrl={logoUrl}
+											bannerUrl={bannerUrl}
+											storeName={storeName}
+											isOpen={isStoreOpen}
+											onToggle={handleClick}
+											setUploadType={setUploadType}
+										/>
+										{/* <LogoButton 
                         logoUrl={logoUrl}
                         onClick={() => setLogoModalOpen(true)} 
                     />
@@ -111,12 +121,12 @@ function Sidebar({ selectedSection, onSectionChange }) {
                                 <span className="text-xs text-gray-600">{isStoreOpen ? 'Aberta' : 'Fechada'}</span>
                             </div>
                         </div>
-                        <div 
+                        <div
                             onClick={() => handleClick()} 
                             className={`relative w-12 h-6 rounded-full cursor-pointer transition-colors ${isStoreOpen ? 'bg-green-500' : 'bg-gray-300'}`}>
                             <div className={`absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-transform ${isStoreOpen ? 'transform translate-x-6' : ''}`}></div>
                         </div>
-                    </div>
+                    </div> */}
                 </div>
                 <div className="px-3 pb-3">
                     <a className={navLinkClass} onClick={handleLogout}>
@@ -124,8 +134,9 @@ function Sidebar({ selectedSection, onSectionChange }) {
                     </a>
                 </div>
                 <ModalUploadLogo 
-                    isOpen={logoModalOpen}
-                    onClose={() => setLogoModalOpen(false)}
+                    isOpen={uploadType !== null}
+										type={uploadType}
+                    onClose={setUploadType}
                 />
             </nav>
         </aside>

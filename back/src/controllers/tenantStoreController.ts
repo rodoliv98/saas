@@ -28,6 +28,7 @@ export interface ITenantData {
   // passo 4
   tenantSlug: string;
   logoUrl: string | null;
+  bannerUrl: string | null;
   whatsapp: string;
   diasFuncionamento: string;
   horarioFuncionamento: string;

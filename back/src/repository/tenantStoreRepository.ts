@@ -8,7 +8,7 @@ import { ActivationCodeDTO, SlugType } from "../types/types-index";
 export interface ITenantStoreRepository {
   getData (slug: SlugType): Promise<ITenantData | null>;
   getProducts (id: string): Promise<ProdutosWSabores[] | null>;
-  isOpen (id: string): Promise<Pick <ITenantData, 'isOpen' | 'tenantSlug' | 'logoUrl'> | null>;
+  isOpen (id: string): Promise<Pick <ITenantData, 'isOpen' | 'tenantSlug' | 'logoUrl' | 'bannerUrl'> | null>;
   patchIsOpen (data: boolean, tenantId: string): Promise<ITenantData>;
   createDeliveryCode (activationCode: ActivationCodeDTO): Promise<DeliveryCode>;
 }
@@ -43,7 +43,8 @@ export class TenantStoreRepository implements ITenantStoreRepository {
       select: {
         isOpen: true,
         tenantSlug: true,
-        logoUrl: true
+        logoUrl: true,
+        bannerUrl: true
       }
     });
   }
