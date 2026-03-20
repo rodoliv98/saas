@@ -44,6 +44,7 @@ const TenantStore = () => {
         setLoading(true);
         
         const res = await api.get(`/${slug}`);
+        console.log(res);
         setStoreData(res.data.store);
         setProducts(res.data.products || []);
         
@@ -300,37 +301,75 @@ const TenantStore = () => {
       
       {/* Header da Loja */}
       <section className="bg-white shadow-sm">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="flex items-center gap-4">
-            <div className="w-16 h-16 bg-red-700 rounded-full flex items-center justify-center">
-              <span className="text-white font-bold text-2xl">
-                {storeData?.nomeFantasia?.charAt(0)?.toUpperCase() || 'L'}
-              </span>
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+
+          {/* Wrapper que segura banner + logo sem cortar nada */}
+          <div className="relative pb-10">
+
+            {/* Banner */}
+            <div className="w-full h-32 sm:h-44 rounded-xl overflow-hidden bg-gradient-to-r from-orange-50 to-red-50">
+              {storeData?.bannerUrl ? (
+                <img
+                  src={storeData.bannerUrl}
+                  alt="Banner da loja"
+                  className="w-full h-full object-fill"
+                />
+              ) : (
+                <img
+                  src="https://placehold.net/800x600.png"
+                  alt="Banner da loja"
+                  className="w-full h-full object-fill"
+                />
+              )}
             </div>
-            <div className="flex-1">
-              <h1 className="text-3xl font-bold text-gray-900">{storeData?.nomeFantasia}</h1>
-              <p className="text-gray-600">{storeData?.endereco}</p>
-              <div className="flex items-center gap-2 mt-1">
-                <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
-                  storeData?.isOpen 
-                    ? 'bg-green-100 text-green-800' 
-                    : 'bg-red-100 text-red-800'
-                }`}>
-                  {storeData?.isOpen ? 'Aberto' : 'Fechado'}
-                </span>
-                {storeData?.tempoPreparo && (
-                  <span className="text-gray-600 text-xs">
-                    🕒 {storeData.tempoPreparo} min
-                  </span>
-                )}
-                {storeData.taxaEntrega && (
-                  <span className="text-gray-600 text-xs">
-                    🚚 R$ {storeData.taxaEntrega}
-                  </span>
+
+            {/* Logo — posicionado sobre a borda inferior do banner, fora do overflow-hidden */}
+            <div className="absolute bottom-0 left-0">
+              <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-xl shadow-lg overflow-hidden flex items-center justify-center">
+                {storeData?.logoUrl ? (
+                  <img
+                    src={storeData.logoUrl}
+                    alt="Logo da loja"
+                    className="w-full h-full object-fill"
+                  />
+                ) : (
+                  <img
+                    src="https://placehold.net/600x600.png"
+                    alt="Logo da loja"
+                    className="w-full h-full object-fill"
+                  />
                 )}
               </div>
             </div>
           </div>
+
+          {/* Infos — sem padding-top excessivo, logo já está fora do fluxo */}
+          <div className="pb-6 pt-3">
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+              {storeData?.nomeEstabelecimento || storeData?.nomeFantasia}
+            </h1>
+            <p className="text-gray-600 text-sm sm:text-base">{storeData?.endereco}</p>
+            <div className="flex flex-wrap items-center gap-2 mt-1">
+              <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
+                storeData?.isOpen
+                  ? 'bg-green-100 text-green-800'
+                  : 'bg-red-100 text-red-800'
+              }`}>
+                {storeData?.isOpen ? 'Aberto' : 'Fechado'}
+              </span>
+              {storeData?.tempoPreparo && (
+                <span className="text-gray-500 text-xs">
+                  🕒 {storeData.tempoPreparo} min
+                </span>
+              )}
+              {storeData?.taxaEntrega && (
+                <span className="text-gray-500 text-xs">
+                  🚚 R$ {storeData.taxaEntrega}
+                </span>
+              )}
+            </div>
+          </div>
+
         </div>
       </section>
 

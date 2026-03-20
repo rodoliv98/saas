@@ -85,11 +85,14 @@ export class TenantStoreService implements ITenantStoreService {
     return {
       store: {
         nomeFantasia: tenant.nomeFantasia,
+        nomeEstabelecimento: tenant.nomeEstabelecimento,
         endereco: tenant.endereco,
         isOpen: tenant.isOpen,
         tempoPreparo: tenant.tempoPreparo,
         taxaEntrega: Number(tenant.taxaEntrega),
-        whatsapp: tenant.whatsapp
+        whatsapp: tenant.whatsapp,
+        logoUrl: tenant.logoUrl,
+        bannerUrl: tenant.bannerUrl
       },
       products: products.map(item => ({
         id: item.id,

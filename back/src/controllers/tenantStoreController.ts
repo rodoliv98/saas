@@ -27,6 +27,7 @@ export interface ITenantData {
   CEP: string;
   // passo 4
   tenantSlug: string;
+  nomeEstabelecimento: string | null;
   logoUrl: string | null;
   bannerUrl: string | null;
   whatsapp: string;

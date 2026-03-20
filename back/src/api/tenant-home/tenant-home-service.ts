@@ -18,12 +18,12 @@ export class TenantHomeService implements ITenantHomeService {
       (acc, index) => acc + Number(index.totalOrderPrice), 0
     );
     
-    const theTrialTime = tenantData.trial.getTime();
-    const thePlanEndTime = tenantData.assinaturas[0]?.endDate?.getTime();
+    const trialTime = tenantData.trial.getTime();
+    const planEndTime = tenantData.assinaturas[0]?.endDate?.getTime();
 
-    const planTimeRemaining = thePlanEndTime === undefined
-    ? new Date(theTrialTime)
-    : new Date(thePlanEndTime + theTrialTime);
+    const planTimeRemaining = planEndTime === undefined
+    ? new Date(trialTime)
+    : new Date(planEndTime + trialTime);
 
     const planType = tenantData.assinaturas.length == 0 
     ? 'Plano Básico'
@@ -31,7 +31,8 @@ export class TenantHomeService implements ITenantHomeService {
 
     return {
       tenant: tenantData.nomeRepresentante,
-      planType: planType, 
+      planType: planType,
+      tenantSlug: tenantData.tenantSlug, 
       ordersQuantity: orders.length,
       timeRemaining: planTimeRemaining,
       totalValue: totalValue

@@ -19,6 +19,7 @@ export class TenantHomeRepository implements ITenantHomeRepository {
       select: {
         nomeRepresentante: true,
         trial: true,
+        tenantSlug: true,
         assinaturas: {
           where: {
             status: 'active'

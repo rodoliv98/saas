@@ -109,24 +109,6 @@ function Sidebar({ selectedSection, onSectionChange }) {
 											onToggle={handleClick}
 											setUploadType={setUploadType}
 										/>
-										{/* <LogoButton 
-                        logoUrl={logoUrl}
-                        onClick={() => setLogoModalOpen(true)} 
-                    />
-                    <div className="flex justify-between items-center overflow-hidden transition-all w-40 ml-3">
-                        <div className="leading-4">
-                            <h4 className="font-semibold">{storeName}</h4>
-                            <div className="flex items-center">
-                                <span className={`h-2 w-2 rounded-full ${isStoreOpen ? 'bg-green-500' : 'bg-red-500'} mr-2`}></span>
-                                <span className="text-xs text-gray-600">{isStoreOpen ? 'Aberta' : 'Fechada'}</span>
-                            </div>
-                        </div>
-                        <div
-                            onClick={() => handleClick()} 
-                            className={`relative w-12 h-6 rounded-full cursor-pointer transition-colors ${isStoreOpen ? 'bg-green-500' : 'bg-gray-300'}`}>
-                            <div className={`absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-transform ${isStoreOpen ? 'transform translate-x-6' : ''}`}></div>
-                        </div>
-                    </div> */}
                 </div>
                 <div className="px-3 pb-3">
                     <a className={navLinkClass} onClick={handleLogout}>
