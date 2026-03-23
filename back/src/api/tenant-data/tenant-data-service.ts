@@ -51,7 +51,7 @@ export class TenantDataService implements ITenantDataService {
     }
 
     const cloudinaryData = await uploadToCloudinary(logoUrl, publicId.logoPublicId);
-    return this.repo.addLogo(tenantId, cloudinaryData.url);
+    return this.repo.addLogo(tenantId, cloudinaryData);
   }
 
   async addBanner (tenantId: string, bannerUrl: string) {
@@ -61,6 +61,6 @@ export class TenantDataService implements ITenantDataService {
     }
 
     const cloudinaryData = await uploadToCloudinary(bannerUrl, publicId.bannerPublicId);
-    return this.repo.addBanner(tenantId, cloudinaryData.url);
+    return this.repo.addBanner(tenantId, cloudinaryData);
   }
 }

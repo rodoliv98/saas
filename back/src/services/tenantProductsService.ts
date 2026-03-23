@@ -37,8 +37,8 @@ export class TenantProductsService implements ITenantProductsService {
   }
   
   async create (product: ProductDTO) {
-    const cloudinaryData = await uploadToCloudinary(product.imagePath);
-    const createdProduct = await this.repo.create(product, cloudinaryData.url);
+    const cloudinaryData = await uploadToCloudinary(product.imagePath, null);
+    const createdProduct = await this.repo.create(product, cloudinaryData);
 
     return createdProduct;
   }

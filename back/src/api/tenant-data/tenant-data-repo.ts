@@ -6,13 +6,14 @@ import { OrdersData } from "./entities/orders-data";
 import { TenantData } from "./entities/tenant-data-entitie";
 import { TenantDataStrDTO } from "./dto/tenant-data-dto";
 import { TenantPublicIdResult } from "./result/tenant-image-result";
+import { CloudinaryImageResult } from "../../integrations/cloudinary/cloudinary-types";
 
 export interface ITenantDataRepository {
   getData (tenantId: string): Promise<TenantData | null>;
   getOrdersData (tenantId: string, dates: TenantReportDTO): Promise<OrdersData[] | []>;
   patchData (tenantId: string, data: TenantDataStrDTO): Promise<TenantData | null>;
-  addLogo (tenantId: string, cloudinaryImageUrl: string): Promise<void>;
-  addBanner (tenantId: string, cloudinaryBannerUrl: string): Promise<void>;
+  addLogo (tenantId: string, cloudinaryData: CloudinaryImageResult): Promise<void>;
+  addBanner (tenantId: string, cloudinaryData: CloudinaryImageResult): Promise<void>;
   getImagePublicId (tenantId: string): Promise<TenantPublicIdResult | null>;
 }
 
@@ -117,7 +118,7 @@ export class TenantDataRepository implements ITenantDataRepository {
     });
   }
 
-  async addLogo (tenantId: string, cloudinaryImageUrl: string) {
+  async addLogo (tenantId: string, cloudinaryData: CloudinaryImageResult) {
     const tenant = await prisma.tenant.findUnique({
       where: {
         id: tenantId
@@ -133,14 +134,15 @@ export class TenantDataRepository implements ITenantDataRepository {
         id: tenantId
       },
       data: {
-        logoUrl: cloudinaryImageUrl
+        logoUrl: cloudinaryData.url,
+        logoPublicId: cloudinaryData.public_id
       },
     });
 
     return;
   }
 
-  async addBanner (tenantId: string, cloudinaryBannerUrl: string) {
+  async addBanner (tenantId: string, cloudinaryData: CloudinaryImageResult) {
     const tenant = await prisma.tenant.findUnique({
       where: {
         id: tenantId
@@ -156,7 +158,8 @@ export class TenantDataRepository implements ITenantDataRepository {
         id: tenantId
       },
       data: {
-        bannerUrl: cloudinaryBannerUrl
+        bannerUrl: cloudinaryData.url,
+        bannerPublicId: cloudinaryData.public_id
       },
     });
 

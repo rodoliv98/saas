@@ -2,11 +2,12 @@ import { PrismaClient } from "../generated/prisma/client"
 import { IPatchProductDTO } from "../controllers/tenantProductsController"
 import { IProdutos, ProductDTO } from "../controllers/tenantProductsController";
 import { CustomError } from "../middlewares/errorHandler";
+import { CloudinaryImageResult } from "../integrations/cloudinary/cloudinary-types";
 
 export interface ITenantProductsRepository {
   getProducts (id: string): Promise<IProdutos[] | []>;
   getProductById (productId: string, tenantId: string): Promise<IProdutos | null>;
-  create (product: ProductDTO, imageUrl: string): Promise<IProdutos>;
+  create (product: ProductDTO, cloudinaryData: CloudinaryImageResult): Promise<IProdutos>;
   patch (product: IPatchProductDTO, productId: string, tenantId: string): Promise<IProdutos | null>;
   delete (id: string, tenantId: string): Promise<IProdutos | null>;
 }
@@ -22,7 +23,7 @@ export class TenantProductsRepository implements ITenantProductsRepository {
     });
   }
 
-  async getProductById (productId: string, tenantId: string): Promise<IProdutos | null> {
+  async getProductById (productId: string, tenantId: string) {
     return prisma.produtos.findFirst({
       where: {
         id: productId,
@@ -31,20 +32,21 @@ export class TenantProductsRepository implements ITenantProductsRepository {
     });
   }
   
-  async create (product: ProductDTO, imageUrl: string): Promise<IProdutos> {
+  async create (product: ProductDTO, cloudinaryData: CloudinaryImageResult) {
     return prisma.produtos.create({
       data: {
         nomeProduto: product.nomeProduto,
         descProduto: product.descProduto,
         categoria: product.categoria,
         precoProduto: product.precoProduto,
-        imageUrl: imageUrl,
+        imageUrl: cloudinaryData.url,
+        imagePublicId: cloudinaryData.public_id,
         tenantId: product.tenantId
       }
     });
   }
 
-  async patch (updatedProduct: IPatchProductDTO, productId: string, tenantId: string): Promise<IProdutos | null> {
+  async patch (updatedProduct: IPatchProductDTO, productId: string, tenantId: string) {
     const product = await prisma.produtos.findFirst({
       where: {
         tenantId: tenantId,
@@ -66,7 +68,7 @@ export class TenantProductsRepository implements ITenantProductsRepository {
     });
   }
 
-  async delete (id: string, tenantId: string): Promise<IProdutos | null> {
+  async delete (id: string, tenantId: string) {
     const product = await prisma.produtos.findFirst({
       where: {
         tenantId: tenantId,
