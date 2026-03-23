@@ -2,7 +2,7 @@ import { IPatchProductDTO } from "../controllers/tenantProductsController";
 import { ProductDTO } from "../controllers/tenantProductsController";
 import { ITenantProductsRepository } from "../repository/tenantProductsRepository"
 import { IFormatProductsData } from "../interfaces/products-interfaces/products-inter-index";
-import { uploadToCloudinary } from "../utils/uploadToCloudinary";
+import { uploadToCloudinary } from "../integrations/cloudinary/cloudinary-upload";
 import { IFormatProductById } from "../interfaces/products-interfaces/products-inter-index";
 import { IProdutos } from "../controllers/tenantProductsController";
 import { CustomError } from "../middlewares/errorHandler";
@@ -37,8 +37,8 @@ export class TenantProductsService implements ITenantProductsService {
   }
   
   async create (product: ProductDTO) {
-    const imageUrl = await uploadToCloudinary(product.imagePath);
-    const createdProduct = await this.repo.create(product, imageUrl);
+    const cloudinaryData = await uploadToCloudinary(product.imagePath);
+    const createdProduct = await this.repo.create(product, cloudinaryData.url);
 
     return createdProduct;
   }

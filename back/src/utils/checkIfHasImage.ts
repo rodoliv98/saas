@@ -1,10 +1,10 @@
 import { IPatchProductDTO } from "../controllers/tenantProductsController";
-import { uploadToCloudinary } from "./uploadToCloudinary";
+import { uploadToCloudinary } from "../integrations/cloudinary/cloudinary-upload";
 
 export async function checkIfHasImage (imageUrl: string | undefined, body: IPatchProductDTO) {
     if (imageUrl) {
-        const url = await uploadToCloudinary(imageUrl);
-        const data = { ...body, imageUrl: url };
+        const cloudinaryData = await uploadToCloudinary(imageUrl);
+        const data = { ...body, imageUrl: cloudinaryData.url };
         return data;
     } else {
         return body;

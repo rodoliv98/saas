@@ -5,7 +5,7 @@ import { TenantReportDTO } from "./dto/tenant-reports-dto";
 import { OrdersData } from "./entities/orders-data";
 import { TenantData } from "./entities/tenant-data-entitie";
 import { TenantDataDTO } from "./dto/tenant-data-dto";
-import { uploadToCloudinary } from "../../utils/uploadToCloudinary";
+import { uploadToCloudinary } from "../../integrations/cloudinary/cloudinary-upload";
 
 export interface ITenantDataService {
   getData (tenantId: string): Promise<TenantData>;
@@ -45,12 +45,22 @@ export class TenantDataService implements ITenantDataService {
   }
 
   async addLogo (tenantId: string, logoUrl: string) {
-    const cloudinaryImageUrl = await uploadToCloudinary(logoUrl);
-    return this.repo.addLogo(tenantId, cloudinaryImageUrl);
+    const publicId = await this.repo.getImagePublicId(tenantId);
+    if (!publicId) {
+      throw new CustomError('Estabelecimento não encontrado', 404, ErrorCode.TENANT_NOT_FOUND);
+    }
+
+    const cloudinaryData = await uploadToCloudinary(logoUrl, publicId.logoPublicId);
+    return this.repo.addLogo(tenantId, cloudinaryData.url);
   }
 
   async addBanner (tenantId: string, bannerUrl: string) {
-    const cloudinaryBannerUrl = await uploadToCloudinary(bannerUrl);
-    return this.repo.addBanner(tenantId, cloudinaryBannerUrl);
+    const publicId = await this.repo.getImagePublicId(tenantId);
+    if (!publicId) {
+      throw new CustomError('Estabelecimento não encontrado', 404, ErrorCode.TENANT_NOT_FOUND);
+    }
+
+    const cloudinaryData = await uploadToCloudinary(bannerUrl, publicId.bannerPublicId);
+    return this.repo.addBanner(tenantId, cloudinaryData.url);
   }
 }

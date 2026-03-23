@@ -5,6 +5,7 @@ import { TenantReportDTO } from "./dto/tenant-reports-dto";
 import { OrdersData } from "./entities/orders-data";
 import { TenantData } from "./entities/tenant-data-entitie";
 import { TenantDataStrDTO } from "./dto/tenant-data-dto";
+import { TenantPublicIdResult } from "./result/tenant-image-result";
 
 export interface ITenantDataRepository {
   getData (tenantId: string): Promise<TenantData | null>;
@@ -12,6 +13,7 @@ export interface ITenantDataRepository {
   patchData (tenantId: string, data: TenantDataStrDTO): Promise<TenantData | null>;
   addLogo (tenantId: string, cloudinaryImageUrl: string): Promise<void>;
   addBanner (tenantId: string, cloudinaryBannerUrl: string): Promise<void>;
+  getImagePublicId (tenantId: string): Promise<TenantPublicIdResult | null>;
 }
 
 const prisma = new PrismaClient();
@@ -159,5 +161,17 @@ export class TenantDataRepository implements ITenantDataRepository {
     });
 
     return;
+  }
+
+  async getImagePublicId (tenantId: string) {
+    return await prisma.tenant.findUnique({
+      where: {
+        id: tenantId
+      },
+      select: {
+        logoPublicId: true,
+        bannerPublicId: true
+      }
+    });
   }
 }

@@ -1,10 +1,10 @@
 import { FlavorDTO, FlavorHasImage } from "../controllers/tenantFlavorsController";
-import { uploadToCloudinary } from "./uploadToCloudinary";
+import { uploadToCloudinary } from "../integrations/cloudinary/cloudinary-upload";
 
 export async function attachDefaultImage (imagePath: string | undefined, body: FlavorHasImage): Promise<FlavorDTO> {
   if (imagePath) {
-    const imageUrl = await uploadToCloudinary(imagePath);
-    const data = { ...body, imageUrl: imageUrl };
+    const cloudinaryData = await uploadToCloudinary(imagePath);
+    const data = { ...body, imageUrl: cloudinaryData.url };
     
     return data;
   

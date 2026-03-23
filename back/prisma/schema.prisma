@@ -47,8 +47,10 @@ model Tenant {
   pin                  String?            @unique @db.VarChar(6)
   trial                DateTime           @db.Timestamp(6)
   active               Boolean            @default(false)
-  logoUrl              String?
-  bannerUrl            String?
+  logoUrl              String? // remover o null antes de ir pra prod
+  logoPublicId         String? // remover o null antes de ir pra prod
+  bannerUrl            String? // remover o null antes de ir pra prod
+  bannerPublicId       String? // remover o null antes de ir pra prod
   assinaturas          assinaturas[]
   codigos_ativacao     Codigos_Ativacao[]
   entregadores         Entregadores[]
@@ -95,31 +97,33 @@ model Codigos_Ativacao {
 }
 
 model Produtos {
-  id           String              @id @default(cuid())
-  tenantId     String
-  nomeProduto  String
-  descProduto  String
-  categoria    String
-  precoProduto Decimal             @db.Decimal(10, 2)
-  imageUrl     String
-  pedidosItens Itens_dos_Pedidos[]
-  tenant       Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  sabores      Sabores[]
+  id            String              @id @default(cuid())
+  tenantId      String
+  nomeProduto   String
+  descProduto   String
+  categoria     String
+  precoProduto  Decimal             @db.Decimal(10, 2)
+  imageUrl      String
+  imagePublicId String? // remover o null antes de ir pra prod
+  pedidosItens  Itens_dos_Pedidos[]
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  sabores       Sabores[]
 
   @@map("produtos")
 }
 
 model Sabores {
-  id           String   @id @default(cuid())
-  produtoId    String
-  nomeProduto  String
-  descProduto  String
-  categoria    String
-  precoProduto Decimal  @db.Decimal(10, 2)
-  imageUrl     String
-  tenantId     String
-  produto      Produtos @relation(fields: [produtoId], references: [id], onDelete: Cascade)
-  tenant       Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  id            String   @id @default(cuid())
+  produtoId     String
+  nomeProduto   String
+  descProduto   String
+  categoria     String
+  precoProduto  Decimal  @db.Decimal(10, 2)
+  imageUrl      String
+  imagePublicId String? // remover o null antes de ir pra prod
+  tenantId      String
+  produto       Produtos @relation(fields: [produtoId], references: [id], onDelete: Cascade)
+  tenant        Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
 
   @@map("sabores")
 }
