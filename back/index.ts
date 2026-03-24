@@ -29,6 +29,7 @@ const corsOptions = {
   allowedHeaders: ["Content-Type", "Authorization"]
 }
 
+app.use('/static', express.static('public'));
 app.use(express.json({ limit: '10kb' }));
 app.use(cors(corsOptions));
 app.use(cookieParser());

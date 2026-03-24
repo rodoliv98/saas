@@ -61,17 +61,28 @@ export class TenantFlavorsController {
   }
 
   async create (req: Request, res: Response, next: NextFunction) {
+    const tenantId = req.tenant;
+    if (!tenantId) {
+      return res.status(401).json({ error: 'Não autorizado' });
+    }
+    
     try {
-      const tenantId = req.tenant;
-      if (!tenantId) return res.status(401).json({ error: 'Não autorizado' });
-
       const productId = cuidSchema.parse(req.params.id);
       // front vem como string por causa do formData
       const body = req.body;
       body.precoProduto = Number(body.precoProduto);
 
       const data = createProductSchema.parse(body);
-      const flavor = await this.service.create(productId, req.file?.path, data, tenantId);
+      const imagePath = req.file?.path;
+      
+      const createFlavor = {
+        data,
+        tenantId,
+        productId,
+        multerImagePath: imagePath
+      }
+
+      const flavor = await this.service.create(createFlavor);
 
       res.status(200).json({ msg: 'Sabor ou item adicional criado', flavor: flavor });
 
@@ -82,15 +93,23 @@ export class TenantFlavorsController {
   }
 
   async patch (req: Request, res: Response, next: NextFunction) {
+    const tenantId = req.tenant;
+    if (!tenantId) {
+      return res.status(401).json({ error: 'Não autorizado' });
+    }
+
     try {
-      const tenantId = req.tenant;
-      if (!tenantId) {
-        return res.status(401).json({ error: 'Não autorizado' });
+      const flavorId = cuidSchema.parse(req.params.id);
+      const data = createProductSchema.parse(req.body);
+
+      const patchData = {
+        flavorId,
+        tenantId,
+        data,
+        multerImagePath: req.file?.path
       }
 
-      const flavorId = cuidSchema.parse(req.params.id);
-      const data = createProductSchema.partial().parse(req.body);
-      await this.service.patch({ flavorId, data, tenantId });
+      await this.service.patch(patchData);
 
       res.status(200).json({ msg: 'Sabor atualizado' });
 

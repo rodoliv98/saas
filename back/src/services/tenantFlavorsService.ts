@@ -4,12 +4,13 @@ import { CustomError } from "../middlewares/errorHandler";
 import { ITenantFlavorsRepository } from "../repository/tenantFlavorsRepository";
 import { attachDefaultImage } from "../utils/attachDefaultImage";
 import { ErrorCode } from "../types/constants/error-codes-constants";
-import { PatchFlavorDTO } from "../api/tenant-flavor/dto/tenant-flavor-dto";
+import { CreateFlavorDTO, PatchFlavorDTO } from "../api/tenant-flavor/dto/tenant-flavor-dto";
+import { uploadToCloudinary } from "../integrations/cloudinary/cloudinary-upload";
 
 export interface ITenantFlavorsService {
   getFlavors (productId: string): Promise<IFlavor[] | []>;
   getFlavorById (flavorId: string, tenantId: string): Promise<IFlavor>;
-  create (productId: Cuid, imagePath: string | undefined, body: FlavorHasImage, tenantId: string): Promise<IFlavor>;
+  create (flavorData: CreateFlavorDTO): Promise<IFlavor>;
   patch (data: PatchFlavorDTO): Promise<void>;
   delete (productId: Cuid, tenantId: string): Promise<void>;
 }
@@ -30,21 +31,67 @@ export class TenantFlavorsService implements ITenantFlavorsService {
     return flavor;
   }
 
-  async create (productId: Cuid, imagePath: string | undefined, body: FlavorHasImage, tenantId: string) {
-    const data = await attachDefaultImage(imagePath, body);
-    const flavor = await this.repo.create(data, productId, tenantId);
+  async create (flavorData: CreateFlavorDTO) {
+    if (flavorData.multerImagePath) {
+      const cloudinaryData = await uploadToCloudinary(flavorData.multerImagePath, null);
 
+      const createFlavorData = {
+        ...flavorData.data,
+        tenantId: flavorData.tenantId,
+        productId: flavorData.productId,
+        imagePublicId: cloudinaryData.public_id,
+        imageUrl: cloudinaryData.url
+      }
+
+      const flavor = await this.repo.create(createFlavorData);
+      return flavor;
+    }
+
+    const defaultImage = process.env.DEFAULT_IMAGE;
+    if (!defaultImage) {
+      throw new CustomError('Imagem padrão não configurada', 500, ErrorCode.INTERNAL_SERVER_ERROR);
+    }
+
+    const createFlavorData = {
+      ...flavorData.data,
+      tenantId: flavorData.tenantId,
+      productId: flavorData.productId,
+      imagePublicId: null,
+      imageUrl: defaultImage
+    }
+    const flavor = await this.repo.create(createFlavorData);
     return flavor;
   }
 
-  async patch (data: PatchFlavorDTO) {
-    const { flavorId, tenantId } = data;
-    const foundFlavor = await this.repo.findFlavor({ flavorId, tenantId });
+  async patch (flavorData: PatchFlavorDTO) {
+    const foundFlavor = await this.repo.findFlavor(flavorData);
     if (!foundFlavor) {
       throw new CustomError('Nenhum sabor encontrado para atualização', 404, ErrorCode.FLAVOR_NOT_FOUND);
     }
-    
-    await this.repo.patch(data);
+
+    if (!foundFlavor.imageUrl) {
+      throw new CustomError('O sabor não possui uma imagem para ser atualizada', 400, ErrorCode.BAD_REQUEST);
+    } 
+
+    if (flavorData.multerImagePath) {
+      const cloudinaryData = await uploadToCloudinary(flavorData.multerImagePath, foundFlavor.imagePublicId);
+      const updateFlavorData = {
+        ...flavorData.data,
+        imagePublicId: cloudinaryData.public_id,
+        imageUrl: cloudinaryData.url
+      } 
+      
+      await this.repo.patch(updateFlavorData, flavorData.flavorId);
+      return;
+    }
+
+    const updateFlavorData = {
+      ...flavorData.data,
+      imagePublicId: foundFlavor.imagePublicId,
+      imageUrl: foundFlavor.imageUrl
+    }
+
+    await this.repo.patch(updateFlavorData, flavorData.flavorId);
     return;
   }
 

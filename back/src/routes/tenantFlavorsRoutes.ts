@@ -16,7 +16,7 @@ router.get('/tenant-flavors/:id', checkLogin, controller.getFlavorById.bind(cont
 
 router.post('/flavors/:id',checkLogin, upload.single('image'), controller.create.bind(controller));
 
-router.patch('/flavors/:id', checkLogin, controller.patch.bind(controller));
+router.patch('/flavors/:id', checkLogin, upload.single('image'), controller.patch.bind(controller));
 
 router.delete('/flavors/:id', checkLogin, controller.delete.bind(controller));
 

@@ -1,85 +1,7 @@
 import { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import { useRefreshHook } from '../utils/refresh-hook';
-
-const config = {
-  createProduct: {
-    h2: "Salvar Novo Produto",
-    labelName: "Nome do produto",
-    labelDesc: "Descrição do produto",
-    labelPrice: "Preço do produto",
-    labelCategory: "Categoria do produto",
-    labelImage: "Imagem do produto",
-    categorias: [
-      { value: 'pizzas', label: '🍕 Pizzas' },
-      { value: 'massas', label: '🍝 Massas' },
-      { value: 'hamburgers', label: '🍔 Hamburguers' },
-      { value: 'pratos_prontos', label: '🍛 Pratos Prontos' },
-      { value: 'bebidas', label: '🥤 Bebidas' },
-      { value: 'sobremesas', label: '🍰 Sobremesas' },
-      { value: 'porcoes', label: '🍟 Porções' },
-      { value: 'lanches', label: '🥪 Lanches' },
-      { value: 'sushis', label: '🍣 Sushis' },
-      { value: 'saladas', label: '🥗 Saladas' },
-      { value: 'sopas', label: '🍜 Sopas' },
-      { value: 'vegetariano', label: '🥦 Opções Vegetarianas' },
-    ],
-    button: "Salvar Produto",
-  },
-  editProduct: {
-    h2: "Editar Produto",
-    labelName: "Nome do produto",
-    labelDesc: "Descrição do produto",
-    labelPrice: "Preço do produto",
-    labelCategory: "Categoria do produto",
-    labelImage: "Imagem do produto",
-    categorias: [
-      { value: 'pizzas', label: '🍕 Pizzas' },
-      { value: 'massas', label: '🍝 Massas' },
-      { value: 'hamburgers', label: '🍔 Hamburguers' },
-      { value: 'pratos_prontos', label: '🍛 Pratos Prontos' },
-      { value: 'bebidas', label: '🥤 Bebidas' },
-      { value: 'sobremesas', label: '🍰 Sobremesas' },
-      { value: 'porcoes', label: '🍟 Porções' },
-      { value: 'lanches', label: '🥪 Lanches' },
-      { value: 'sushis', label: '🍣 Sushis' },
-      { value: 'saladas', label: '🥗 Saladas' },
-      { value: 'sopas', label: '🍜 Sopas' },
-      { value: 'vegetariano', label: '🥦 Opções Vegetarianas' },
-    ],
-    button: "Salvar Alterações",
-  },
-  createFlavor: {
-    h2: "Adicionar Sabor",
-    labelName: "Nome do sabor",
-    labelDesc: "Descrição do sabor",
-    labelPrice: "Preço do sabor",
-    labelCategory: "Categoria do sabor",
-    labelImage: "Imagem do sabor",
-    button: "Salvar Sabor",
-    categorias: [
-      { value: 'borda', label: '🫓 Borda' },
-      { value: 'sabores', label: '🍕 Sabores' },
-      { value: 'adicional', label: '🧂 Adicional' },
-      { value: 'bebida', label: '🥤 Bebida' },
-    ]
-  },
-  editFlavor: {
-    h2: "Adicionar Sabor",
-    labelName: "Nome do sabor",
-    labelDesc: "Descrição do sabor",
-    labelPrice: "Preço do sabor",
-    labelCategory: "Categoria do sabor",
-    labelImage: "Imagem do sabor",
-    button: "Salvar Sabor",
-    categorias: [
-      { value: 'borda', label: '🫓 Borda' },
-      { value: 'sabores', label: '🍕 Sabores' },
-      { value: 'adicional', label: '🧂 Adicional' },
-      { value: 'bebida', label: '🥤 Bebida' },
-    ]
-  }
-}
+import { modalConfig } from '../../config/modal-config';
 
 function ModalForm ({ modalOpen, setModalOpen, productId, type }) {
 // Estado para o formulário
@@ -101,7 +23,7 @@ function ModalForm ({ modalOpen, setModalOpen, productId, type }) {
     labelImage,
     categorias,
     button,
-  } = config[type] || config.createProduct;
+  } = modalConfig[type] || modalConfig.createProduct;
   const { refreshHook } = useRefreshHook();
 
   useEffect(() => {
@@ -166,6 +88,8 @@ function ModalForm ({ modalOpen, setModalOpen, productId, type }) {
         await refreshHook('patch', `/products/${productId}`, formData);
       } else if (type === 'createFlavor') {
         await refreshHook('post', `/flavors/${productId}`, formData);
+      } else if (type === 'editFlavor') {
+        await refreshHook('patch', `/flavors/${productId}`, formData)
       }
 
       setImage(null);

@@ -1,17 +1,18 @@
 import { Decimal } from "@prisma/client/runtime/library";
 import { PrismaClient } from "../generated/prisma/client";
-import { FlavorDTO, IFlavor } from "../controllers/tenantFlavorsController";
+import { IFlavor } from "../controllers/tenantFlavorsController";
 import { Cuid } from "../types/types-index";
 import { CustomError } from "../middlewares/errorHandler";
 import { PatchFlavorDTO } from "../api/tenant-flavor/dto/tenant-flavor-dto";
 import { Flavor } from "../api/tenant-flavor/entitie/flavor-entitie";
+import { PatchFlavorData, FlavorImageData, CreateFlavorData } from "../api/tenant-flavor/types/tenant-flavor-types";
 
 export interface ITenantFlavorsRepository {
   getFlavors (productId: string): Promise<IFlavor[] | []>;
   getFlavorById (flavorId: string, tenantId: string): Promise<IFlavor | null>;
-  findFlavor (data: Partial<PatchFlavorDTO>): Promise<Flavor | null>;
-  create (data: FlavorDTO, productId: Cuid, tenantId: string): Promise<IFlavor>;
-  patch (data: PatchFlavorDTO): Promise<Flavor>;
+  findFlavor (data: PatchFlavorDTO): Promise<FlavorImageData | null> | null;
+  create (flavorData: CreateFlavorData): Promise<IFlavor>;
+  patch (data: PatchFlavorData, flavorId: string): Promise<Flavor>;
   delete (productId: Cuid, tenantId: string): Promise<DeletedFlavor>;
 }
 
@@ -45,36 +46,41 @@ export class TenantFlavorsRepository implements ITenantFlavorsRepository {
     });
   }
 
-  async findFlavor (data: Partial<PatchFlavorDTO>) {
+  async findFlavor (data: PatchFlavorDTO) {
     return prisma.sabores.findFirst({
       where: {
         id: data.flavorId,
         tenantId: data.tenantId
+      },
+      select: {
+        imageUrl: true,
+        imagePublicId: true,
       }
     });    
   }
 
-  async create (data: FlavorDTO, productId: Cuid, tenantId: string) {
+  async create (flavorData: CreateFlavorData) {
     return prisma.sabores.create({
       data: {
-        nomeProduto: data.nomeProduto,
-        descProduto: data.descProduto,
-        precoProduto: data.precoProduto,
-        categoria: data.categoria,
-        imageUrl: data.imageUrl,
-        produtoId: productId,
-        tenantId: tenantId
+        nomeProduto: flavorData.nomeProduto,
+        descProduto: flavorData.descProduto,
+        precoProduto: flavorData.precoProduto,
+        categoria: flavorData.categoria,
+        imageUrl: flavorData.imageUrl,
+        imagePublicId: flavorData.imagePublicId,
+        produtoId: flavorData.productId,
+        tenantId: flavorData.tenantId
       }
     })
   }
 
-  async patch (data: PatchFlavorDTO) {
+  async patch (data: CreateFlavorData, flavorId: string) {
     return prisma.sabores.update({
       where: {
-        id: data.flavorId
+        id: flavorId
       },
       data: {
-        ...data.data
+        ...data
       }
     });
   }
