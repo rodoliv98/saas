@@ -12,6 +12,7 @@ export interface IProdutos { // <- interface de objeto que vem do db
   categoria: string;
   precoProduto: Decimal; // <- tipo é transformado em decimal ao introduzir no db
   imageUrl: string;
+  imagePublicId: string | null;
   tenantId: string;
 }
 
@@ -112,19 +113,29 @@ export class TenantProductsController {
   }
 
   async patch (req: Request, res: Response, next: NextFunction) {
+    const tenantId = req.tenant;
+    if (!tenantId) {
+      return res.status(401).json({ error: 'Não autorizado' });
+    }
+    
     try {
-      const tenantId = req.tenant;
-      if (!tenantId) return res.status(401).json({ error: 'Não autorizado' });
-      
       const productId = cuidSchema.parse(req.params.id);
       // preço vem como string por causa do formData
       // usando decimal no prisma
-      const parsedBody = req.body;
-      parsedBody.precoProduto = Number(parsedBody.precoProduto);
+      const body = req.body;
+      body.precoProduto = Number(body.precoProduto);
 
-      const body = createProductSchema.parse(parsedBody);
-      const data = await checkIfHasImage(req.file?.path, body);
-      await this.service.patch(data, productId, tenantId);
+      const parsedBody = createProductSchema.parse(body);
+      // const data = await checkIfHasImage(req.file?.path, body);
+
+      const patchProduct = {
+        ...parsedBody,
+        tenantId,
+        productId,
+        multerImagePath: req.file?.path
+      }
+
+      await this.service.patch(patchProduct);
 
       res.status(200).json({ msg: 'Produto atualizado' });
 

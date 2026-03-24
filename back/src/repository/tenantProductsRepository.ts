@@ -3,12 +3,13 @@ import { IPatchProductDTO } from "../controllers/tenantProductsController"
 import { IProdutos, ProductDTO } from "../controllers/tenantProductsController";
 import { CustomError } from "../middlewares/errorHandler";
 import { CloudinaryImageResult } from "../integrations/cloudinary/cloudinary-types";
+import { CreateProductData } from "../api/product/types/product-types";
 
 export interface ITenantProductsRepository {
   getProducts (id: string): Promise<IProdutos[] | []>;
   getProductById (productId: string, tenantId: string): Promise<IProdutos | null>;
   create (product: ProductDTO, cloudinaryData: CloudinaryImageResult): Promise<IProdutos>;
-  patch (product: IPatchProductDTO, productId: string, tenantId: string): Promise<IProdutos | null>;
+  patch (productData: CreateProductData): Promise<void>;
   delete (id: string, tenantId: string): Promise<IProdutos | null>;
 }
 
@@ -46,26 +47,15 @@ export class TenantProductsRepository implements ITenantProductsRepository {
     });
   }
 
-  async patch (updatedProduct: IPatchProductDTO, productId: string, tenantId: string) {
-    const product = await prisma.produtos.findFirst({
+  async patch (productData: CreateProductData) {
+    await prisma.produtos.update({
       where: {
-        tenantId: tenantId,
-        id: productId
-      }
-    });
-
-    if (!product) {
-      throw new CustomError('Produto não encontrado', 404, 'PRODUCT_NOT_FOUND');
-    }
-
-    return prisma.produtos.update({
-      where: {
-        id: productId
+        id: productData.productId
       },
-      data: {
-        ...updatedProduct
-      }
+      data: productData
     });
+
+    return;
   }
 
   async delete (id: string, tenantId: string) {

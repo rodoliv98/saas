@@ -103,9 +103,9 @@ export class TenantFlavorsController {
       const data = createProductSchema.parse(req.body);
 
       const patchData = {
+        data,
         flavorId,
         tenantId,
-        data,
         multerImagePath: req.file?.path
       }
 
