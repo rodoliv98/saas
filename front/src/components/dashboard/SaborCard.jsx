@@ -2,6 +2,7 @@ import { Edit, Trash2 } from "lucide-react"
 import PatchSaboresModal from "./PatchSaboresModal"
 import { useState } from "react";
 import { useRefreshHook } from "../utils/refresh-hook";
+import ModalForm from "./ModalForm";
 
 function SaborCard ({ flavor, formatPrice, setOpenMostrarSabores }) {
   const [modalOpen, setModalOpen] = useState(false);
@@ -50,8 +51,8 @@ function SaborCard ({ flavor, formatPrice, setOpenMostrarSabores }) {
           )}
         </div>
 
-        {modalOpen == true && (
-          <PatchSaboresModal flavorId={flavor.id} setModalOpen={setModalOpen} />
+        {modalOpen && (
+          <ModalForm productId={flavor.id} modalOpen={modalOpen} setModalOpen={setModalOpen} type="editFlavor" />
         )}
 
         {/* Ações */}

@@ -1,9 +1,9 @@
 import { Edit, Trash2, Plus, Hamburger } from "lucide-react";
-import PatchModal from "./PatchModal";
 import { useState } from "react";
 import CriarSaboresModal from "./CriarSaboresModal";
 import MostrarSabores from "./MostrarSabores";
 import { useRefreshHook } from "../utils/refresh-hook";
+import ModalForm from "./ModalForm";
 
 const ProductCard = ({ product, reloadPage }) => {
   // Mapeamento de categorias para ícones e cores
@@ -91,11 +91,11 @@ const ProductCard = ({ product, reloadPage }) => {
       </div>
 
       {modalOpen && (
-        <PatchModal productId={product.id} modalOpen={modalOpen} setModalOpen={setModalOpen} childReloadPage={childReloadPage} />
+        <ModalForm productId={product.id} modalOpen={modalOpen} setModalOpen={setModalOpen} type="editProduct" />
       )}
       
       {saborModalOpen && (
-        <CriarSaboresModal setSaborModalOpen={setSaborModalOpen} productId={product.id} />
+        <ModalForm productId={product.id} modalOpen={saborModalOpen} setModalOpen={setSaborModalOpen} type="createFlavor" />
       )}
 
       {openMostrarSabores && (

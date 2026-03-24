@@ -5,7 +5,7 @@ import ModalForm from './ModalForm';
 import { useRefreshHook } from '../utils/refresh-hook';
 
 function CardapioDashboard() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
   const [products, setProducts] = useState([]);
   const [reload, setReload] = useState('');
   const [error, setError] = useState('');
@@ -97,7 +97,7 @@ function CardapioDashboard() {
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold text-gray-800">Produtos</h1>
         <button 
-          onClick={() => setIsModalOpen(true)}
+          onClick={() => setModalOpen(true)}
           className="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-lg transition-colors"
         >
           <Plus className="w-5 h-5" />
@@ -105,7 +105,9 @@ function CardapioDashboard() {
         </button>
       </div>
 
-      {isModalOpen == true && <ModalForm isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />}
+      {modalOpen && (
+        <ModalForm modalOpen={modalOpen} setModalOpen={setModalOpen} />
+      )}
 
       {/* Filtros funcionais */}
       <div className="mb-6 p-4 bg-gray-50 rounded-lg">
@@ -146,8 +148,8 @@ function CardapioDashboard() {
             <ProductCard
               key={product.id}
               product={product}
-              setIsModalOpen={setIsModalOpen}
-              isModalOpen={isModalOpen}
+              setModalOpen={setModalOpen}
+              modalOpen={modalOpen}
               reloadPage={reloadPage}
             />
           ))}
