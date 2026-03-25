@@ -4,6 +4,7 @@ import { TenantFlavorsRepository } from "../repository/tenantFlavorsRepository";
 import { Router } from "express";
 import { upload } from "../../cloudinary/multer";
 import { checkLogin } from "../middlewares/checkLogin";
+import { validateImageType } from "../middlewares/validateImageType";
 
 const router = Router();
 const repo = new TenantFlavorsRepository();
@@ -14,9 +15,9 @@ router.get('/flavors/:id', checkLogin, controller.getFlavors.bind(controller));
 
 router.get('/tenant-flavors/:id', checkLogin, controller.getFlavorById.bind(controller));
 
-router.post('/flavors/:id',checkLogin, upload.single('image'), controller.create.bind(controller));
+router.post('/flavors/:id',checkLogin, upload.single('image'), validateImageType, controller.create.bind(controller));
 
-router.patch('/flavors/:id', checkLogin, upload.single('image'), controller.patch.bind(controller));
+router.patch('/flavors/:id', checkLogin, upload.single('image'), validateImageType, controller.patch.bind(controller));
 
 router.delete('/flavors/:id', checkLogin, controller.delete.bind(controller));
 

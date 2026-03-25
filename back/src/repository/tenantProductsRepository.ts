@@ -52,7 +52,14 @@ export class TenantProductsRepository implements ITenantProductsRepository {
       where: {
         id: productData.productId
       },
-      data: productData
+      data: {
+        nomeProduto: productData.nomeProduto,
+        descProduto: productData.descProduto,
+        categoria: productData.categoria,
+        precoProduto: productData.precoProduto,
+        imageUrl: productData.imageUrl,
+        imagePublicId: productData.imagePublicId
+      }
     });
 
     return;

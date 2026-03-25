@@ -106,7 +106,7 @@ function CardapioDashboard() {
       </div>
 
       {modalOpen && (
-        <ModalForm modalOpen={modalOpen} setModalOpen={setModalOpen} />
+        <ModalForm modalOpen={modalOpen} setModalOpen={setModalOpen} type="createProduct" />
       )}
 
       {/* Filtros funcionais */}

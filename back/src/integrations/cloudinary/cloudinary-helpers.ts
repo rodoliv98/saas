@@ -14,16 +14,13 @@ export async function uploadImageCloudinary(filePath: string): Promise<Cloudinar
     console.log(err);
     throw new CustomError('Erro ao fazer upload da imagem', 502, ErrorCode.BAD_GATEWAY);
   });
-  cloudinary.uploader.destroy
-  console.log('Upload bem-sucedido:', result);
-
+  
   const optimizedUrl = result.secure_url.replace('/upload/', '/upload/f_auto,q_auto/');
-  const imageData = {
+  
+  return {
     public_id: result.public_id,
     url: optimizedUrl
-  }
-  
-  return imageData;
+  };
 }
 
 export async function deleteFromCloudinary(publicId: string) {

@@ -1,13 +1,14 @@
 import { CloudinaryImageResult } from './cloudinary-types';
 import { uploadImageCloudinary, deleteFromCloudinary } from './cloudinary-helpers';
-import { validateImage } from './claudinary-validators';
+import fs from 'fs/promises';
 
 export async function uploadToCloudinary(filePath: string, publicId: string | null): Promise<CloudinaryImageResult> {
   if (publicId) {
     await deleteFromCloudinary(publicId);
   }
 
-  validateImage(filePath);
+  const imageData = await uploadImageCloudinary(filePath);
+  await fs.unlink(filePath);
 
-  return await uploadImageCloudinary(filePath);
+  return imageData;
 }

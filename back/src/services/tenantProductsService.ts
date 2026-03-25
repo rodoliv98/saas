@@ -1,4 +1,3 @@
-import { IPatchProductDTO } from "../controllers/tenantProductsController";
 import { ProductDTO } from "../controllers/tenantProductsController";
 import { ITenantProductsRepository } from "../repository/tenantProductsRepository"
 import { IFormatProductsData } from "../interfaces/products-interfaces/products-inter-index";

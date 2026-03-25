@@ -1,4 +1,4 @@
-import { Router } from "express";
+/* import { Router } from "express";
 import { PaymentRepository } from "../repository/payment-repository";
 import { PaymentService } from "../services/payment-service";
 import { PaymentController } from "../controllers/payment-controller";
@@ -10,4 +10,4 @@ const controller = new PaymentController(service);
 
 router.post('/payment', controller.createPayment.bind(controller));
 
-export default router;
+export default router; */

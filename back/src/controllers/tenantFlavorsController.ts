@@ -99,8 +99,11 @@ export class TenantFlavorsController {
     }
 
     try {
+      const body = req.body;
+      body.precoProduto = Number(body.precoProduto);
+
       const flavorId = cuidSchema.parse(req.params.id);
-      const data = createProductSchema.parse(req.body);
+      const data = createProductSchema.parse(body);
 
       const patchData = {
         data,

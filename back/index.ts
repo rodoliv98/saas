@@ -12,7 +12,7 @@ import orderRoutes from './src/api/orders/ordersRoutes';
 import userRegister from './src/routes/user-register-routes';
 import userData from './src/routes/user-data-routes';
 import telegram from './src/api/telegram/telegram-routes';
-import paymentRoutes from './src/routes/payment-routes';
+// import paymentRoutes from './src/routes/payment-routes';
 import http from 'node:http';
 import { Server } from 'socket.io';
 import { errorHandler } from './src/middlewares/errorHandler'
@@ -58,7 +58,7 @@ io.on('connection', (socket) => {
 
 app.use('/', userRegister);
 app.use('/', userData);
-app.use('/', paymentRoutes);
+// app.use('/', paymentRoutes);
 app.use('/', tenantProducts);
 app.use('/', loginRoutes);
 app.use('/', registerRoutes);

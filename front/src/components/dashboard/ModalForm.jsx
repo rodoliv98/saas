@@ -80,10 +80,13 @@ function ModalForm ({ modalOpen, setModalOpen, productId, type }) {
       formData.append(key, value)
     })
     formData.append('image', image);
-
+  
     try {
+      console.log('hit', type);
       if (type === 'createProduct') {
-        await refreshHook('post', '/products', formData);
+        console.log('test');
+        const res = await refreshHook('post', '/products', formData);
+        console.log(res);
       } else if (type === 'editProduct') {
         await refreshHook('patch', `/products/${productId}`, formData);
       } else if (type === 'createFlavor') {
@@ -96,6 +99,7 @@ function ModalForm ({ modalOpen, setModalOpen, productId, type }) {
       setModalOpen(false);
 
     } catch (err) {
+      console.log(err);
       if (err.response.data.code === "VALIDATION_ERROR") {
         return setError(err.response.data.error.map(err => err.message).join(', '));
       }
