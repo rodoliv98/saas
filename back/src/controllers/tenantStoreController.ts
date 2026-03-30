@@ -53,7 +53,6 @@ export class TenantStoreController {
       res.status(200).json(data);
 
     } catch (err) {
-      console.error('Erro no controlador tenant-store-controller getData method:\n', err);
       next(err);
     }
   }
@@ -68,7 +67,6 @@ export class TenantStoreController {
       res.status(200).json(data);
 
     } catch (err) {
-      console.error('Erro no controlador tenant-store-controller isOpen method:\n', err);
       next(err);
     }
   }
@@ -84,7 +82,6 @@ export class TenantStoreController {
       res.status(200).json({ msg: 'Status da loja atualizado' });
 
     } catch (err) {
-      console.error('Erro no controlador tenant-store-controller patchIsOpen method:\n', err);
       next(err);
     }
   }
@@ -103,7 +100,6 @@ export class TenantStoreController {
       res.status(200).json({ msg: 'Código criado', code: code })
 
     } catch (err) {
-      console.error('Erro no controlador tenant-store-controller createDeliveryCode method:\n', err);
       next(err);
     }
   }

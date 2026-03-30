@@ -13,7 +13,6 @@ export class UserDataController {
       res.status(200).json(data);
 
     } catch (err) {
-      console.log('Erro no controlador user-data-controller getData method:\n');
       next(err);
     }
   }

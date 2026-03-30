@@ -36,10 +36,10 @@ export class PaymentService {
       })
     });
 
-    if (!res.ok) {
+    /* if (!res.ok) {
       console.log(res);
       throw new CustomError('Erro na resposta do Abacate', 502, ErrorCode.ABACATE.CHARGE_CREATE);
-    }
+    } */
     // da api vem gmt 0 e eu preciso gmt -3 nos timestamps
     const abacateCharge = await res.json();
     const charge = this.covertAbacateTimestamps(abacateCharge);

@@ -9,7 +9,7 @@ import { ErrorCode } from "../types/constants/error-codes-constants";
 
 export interface ITenantStoreService {
   getData (slug: SlugType): Promise<IFormatStoreData>;
-  isOpen (id: string): Promise<{ isStoreOpen: boolean; storeName: string }>;
+  isOpen (id: string): Promise<{ isStoreOpen: boolean; storeName: string }>; // criar interface dps
   patchIsOpen (data: boolean, tenantId: string): Promise<ITenantData>;
   createDeliveryCode (tenantSlug: string, tenantId: string): Promise<string>;
 }
@@ -24,8 +24,8 @@ export class TenantStoreService implements ITenantStoreService {
     }
 
     const products = await this.repo.getProducts(tenant.id);
-    if (!products) {
-      throw new CustomError('Nenhum produto encontrado', 404, ErrorCode.PRODUCT_NOT_FOUND);
+    if (!products || products.length === 0) {
+      throw new CustomError('Nenhum produto cadastrado nesse tenant', 404, ErrorCode.PRODUCT_NOT_FOUND);
     }
 
     const formatedData = this.formatStoreData(tenant, products);

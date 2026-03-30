@@ -9,7 +9,10 @@ function UserLogin() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const redirectUrl = searchParams.get('redirect') || '/';
+  const raw = searchParams.get('redirect') || '/';
+  const redirectUrl = raw.startsWith('/') && !raw.startsWith('//')
+  ? raw
+  : '/';
   const { login } = useAuth();
   const { refreshHook } = useRefreshHook();
 

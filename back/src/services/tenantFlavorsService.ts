@@ -1,8 +1,7 @@
-import { FlavorHasImage, IFlavor } from "../controllers/tenantFlavorsController";
+import { IFlavor } from "../controllers/tenantFlavorsController";
 import { Cuid } from "../types/types-index";
 import { CustomError } from "../middlewares/errorHandler";
 import { ITenantFlavorsRepository } from "../repository/tenantFlavorsRepository";
-import { attachDefaultImage } from "../utils/attachDefaultImage";
 import { ErrorCode } from "../types/constants/error-codes-constants";
 import { CreateFlavorDTO, PatchFlavorDTO } from "../api/tenant-flavor/dto/tenant-flavor-dto";
 import { uploadToCloudinary } from "../integrations/cloudinary/cloudinary-upload";

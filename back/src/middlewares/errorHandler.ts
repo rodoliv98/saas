@@ -1,6 +1,13 @@
 import { Request, Response, NextFunction } from "express"
 import { ZodError } from "zod"
 import { ErrorCode } from "../types/constants/error-codes-constants";
+import {
+  PrismaClientKnownRequestError, 
+  PrismaClientUnknownRequestError, 
+  PrismaClientInitializationError, 
+  PrismaClientValidationError
+} from "../generated/prisma/internal/prismaNamespace";
+import logger from "../winston/winston";
 
 export class CustomError extends Error {
   public status: number;
@@ -22,26 +29,64 @@ function parseZodError(err: any) {
   }));
 }
 
-export function errorHandler (err: any, _req: Request, res: Response, _next: NextFunction) {
+export function errorHandler (err: any, req: Request, res: Response, _next: NextFunction) {
   if (err instanceof ZodError) {
-    const simplified = parseZodError(err);
-    return res.status(400).json({ error: simplified, code: ErrorCode.VALIDATION_ERROR });
+    const fields = parseZodError(err);
+    req.logger.warn('Erro de validação', {
+      event: 'validation_error',
+      body: req.body,
+      error: fields,
+      actor: {
+        userId: req.user,
+        tenantId: req.tenant
+      }
+    });
+    return res.status(400).json({ error: fields, code: ErrorCode.VALIDATION_ERROR });
   }
 
-  if (err.code === 'P2025') {
-    return res.status(404).json({ error: 'Produto não encontrado' });
-  }
-
-  if (err.code === 'P2002') {
-    console.log('Erro p2002\n', err);
-    const errorName = err.meta.target[0]
-    return res.status(400).json({ error: errorName });
-  }
-
-  if (err.code === undefined || err.status === undefined) {
-    console.log('Vai ser enviado como erro genérico\n', err);
+  if (
+    err instanceof PrismaClientInitializationError ||
+    err instanceof PrismaClientKnownRequestError ||
+    err instanceof PrismaClientUnknownRequestError ||
+    err instanceof PrismaClientValidationError
+  ) {
+    req.logger.warn(err.message, {
+      event: 'prisma_error',
+      body: req.body,
+      error: err,
+      stack: err.stack,
+      actor: {
+        userId: req.user,
+        tenantId: req.tenant
+      }
+    })
     return res.status(500).json({ error: 'Internal Server Error' });
   }
+
+  if (err instanceof CustomError) {
+    req.logger.warn(err.message, {
+      event: err.code,
+      body: req.body,
+      error: err,
+      stack: err.stack,
+      actor: {
+        userId: req.user,
+        tenantId: req.tenant
+      }
+    });
+    return res.status(err.status).json({ error: err.message, code: err.code });
+  }
   
-  res.status(err.status).json({ error: err.message, code: err.code });
+  logger.error(err.message ?? 'Erro desconhecido', {
+    stack: err.stack,
+    method: req.method,
+    path: req.path,
+    code: err.code,
+    status: err.status,
+    actor: {
+      userId: req.user,
+      tenantId: req.tenant
+    }
+  })
+  res.status(500).json({ error: 'Internal Server Error' });
 }

@@ -21,7 +21,7 @@ export class LoginController {
       .json({ msg: 'Usuário logado com sucesso', token: accessToken });
 
     } catch (err) {
-      console.error('Erro no controlador login-controller login method:\n', err);
+      // console.error('Erro no controlador login-controller login method:\n', err);
       next(err);
     }
   }

@@ -12,14 +12,16 @@ import orderRoutes from './src/api/orders/ordersRoutes';
 import userRegister from './src/routes/user-register-routes';
 import userData from './src/routes/user-data-routes';
 import telegram from './src/api/telegram/telegram-routes';
-// import paymentRoutes from './src/routes/payment-routes';
 import http from 'node:http';
+import helmet from 'helmet';
 import { Server } from 'socket.io';
 import { errorHandler } from './src/middlewares/errorHandler'
 import 'dotenv/config'
+import { requestLogger } from './src/middlewares/request-logger';
 
 
 const app = express();
+app.use(helmet());
 const server = http.createServer(app);
 const corsOptions = {
   origin: process.env.NODE_ENV === 'production'
@@ -28,6 +30,8 @@ const corsOptions = {
   credentials: true,
   allowedHeaders: ["Content-Type", "Authorization"]
 }
+
+app.use(requestLogger);
 
 app.use('/static', express.static('public'));
 app.use(express.json({ limit: '10kb' }));
@@ -58,7 +62,6 @@ io.on('connection', (socket) => {
 
 app.use('/', userRegister);
 app.use('/', userData);
-// app.use('/', paymentRoutes);
 app.use('/', tenantProducts);
 app.use('/', loginRoutes);
 app.use('/', registerRoutes);

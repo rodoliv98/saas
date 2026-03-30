@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from "express"
 import { ITenantProductsService } from "../services/tenantProductsService";
-import { checkIfHasImage } from "../utils/checkIfHasImage";
 import { createProductSchema } from "../schemas/products/products-schemas";
 import { cuidSchema } from "../schemas/products/products-schemas";
 import { Decimal } from "@prisma/client/runtime/library";
@@ -65,7 +64,6 @@ export class TenantProductsController {
       res.status(200).json(products);
 
     } catch (err) {
-      console.log('Erro no controlador tenant-products-controller getProducts method:\n', err);
       next(err);
     }
   }
@@ -83,7 +81,6 @@ export class TenantProductsController {
       res.status(200).json(product);
 
     } catch (err) {
-      console.log('Erro no controlador tenant-products-controller getProductById method:\n', err);
       next(err);
     }
   }
@@ -107,7 +104,6 @@ export class TenantProductsController {
       res.status(200).json({ msg: 'Produto criado com sucesso!' });
 
     } catch (err) {
-      console.log('Erro no controlador tenant-products-controller create method:\n', err);
       next(err);
     }
   }
@@ -126,8 +122,6 @@ export class TenantProductsController {
       body.precoProduto = Number(body.precoProduto);
 
       const parsedBody = createProductSchema.parse(body);
-      // const data = await checkIfHasImage(req.file?.path, body);
-
       const patchProduct = {
         ...parsedBody,
         tenantId,
@@ -140,7 +134,6 @@ export class TenantProductsController {
       res.status(200).json({ msg: 'Produto atualizado' });
 
     } catch (err) {
-      console.log('Erro no controlador tenant-products-controller patch method:\n', err);
       next(err);
     }
   }
@@ -157,7 +150,6 @@ export class TenantProductsController {
       res.status(200).json({ msg: 'Produto deletado com sucesso' });
 
     } catch (err) {
-      console.log('Erro no controlador tenant-products-controller delete method:\n', err);
       next(err);
     }
   }

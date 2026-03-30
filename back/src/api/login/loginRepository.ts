@@ -12,11 +12,13 @@ export interface ILoginRepository {
   refresh (id: IdType): Promise<TenantRefresh | UserRefresh>;
 }
 
-const prisma = new PrismaClient();
+// const prisma = new PrismaClient();
 
 export class LoginRepository implements ILoginRepository {
+  constructor (private readonly prisma: PrismaClient) {}
+  
   async login (data: LoginDTO): Promise<TenantLogin | UserLogin | null> {
-    const tenantFromDb = await prisma.tenant.findUnique({
+    const tenantFromDb = await this.prisma.tenant.findUnique({
       where: {
         email: data.email
       },
@@ -33,7 +35,7 @@ export class LoginRepository implements ILoginRepository {
       return tenant;
     }
 
-    const userFromDB = await prisma.users.findFirst({
+    const userFromDB = await this.prisma.users.findFirst({
       where: {
         email: data.email
       },
@@ -43,16 +45,20 @@ export class LoginRepository implements ILoginRepository {
       }
     });
 
+    if (!userFromDB) {
+      return null;
+    }
+
     const user = { ...userFromDB, kind: 'user' };
     return user as UserLogin;
   }
 
   async refresh (tokenId: IdType): Promise<TenantRefresh | UserRefresh> {
     const identity = tokenId.role === 'user'
-    ? await prisma.users.findFirst({
+    ? await this.prisma.users.findFirst({
       where: { id: tokenId.id },
       select: { id: true }
-    }) : await prisma.tenant.findFirst({
+    }) : await this.prisma.tenant.findFirst({
       where: { id: tokenId.id },
       select: { id: true, tenantSlug: true }
     });

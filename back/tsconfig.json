@@ -5,7 +5,7 @@
         "outDir": "./dist",
         "moduleResolution": "Node",
         "strict": true,
-        "types": ["node", "jest"],
+        "types": ["node"],
         "typeRoots": ["node_modules/@types"],
         "esModuleInterop": true,
         "skipLibCheck": true,

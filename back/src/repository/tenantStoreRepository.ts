@@ -7,7 +7,7 @@ import { ActivationCodeDTO, SlugType } from "../types/types-index";
 
 export interface ITenantStoreRepository {
   getData (slug: SlugType): Promise<ITenantData | null>;
-  getProducts (id: string): Promise<ProdutosWSabores[] | null>;
+  getProducts (id: string): Promise<ProdutosWSabores[] | []>;
   isOpen (id: string): Promise<Pick <ITenantData, 'isOpen' | 'tenantSlug' | 'logoUrl' | 'bannerUrl'> | null>;
   patchIsOpen (data: boolean, tenantId: string): Promise<ITenantData>;
   createDeliveryCode (activationCode: ActivationCodeDTO): Promise<DeliveryCode>;

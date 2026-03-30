@@ -10,7 +10,10 @@ function UserRegister() {
   const [loading, setLoading] = useState(false);
   const [searchParams] = useSearchParams();
   const [showPass, setShowPass] = useState(false);
-  const redirectUrl = searchParams.get('redirect') || '/';
+  const raw = searchParams.get('redirect') || '/';
+  const redirectUrl = raw.startsWith('/') && !raw.startsWith('//')
+  ? raw
+  : '/';
   const navigate = useNavigate();
   const { login } = useAuth();
   const { refreshHook } = useRefreshHook();
@@ -28,7 +31,7 @@ function UserRegister() {
       login(res.data.token);
       navigate(redirectUrl);
     } catch (err) {
-      if (err.response.data.code === "VALIDATION_ERROR") {
+      if (err.response?.data?.code === "VALIDATION_ERROR") {
         return setError(err.response.data.error.map(e => e.message).join(', \n'));
       }
 
