@@ -7,6 +7,7 @@ test.txt
 # folders
 node_modules
 /dist
+/logs
 
 # files
 hook.js

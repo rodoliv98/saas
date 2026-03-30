@@ -4,7 +4,7 @@ import crypto from 'crypto'
 import { CustomError } from "../src/middlewares/errorHandler";
 
 const storage = multer.diskStorage({
-  filename(req, file, cb) {
+  filename(_req, file, cb) {
     const uniqueName = formatFileName(file.originalname);
     cb(null, uniqueName);
   }
@@ -21,10 +21,10 @@ function formatFileName (originalName: string) {
 export const upload = multer({
   storage: storage,
   limits: {
-    fileSize: 10 * 1024 * 1024,
+    fileSize: 10 * 1024 * 1024, // 10mb
     files: 1
   },
-  fileFilter: (req, file, cb) => {
+  fileFilter: (_req, file, cb) => {
     const allowedMime = ['image/jpeg','image/jpg','image/png','image/webp'];
 
     if (!allowedMime.includes(file.mimetype)) {

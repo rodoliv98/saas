@@ -7,6 +7,7 @@ import {
   PrismaClientInitializationError, 
   PrismaClientValidationError
 } from "../generated/prisma/internal/prismaNamespace";
+import { MulterError } from "multer";
 import logger from "../winston/winston";
 
 export class CustomError extends Error {
@@ -63,9 +64,24 @@ export function errorHandler (err: any, req: Request, res: Response, _next: Next
     return res.status(500).json({ error: 'Internal Server Error' });
   }
 
+  if (err instanceof MulterError) {
+    req.logger.warn(err.message, {
+      event: 'multer_error',
+      body: req.body,
+      file: req.file,
+      error: err,
+      stack: err.stack,
+      actor: {
+        userId: req.user,
+        tenantId: req.tenant
+      }
+    });
+    return res.status(400).json({ error: err.message, code: err.code });
+  }
+
   if (err instanceof CustomError) {
     req.logger.warn(err.message, {
-      event: err.code,
+      event: 'api_error',
       body: req.body,
       error: err,
       stack: err.stack,
@@ -79,8 +95,6 @@ export function errorHandler (err: any, req: Request, res: Response, _next: Next
   
   logger.error(err.message ?? 'Erro desconhecido', {
     stack: err.stack,
-    method: req.method,
-    path: req.path,
     code: err.code,
     status: err.status,
     actor: {
