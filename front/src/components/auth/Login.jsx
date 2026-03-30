@@ -59,7 +59,7 @@ export function Login () {
     setIsLoading(true);
     
     try {
-      const res = await refreshHook('post', '/login', formData);
+      const res = await refreshHook('post', '/api/auth/login', formData);
       login(res.data.token);
       redirect('/dashboard');
       

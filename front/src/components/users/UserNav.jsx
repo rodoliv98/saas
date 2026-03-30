@@ -11,7 +11,7 @@ function UserNav () {
   useEffect(() => {
     const fetch = async () => {
       try {
-        const res = await api.post('/refresh');
+        const res = await api.post('/api/refresh');
         login(res.data.token);
       } catch (err) {
         if (!err.response.data.error === 'refreshToken não encontrado') {

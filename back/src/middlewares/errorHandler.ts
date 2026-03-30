@@ -33,7 +33,7 @@ function parseZodError(err: any) {
 export function errorHandler (err: any, req: Request, res: Response, _next: NextFunction) {
   if (err instanceof ZodError) {
     const fields = parseZodError(err);
-    req.logger.warn('Erro de validação', {
+    req.logger.warning('Erro de validação', {
       event: 'validation_error',
       body: req.body,
       error: fields,
@@ -51,7 +51,7 @@ export function errorHandler (err: any, req: Request, res: Response, _next: Next
     err instanceof PrismaClientUnknownRequestError ||
     err instanceof PrismaClientValidationError
   ) {
-    req.logger.warn(err.message, {
+    req.logger.crit(err.message, {
       event: 'prisma_error',
       body: req.body,
       error: err,
@@ -65,7 +65,7 @@ export function errorHandler (err: any, req: Request, res: Response, _next: Next
   }
 
   if (err instanceof MulterError) {
-    req.logger.warn(err.message, {
+    req.logger.warning(err.message, {
       event: 'multer_error',
       body: req.body,
       file: req.file,
@@ -80,7 +80,7 @@ export function errorHandler (err: any, req: Request, res: Response, _next: Next
   }
 
   if (err instanceof CustomError) {
-    req.logger.warn(err.message, {
+    req.logger.warning(err.message, {
       event: 'api_error',
       body: req.body,
       error: err,

@@ -13,7 +13,7 @@ function UserProfile() {
   useEffect(() => { 
     const fetch = async () => {
       try {
-        const res = await refreshHook('get', '/user-data');
+        const res = await refreshHook('get', '/api/user-data');
         
         setData(res.data.user);
         setPedidos(res.data.pedidos);
@@ -285,9 +285,6 @@ function UserProfile() {
                               src={item.imageUrl} 
                               alt={item.nomeProduto}
                               className="w-20 h-20 rounded-lg object-cover"
-                              onError={(e) => {
-                                e.target.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Crect width='80' height='80' fill='%23e5e7eb'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='0.3em' fill='%239ca3af' font-size='24'%3E🍕%3C/text%3E%3C/svg%3E";
-                              }}
                             />
                             <div className="flex-1">
                               <div className="flex justify-between items-start mb-2">

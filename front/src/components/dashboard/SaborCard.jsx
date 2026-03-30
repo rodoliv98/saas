@@ -1,5 +1,4 @@
 import { Edit, Trash2 } from "lucide-react"
-import PatchSaboresModal from "./PatchSaboresModal"
 import { useState } from "react";
 import { useRefreshHook } from "../utils/refresh-hook";
 import ModalForm from "./ModalForm";
@@ -10,7 +9,7 @@ function SaborCard ({ flavor, formatPrice, setOpenMostrarSabores }) {
 
   const handleDeleteFlavor = async (flavorId) => {
     try {
-      await refreshHook('delete', `/flavors/${flavorId}`);
+      await refreshHook('delete', `/api/flavors/${flavorId}`);
       setOpenMostrarSabores(false);
     } catch (err) {
     }
@@ -23,7 +22,7 @@ function SaborCard ({ flavor, formatPrice, setOpenMostrarSabores }) {
         {/* Imagem do Sabor */}
         <div className="w-20 h-20 bg-gray-200 rounded-lg overflow-hidden flex-shrink-0">
           <img
-            src={flavor.imageUrl || 'https://via.placeholder.com/80x80?text=🍕'}
+            src={flavor.imageUrl}
             alt={flavor.nomeProduto}
             className="w-full h-full object-cover"
           />

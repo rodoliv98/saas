@@ -14,7 +14,7 @@ function CodigoEntregador() {
     setError(null);
     
     try {
-      const res = await refreshHook('post', '/tenant-delivery-code', {});
+      const res = await refreshHook('post', '/api/tenant-delivery-code', {});
       setCode(res.data.code);
       
     } catch (err) {

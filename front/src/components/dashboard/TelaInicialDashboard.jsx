@@ -7,13 +7,10 @@ function TelaInicialDashboard() {
   const [copied, setCopied] = useState(false);
   const { refreshHook } = useRefreshHook();
 
-  // Link hardcoded por enquanto - você pode substituir depois
-  const storeLink = "https://minhaloja.com.br/loja-exemplo";
-
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await refreshHook('get', '/tenant/home');
+        const res = await refreshHook('get', '/api/tenant/home');
         setData(res.data);
       } catch (err) {
         console.log(err);

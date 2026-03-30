@@ -31,9 +31,9 @@ function ModalForm ({ modalOpen, setModalOpen, productId, type }) {
       const fetch = async () => {
         try {
           console.log('test', productId);
-          const res = type === 'editProduct' ? await refreshHook('get', `/products/${productId}`)
-                                             : await refreshHook('get', `/tenant-flavors/${productId}`);
-          // const res = await refreshHook('get', `/products/${productId}`);
+          const res = type === 'editProduct' ? await refreshHook('get', `/api/products/${productId}`)
+                                             : await refreshHook('get', `/api/tenant-flavors/${productId}`);
+
           console.log(res.data);
           setForm(res.data);
 
@@ -85,14 +85,14 @@ function ModalForm ({ modalOpen, setModalOpen, productId, type }) {
       console.log('hit', type);
       if (type === 'createProduct') {
         console.log('test');
-        const res = await refreshHook('post', '/products', formData);
+        const res = await refreshHook('post', '/api/products', formData);
         console.log(res);
       } else if (type === 'editProduct') {
-        await refreshHook('patch', `/products/${productId}`, formData);
+        await refreshHook('patch', `/api/products/${productId}`, formData);
       } else if (type === 'createFlavor') {
-        await refreshHook('post', `/flavors/${productId}`, formData);
+        await refreshHook('post', `/api/flavors/${productId}`, formData);
       } else if (type === 'editFlavor') {
-        await refreshHook('patch', `/flavors/${productId}`, formData)
+        await refreshHook('patch', `/api/flavors/${productId}`, formData)
       }
 
       setImage(null);

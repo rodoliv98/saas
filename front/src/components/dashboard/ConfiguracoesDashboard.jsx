@@ -11,7 +11,7 @@ function ConfiguracoesDashboard () {
   useEffect(() => {
     async function fetchTenantData() {
       try {
-        const res = await refreshHook('get', '/tenant-data');
+        const res = await refreshHook('get', '/api/tenant-data');
         const diasFunc = JSON.parse(res.data.diasFuncionamento);
         const newRes = { ...res.data, diasFuncionamento: diasFunc };
         setForm(newRes);
@@ -66,7 +66,7 @@ function ConfiguracoesDashboard () {
     if (form.complemento == '') form.complemento = null;
     
     try {
-      await refreshHook('patch', '/tenant-data', form); 
+      await refreshHook('patch', '/api/tenant-data', form); 
       setMessage('Dados atualizados');
     } catch (err) {
       if (err.response.data.code === "VALIDATION_ERROR") {

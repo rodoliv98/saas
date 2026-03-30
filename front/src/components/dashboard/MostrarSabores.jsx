@@ -12,7 +12,7 @@ function MostrarSabores ({ productId, setOpenMostrarSabores }) {
   useEffect(() => {
     const fetch = async () => {
       try {
-        const res = await refreshHook('get', `/flavors/${productId}`);
+        const res = await refreshHook('get', `/api/flavors/${productId}`);
         setFlavors(res.data);
         
       } catch (err) {

@@ -9,10 +9,7 @@ import { ErrorCode } from "../../types/constants/error-codes-constants";
 
 export interface ILoginRepository {
   login (data: LoginDTO): Promise<TenantLogin | UserLogin | null>;
-  refresh (id: IdType): Promise<TenantRefresh | UserRefresh>;
 }
-
-// const prisma = new PrismaClient();
 
 export class LoginRepository implements ILoginRepository {
   constructor (private readonly prisma: PrismaClient) {}
@@ -51,22 +48,5 @@ export class LoginRepository implements ILoginRepository {
 
     const user = { ...userFromDB, kind: 'user' };
     return user as UserLogin;
-  }
-
-  async refresh (tokenId: IdType): Promise<TenantRefresh | UserRefresh> {
-    const identity = tokenId.role === 'user'
-    ? await this.prisma.users.findFirst({
-      where: { id: tokenId.id },
-      select: { id: true }
-    }) : await this.prisma.tenant.findFirst({
-      where: { id: tokenId.id },
-      select: { id: true, tenantSlug: true }
-    });
-    
-    if (!identity) {
-      throw new CustomError('Usuário não encontrado', 404, ErrorCode.NOT_FOUND);
-    }
-
-    return identity;
   }
 }

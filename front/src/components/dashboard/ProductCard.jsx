@@ -1,6 +1,5 @@
 import { Edit, Trash2, Plus, Hamburger } from "lucide-react";
 import { useState } from "react";
-import CriarSaboresModal from "./CriarSaboresModal";
 import MostrarSabores from "./MostrarSabores";
 import { useRefreshHook } from "../utils/refresh-hook";
 import ModalForm from "./ModalForm";
@@ -56,7 +55,7 @@ const ProductCard = ({ product, reloadPage }) => {
   
   const handleDelete = async (productId) => {
     try {
-      await refreshHook('delete', `/products/${productId}`);
+      await refreshHook('delete', `/api/products/${productId}`);
     } catch (err) {
       setError('Ocorreu um erro, reinicie a página ou tente novamente mais tarde.');
     }
@@ -71,7 +70,7 @@ const ProductCard = ({ product, reloadPage }) => {
       {/* Imagem do Produto */}
       <div className="h-48 bg-gray-100 relative">
         <img
-          src={product.imageUrl || 'https://via.placeholder.com/300x200?text=Sem+Imagem'}
+          src={product.imageUrl}
           alt={product.nomeProduto}
           className="w-full h-full object-cover"
         />

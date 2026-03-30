@@ -20,7 +20,7 @@ function Sidebar({ selectedSection, onSectionChange }) {
     useEffect(() => {
 			const fetch = async () => {
 				try {
-					const res = await refreshHook('get', '/tenant-is-open');
+					const res = await refreshHook('get', '/api/tenant-is-open');
           setStoreName(res.data.storeName);
           setIsStoreOpen(res.data.isStoreOpen);
 					setLogoUrl(res.data.logoUrl);
@@ -39,7 +39,7 @@ function Sidebar({ selectedSection, onSectionChange }) {
         const newValue = !isStoreOpen;
         setIsStoreOpen(newValue);
 				
-        await refreshHook('patch', '/tenant-is-open', { isStoreOpen: newValue });
+        await refreshHook('patch', '/api/tenant-is-open', { isStoreOpen: newValue });
 				
 			} catch (err) {
 			}
@@ -47,7 +47,7 @@ function Sidebar({ selectedSection, onSectionChange }) {
 
 		const handleLogout = async () => {
 			try {
-				await refreshHook('post', '/logout');
+				await refreshHook('post', '/api/logout');
 				redirect('/');
 
 			} catch (err) {

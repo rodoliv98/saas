@@ -26,7 +26,7 @@ function UserLogin() {
     setLoading(true);
 
     try {
-      const res = await refreshHook('post', '/login', form);
+      const res = await refreshHook('post', '/api/login', form);
       login(res.data.token);
       navigate(redirectUrl);
     } catch {

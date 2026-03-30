@@ -62,8 +62,8 @@ function ModalUploadLogo({ isOpen, type, onClose }) {
       const formData = new FormData();
       formData.append(type, image);
 
-      type === "logo" ? await refreshHook("patch", "/tenant/logo", formData)
-                      : await refreshHook("patch", "/tenant/banner", formData);
+      type === "logo" ? await refreshHook("patch", "/api/tenant/logo", formData)
+                      : await refreshHook("patch", "/api/tenant/banner", formData);
 
       setSuccess(true);
       handleRemoveImage();

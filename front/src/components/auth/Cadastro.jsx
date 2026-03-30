@@ -184,7 +184,7 @@ function Cadastro () {
         setIsLoading(true);
         setApiMessage("");
         try {
-            const res = await api.post('/register', form);
+            const res = await api.post('/api/auth/register', form);
             setApiMessage(res.data?.msg || "Cadastro realizado com sucesso!");
         } catch (err) {
             const fieldError = err.response?.data?.error;

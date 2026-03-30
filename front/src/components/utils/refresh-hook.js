@@ -24,7 +24,7 @@ export function useRefreshHook () {
     } catch (err) {
       if (err.response.data.code === "NOT_AUTHORIZED" || "TOKEN_EXPIRED") {
         try {
-          const refreshRes = await api.post('/refresh');
+          const refreshRes = await api.post('/api/refresh');
           const newToken = refreshRes.data.token;
 
           if (newToken) {

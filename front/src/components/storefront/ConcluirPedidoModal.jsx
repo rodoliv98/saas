@@ -116,7 +116,7 @@ function ConcluirPedidoModal ({ carrinho, setConcluirPedidoModal, taxaEntrega })
     }
 
     try {
-      await refreshHook('post', '/orders', form);
+      await refreshHook('post', '/api/orders', form);
       redirect('/usuario-perfil');
       setConcluirPedidoModal(false);
 

@@ -27,7 +27,7 @@ function UserRegister() {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await refreshHook('post', '/user-register', form);
+      const res = await refreshHook('post', '/api/auth/user-register', form);
       login(res.data.token);
       navigate(redirectUrl);
     } catch (err) {

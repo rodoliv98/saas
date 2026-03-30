@@ -49,7 +49,7 @@ function RelatoriosComponent () {
         month: String(month),
         status: String(status)
       });
-      const url = `/tenant/orders?${params.toString()}`;
+      const url = `/api/tenant/orders?${params.toString()}`;
 
       const res = await refreshHook('get', url);
       setOrders(res.data.orders);

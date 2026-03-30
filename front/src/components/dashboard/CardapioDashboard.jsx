@@ -39,7 +39,7 @@ function CardapioDashboard() {
   useEffect(() => {
     const fetch = async () => {
       try {
-        const res = await refreshHook('get', '/products');
+        const res = await refreshHook('get', '/api/products');
         setProducts(res.data);
 
       } catch (err) {

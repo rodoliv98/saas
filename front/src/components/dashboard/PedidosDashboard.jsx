@@ -43,7 +43,7 @@ function PedidosDashboard() {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const res = await refreshHook('get', `/orders`);
+        const res = await refreshHook('get', `/api/orders`);
         setPedidos(res.data.orders);
         setTenant(res.data.tenant);
         previousOrderCount.current = res.data.orders.length;
@@ -59,7 +59,7 @@ function PedidosDashboard() {
     const socket = io('http://localhost:3000');
     socket.on('pedido-criado', async (data) => {
       if (data.tenant === tenant) {
-        const res = await refreshHook('get', '/orders');
+        const res = await refreshHook('get', '/api/orders');
         const newOrderCount = res.data.orders.length;
         
         if (newOrderCount > previousOrderCount.current) {
@@ -103,7 +103,7 @@ function PedidosDashboard() {
     setError('');
 
     try {
-      await refreshHook('patch', `/orders/${orderId}`, { status: newStatus });
+      await refreshHook('patch', `/api/orders/${orderId}`, { status: newStatus });
       setPedidos(pedidos.map(pedido => 
         pedido.id === orderId ? { ...pedido, status: newStatus } : pedido
       ));
