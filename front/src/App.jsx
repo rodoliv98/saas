@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, Outlet } from "react-router-dom";
 import LandingPage from "./components/LandingPage";
+import Terms from "./components/Terms";
 import Login from "./components/auth/Login";
 import NavBar from "./components/NavBar";
 import Cadastro from "./components/auth/Cadastro";
@@ -42,6 +43,7 @@ function App () {
             <Route path="/" element={<LandingPage />} />
             <Route path="/login" element={<Login />} />
             <Route path="/cadastro" element={<Cadastro />} />
+            <Route path="/termos" element={<Terms />} />
             <Route path="/recuperar-senha" element={<RecoveryPassword />} />
           </Route>
           <Route path="/dashboard" element={<Dashboard />} />

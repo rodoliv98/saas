@@ -1,5 +1,4 @@
 # Keep environment variables out of version control
-.env
 plan.md
 plan.txt
 test.txt
@@ -8,8 +7,9 @@ test.txt
 node_modules
 /dist
 /logs
+/src/generated/prisma
 
 # files
 hook.js
 fix-imports.mjs
-/src/generated/prisma
+.env

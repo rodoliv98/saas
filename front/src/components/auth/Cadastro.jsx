@@ -30,6 +30,7 @@ function Cadastro () {
         estado: '',
 
         // Passo 4 - Configurações
+        aceitouTermos: false,
         tenantSlug: '',
         nomeEstabelecimento: '',
         whatsapp: '',
@@ -81,7 +82,6 @@ function Cadastro () {
                     .replace(/(\d{3})(\d)/, "$1-$2")
                     .replace(/(-\d{3})\d+?$/, "$1");
             } else if (name === "whatsapp" || name === "telefone") {
-                // Máscara dinâmica para WhatsApp/Telefone
                 let onlyNumbers = processedValue.slice(0, 11);
                 if (onlyNumbers.length === 11) {
                     processedValue = onlyNumbers.replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3");
@@ -97,7 +97,6 @@ function Cadastro () {
             setForm(prev => ({ ...prev, [name]: slicedValue }));
 
         } else if (name === 'horarioFuncionamento') {
-            // Mascara: xx:xx-xx:xx
             processedValue = value
                 .replace(/[^0-9]/g, '')
                 .replace(/(\d{2})(\d)/, '$1:$2')
@@ -152,6 +151,7 @@ function Cadastro () {
                 if (!form.horarioFuncionamento) newErrors.horarioFuncionamento = 'Horário de funcionamento é obrigatório';
                 if (!form.tempoPreparo) newErrors.tempoPreparo = 'Tempo de preparo é obrigatório';
                 if (!form.taxaEntrega) newErrors.taxaEntrega = 'Taxa de entrega é obrigatória';
+                if (!form.aceitouTermos) newErrors.aceitouTermos = 'Você precisa aceitar os termos para continuar';
                 break;
             default:
                 break;
@@ -172,10 +172,13 @@ function Cadastro () {
     };
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
+        if (currentStep !== 4) return;
+
+				e.preventDefault();
         if (!validateStep(4)) return;
 
         delete form.confirmarSenha;
+        delete form.aceitouTermos;
         if (form.tenantSlug) {
             form.tenantSlug = form.tenantSlug.replace(' ', '-');
         }
@@ -433,6 +436,33 @@ function Cadastro () {
                             </div>
                             {errors.diasFuncionamento && <p className="text-red-500 text-sm mt-1">{errors.diasFuncionamento}</p>}
                         </div>
+                        <div className="md:col-span-2">
+                            <label className="flex items-start gap-3 cursor-pointer select-none">
+                                <input
+                                    type="checkbox"
+                                    name="aceitouTermos"
+                                    checked={form.aceitouTermos}
+                                    onChange={(e) =>
+                                        setForm(prev => ({ ...prev, aceitouTermos: e.target.checked }))
+                                    }
+                                    className="mt-1 h-4 w-4 rounded border-gray-300 text-red-600 focus:ring-red-500 cursor-pointer"
+                                />
+                                <span className="text-sm text-gray-700">
+                                    Li e aceito os{' '}
+                                    <a
+                                        href="/termos"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="font-medium text-red-600 hover:text-red-500 underline"
+                                    >
+                                        Termos de Uso e Privacidade
+                                    </a>
+                                </span>
+                            </label>
+                            {errors.aceitouTermos && (
+                                <p className="text-red-500 text-sm mt-1">{errors.aceitouTermos}</p>
+                            )}
+                        </div>
                     </div>
                 );
             default:
@@ -443,79 +473,78 @@ function Cadastro () {
     const stepTitles = ["Identificação da Empresa", "Representante Legal", "Endereço", "Configurações da Loja"];
 
     return (
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4 font-sans">
-            <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-3xl">
-                <div className="text-center mb-8">
-                    <div className="bg-orange-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <Building className="w-8 h-8 text-red-600" />
-                    </div>
-                    <h1 className="text-3xl font-bold text-gray-800">Crie sua Conta</h1>
-                    <p className="text-gray-600 mt-2">{stepTitles[currentStep - 1]}</p>
-                </div>
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4 font-sans">
+          <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-3xl">
+              <div className="text-center mb-8">
+                  <div className="bg-orange-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <Building className="w-8 h-8 text-red-600" />
+                  </div>
+                  <h1 className="text-3xl font-bold text-gray-800">Crie sua Conta</h1>
+                  <p className="text-gray-600 mt-2">{stepTitles[currentStep - 1]}</p>
+              </div>
 
-                <div className="mb-8 px-4">
-                    <div className="relative h-2 w-full bg-gray-200 rounded-full">
-                        <div className="absolute top-0 left-0 h-2 bg-red-600 rounded-full transition-all duration-500" style={{ width: `${((currentStep - 1) / (stepTitles.length - 1)) * 100}%` }}></div>
-                        <div className="absolute w-full flex justify-between items-center top-1/2 -translate-y-1/2">
-                            {stepTitles.map((_, index) => (
-                                <div key={index} className={`h-4 w-4 rounded-full transition-colors duration-500 ${currentStep > index ? 'bg-red-600' : 'bg-gray-300'}`}></div>
-                            ))}
-                        </div>
-                    </div>
-                    <div className="flex justify-between mt-2 text-xs text-gray-500">
-                        {stepTitles.map((title, index) => (
-                            <span key={index} className={`w-1/4 text-center ${currentStep === index + 1 ? 'font-bold text-red-600' : ''}`}>{title.split(' ')[0]}</span>
-                        ))}
-                    </div>
-                </div>
+              <div className="mb-8 px-4">
+                  <div className="relative h-2 w-full bg-gray-200 rounded-full">
+                      <div className="absolute top-0 left-0 h-2 bg-red-600 rounded-full transition-all duration-500" style={{ width: `${((currentStep - 1) / (stepTitles.length - 1)) * 100}%` }}></div>
+                      <div className="absolute w-full flex justify-between items-center top-1/2 -translate-y-1/2">
+                          {stepTitles.map((_, index) => (
+                              <div key={index} className={`h-4 w-4 rounded-full transition-colors duration-500 ${currentStep > index ? 'bg-red-600' : 'bg-gray-300'}`}></div>
+                          ))}
+                      </div>
+                  </div>
+                  <div className="flex justify-between mt-2 text-xs text-gray-500">
+                      {stepTitles.map((title, index) => (
+                          <span key={index} className={`w-1/4 text-center ${currentStep === index + 1 ? 'font-bold text-red-600' : ''}`}>{title.split(' ')[0]}</span>
+                      ))}
+                  </div>
+              </div>
 
-                <form onSubmit={handleSubmit} className="space-y-6">
-                    {errors.general && <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg text-sm">{errors.general}</div>}
-                    {renderStepContent()}
-                    <div className="flex items-center justify-between pt-6">
-                        {currentStep > 1 ? (
-                            <button type="button" onClick={handleBack} className="flex items-center gap-2 bg-transparent text-gray-600 py-3 px-6 rounded-lg font-medium hover:bg-gray-100 transition-colors">
-                                <ArrowLeft size={18} />
-                                Voltar
-                            </button>
-                        ) : <div></div>}
+              <form onSubmit={handleSubmit} className="space-y-6">
+                  {errors.general && <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg text-sm">{errors.general}</div>}
+                  {renderStepContent()}
+                  <div className="flex items-center justify-between pt-6">
+                      {currentStep > 1 ? (
+                          <button type="button" onClick={handleBack} className="flex items-center gap-2 bg-transparent text-gray-600 py-3 px-6 rounded-lg font-medium hover:bg-gray-100 transition-colors">
+                              <ArrowLeft size={18} />
+                              Voltar
+                          </button>
+                      ) : <div></div>}
 
-                        {/* Mensagem da API */}
-                        {apiMessage && (
-                            <div className="flex-1 text-center mx-4">
-                                <p className={`text-sm ${apiMessage.toLowerCase().includes('sucesso') ? 'text-green-600' : 'text-red-600'}`}>{apiMessage}</p>
-                            </div>
-                        )}
+                      {apiMessage && (
+                          <div className="flex-1 text-center mx-4">
+                              <p className={`text-sm ${apiMessage.toLowerCase().includes('sucesso') ? 'text-green-600' : 'text-red-600'}`}>{apiMessage}</p>
+                          </div>
+                      )}
 
-                        {currentStep < 4 ? (
-                            <button type="button" onClick={handleNext} className="bg-red-600 text-white py-3 px-8 rounded-lg font-semibold hover:bg-red-700 transition-colors shadow-md hover:shadow-lg">
-                                Próximo Passo
-                            </button>
-                        ) : (
-                            <button type="submit" disabled={isLoading} className="flex items-center gap-2 bg-red-600 hober:bg-red-700 text-white py-3 px-8 rounded-lg font-semibold shadow-md hover:from-red-700 hover:to-orange-600 transition-all duration-200 disabled:bg-gray-400 disabled:cursor-not-allowed">
-                                {isLoading ? (
-                                    <>
-                                        <svg className="animate-spin h-5 w-5 mr-2 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path></svg>
-                                        Finalizando...
-                                    </>
-                                ) : (
-                                    <>
-                                        <KeyRound size={20} className="opacity-80" />
-                                        Finalizar Cadastro
-                                    </>
-                                )}
-                            </button>
-                        )}
-                    </div>
-                </form>
-                <div className="text-center mt-8">
-                    <p className="text-sm text-gray-600">
-                        Já tem uma conta? <Link to="/login" className="font-medium text-red-600 hover:text-red-500">Faça login</Link>
-                    </p>
-                </div>
-            </div>
-        </div>
-    );
+                      {currentStep < 4 ? (
+                          <button type="button" onClick={handleNext} className="bg-red-600 text-white py-3 px-8 rounded-lg font-semibold hover:bg-red-700 transition-colors shadow-md hover:shadow-lg">
+                              Próximo Passo
+                          </button>
+                      ) : (
+                          <button type="submit" disabled={isLoading} className="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white py-3 px-8 rounded-lg font-semibold shadow-md transition-all duration-200 disabled:bg-gray-400 disabled:cursor-not-allowed">
+                              {isLoading ? (
+                                  <>
+                                      <svg className="animate-spin h-5 w-5 mr-2 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path></svg>
+                                      Finalizando...
+                                  </>
+                              ) : (
+                                  <>
+                                      <KeyRound size={20} className="opacity-80" />
+                                      Finalizar Cadastro
+                                  </>
+                              )}
+                          </button>
+                      )}
+                  </div>
+              </form>
+              <div className="text-center mt-8">
+                  <p className="text-sm text-gray-600">
+                      Já tem uma conta? <Link to="/login" className="font-medium text-red-600 hover:text-red-500">Faça login</Link>
+                  </p>
+              </div>
+          </div>
+      </div>
+  );
 }
 
 export default Cadastro;

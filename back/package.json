@@ -42,7 +42,7 @@
     "build": "tsc && node fix-imports.mjs",
     "dev": "tsx watch index.ts",
     "container": "tsx watch index.ts --poll",
-    "compiled": "node dist/index.js"
+    "compiled": "node ./dist/index.js"
   },
   "keywords": [],
   "author": "",

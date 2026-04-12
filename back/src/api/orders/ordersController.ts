@@ -3,7 +3,7 @@ import { IOrdersService } from "./ordersService";
 import { cuidSchema } from "../../schemas/products/products-schemas";
 import { orderSchema } from "../../schemas/orders/order-schemas";
 import { orderStatusSchema } from "./schemas/order-schema";
-import { io } from "../../..";
+import { io } from '../../../index';
 
 export class OrdersController {
   constructor (private service: IOrdersService) {}
@@ -18,7 +18,6 @@ export class OrdersController {
       res.status(200).json({ orders: orders, tenant: tenantSlug });
 
     } catch (err) {
-      console.error('Erro no controlador order-controller getOrders method:\n', err);
       next(err);
     }
   }
@@ -39,7 +38,6 @@ export class OrdersController {
       res.status(200).json({ msg: 'Pedido atualizado' });
 
     } catch (err) {
-      console.error('Erro no controlador order-controller patchOrders method:\n', err);
       next(err);
     }
   }
@@ -57,7 +55,6 @@ export class OrdersController {
       res.status(200).json({ msg: 'Pedido criado' });
       
     } catch (err) {
-      console.error('Erro no controlador order-controller create method:\n', err);
       next(err);
     }
   }
