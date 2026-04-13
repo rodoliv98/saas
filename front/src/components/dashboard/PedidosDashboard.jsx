@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from "react"
 import { useRefreshHook } from '../utils/refresh-hook'
 import { io } from 'socket.io-client'
+import { useAuth } from "../auth/AuthProvider";
 
 function PedidosDashboard() {
   const [pedidos, setPedidos] = useState([]);
@@ -56,7 +57,9 @@ function PedidosDashboard() {
   }, []);
 
   useEffect(() => {
-    const socket = io('http://localhost:3000');
+    const { token } = useAuth();
+    const socket = io('http://localhost:3000', { auth: { token } });
+    
     socket.on('pedido-criado', async (data) => {
       if (data.tenant === tenant) {
         const res = await refreshHook('get', '/api/orders');

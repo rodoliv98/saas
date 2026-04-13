@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Clock, ChefHat, PackageCheck, Truck, CheckCircle2, XCircle } from "lucide-react";
 import { useRefreshHook } from "../utils/refresh-hook";
 import { io } from 'socket.io-client';
+import { useAuth } from "../auth/AuthProvider";
 
 function UserProfile() {
   const [data, setData] = useState(null);
@@ -28,7 +29,9 @@ function UserProfile() {
   }, []);
 
   useEffect(() => {
-    const socket = io('http://localhost:3000');
+    const { token } = useAuth();
+    const socket = io('http://localhost:3000', { auth: { token } });
+    
     socket.on('pedido-atualizado', (data) => {
       setPedidos(prev => {
         return prev.map(p => 
