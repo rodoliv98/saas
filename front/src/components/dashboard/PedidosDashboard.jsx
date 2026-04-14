@@ -11,6 +11,7 @@ function PedidosDashboard() {
   const [currentTime, setCurrentTime] = useState(Date.now());
   const previousOrderCount = useRef(0);
   const { refreshHook } = useRefreshHook();
+  const { token } = useAuth();
 
   const activosColumns = [
     { key: 'pendente', title: 'Pendente' },
@@ -57,7 +58,6 @@ function PedidosDashboard() {
   }, []);
 
   useEffect(() => {
-    const { token } = useAuth();
     const socket = io('http://localhost:3000', { auth: { token } });
     
     socket.on('pedido-criado', async (data) => {

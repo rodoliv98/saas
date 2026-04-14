@@ -7,7 +7,7 @@ import { useRefreshHook } from "../utils/refresh-hook";
 function UserRegister() {
   const [form, setForm] = useState({ nomeCompleto: '', email: '', senha: '' });
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [searchParams] = useSearchParams();
   const [showPass, setShowPass] = useState(false);
   const raw = searchParams.get('redirect') || '/';
@@ -25,7 +25,7 @@ function UserRegister() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
+    setIsLoading(true);
     try {
       const res = await refreshHook('post', '/api/auth/user-register', form);
       login(res.data.token);
@@ -38,7 +38,7 @@ function UserRegister() {
       setError('Erro ao cadastrar. Tente novamente.');
       
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -99,10 +99,10 @@ function UserRegister() {
         </div>
         <button
           type="submit"
-          disabled={loading}
+          disabled={isLoading}
           className="w-full bg-red-700 text-white py-2 rounded font-bold hover:bg-red-800 transition-colors disabled:bg-gray-400"
         >
-          {loading ? 'Cadastrando...' : 'Cadastrar'}
+          {isLoading ? 'Cadastrando...' : 'Cadastrar'}
         </button>
       </form>
     </div>

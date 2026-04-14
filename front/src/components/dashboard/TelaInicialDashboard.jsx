@@ -3,7 +3,7 @@ import { useRefreshHook } from '../utils/refresh-hook'
 // ajustar tamanho do div de assinatura
 function TelaInicialDashboard() {
   const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const [copied, setCopied] = useState(false);
   const { refreshHook } = useRefreshHook();
 
@@ -15,7 +15,7 @@ function TelaInicialDashboard() {
       } catch (err) {
         console.log(err);
       } finally {
-        setLoading(false);
+        setIsLoading(false);
       }
     }
 
@@ -38,7 +38,7 @@ function TelaInicialDashboard() {
     }
   };
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-gray-600">Carregando...</div>

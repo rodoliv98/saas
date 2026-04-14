@@ -6,7 +6,7 @@ import { useRefreshHook } from "../utils/refresh-hook";
 function UserLogin() {
   const [form, setForm] = useState({ email: '', senha: '' });
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const raw = searchParams.get('redirect') || '/';
@@ -23,7 +23,7 @@ function UserLogin() {
   
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
+    setIsLoading(true);
 
     try {
       const res = await refreshHook('post', '/api/login', form);
@@ -32,7 +32,7 @@ function UserLogin() {
     } catch {
       setError('Email ou senha inválidos');
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -77,10 +77,10 @@ function UserLogin() {
         </div>
         <button
           type="submit"
-          disabled={loading}
+          disabled={isLoading}
           className="w-full bg-red-700 text-white py-2 rounded font-bold hover:bg-red-800 transition-colors disabled:bg-gray-400"
         >
-          {loading ? 'Entrando...' : 'Entrar'}
+          {isLoading ? 'Entrando...' : 'Entrar'}
         </button>
       </form>
     </div>

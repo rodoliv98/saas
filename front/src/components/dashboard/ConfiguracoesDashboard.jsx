@@ -6,6 +6,7 @@ function ConfiguracoesDashboard () {
   const [form, setForm] = useState({});
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const { refreshHook } = useRefreshHook();
 
   useEffect(() => {
@@ -64,7 +65,8 @@ function ConfiguracoesDashboard () {
     setMessage('');
 
     if (form.complemento == '') form.complemento = null;
-    
+    setIsLoading(true);
+
     try {
       await refreshHook('patch', '/api/tenant-data', form); 
       setMessage('Dados atualizados');
@@ -72,8 +74,9 @@ function ConfiguracoesDashboard () {
       if (err.response.data.code === "VALIDATION_ERROR") {
         return setError(err.response.data.error.map(err => err.message).join(', '));
       }
-
       setError('Ocorreu um erro, reinicie a página ou tente mais tarde.');
+    } finally {
+      setIsLoading(false);
     }
   }
   
@@ -215,7 +218,7 @@ function ConfiguracoesDashboard () {
           <h2 className="bg-red-50 border border-red-200 text-black px-4 py-3 rounded-lg text-sm">{message}.</h2>
         )}
         <div className="flex justify-end pt-4">
-            <button onClick={handleSubmit} className="flex items-center justify-center gap-2 w-full md:w-auto bg-red-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-all duration-300 ease-in-out">
+            <button onClick={handleSubmit} disabled={isLoading} className="flex items-center justify-center gap-2 w-full md:w-auto bg-red-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-all duration-300 ease-in-out">
                 <Save size={20} />
                 Salvar Alterações
             </button>

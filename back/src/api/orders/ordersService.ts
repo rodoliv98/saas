@@ -25,33 +25,23 @@ export class OrdersService implements IOrdersService {
     return this.repo.patchOrders(orderId, body, tenantSlug);
   }
   // otimizar no futuro
+  // falta testar dps de tirar a call inutil extra
   async create (body: OrderSchema, userId: string) {
-    const [tenantPin, orders] = await Promise.all([
-      this.repo.getTenantPin(body.tenantSlug),
-      this.repo.getUserOrders(userId)
-    ]);
+    const tenantPin = await this.repo.getTenantPin(body.tenantSlug)
 
     if (!tenantPin || !tenantPin.pin) {
       throw new CustomError('Pin não configurado', 404, ErrorCode.PIN_NOT_FOUND);
-    }
-
-    if (orders.length > 0) {  
-      throw new CustomError(
-        'Você já tem um pedido em andamento, aguarde ele terminar para fazer outro',
-        400,
-        ErrorCode.ORDER_IN_PROGRESS
-      );
     }
 
     const alphabet = '0123456789abcdefghijklmnopqrstuvwxyz';
     const nanoid = customAlphabet(alphabet, 6);
     const shortId = nanoid();
 
-    await this.checkProductsPrices(body);
+    await this.findProductsPrices(body);
     return this.repo.create(body, userId, tenantPin.pin, shortId);
   }
 
-  async checkProductsPrices (body: OrderSchema) {
+  async findProductsPrices (body: OrderSchema) {
     const itemsIds = body.items.map(item => 
       Array.from({ length: item.quantidade }, () => 
         item.id)

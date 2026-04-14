@@ -13,7 +13,7 @@ const TenantStore = () => {
   const redirect = useNavigate();
   const [storeData, setStoreData] = useState(null);
   const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [cart, setCart] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -42,7 +42,7 @@ const TenantStore = () => {
   useEffect(() => {
     const fetchStoreData = async () => {
       try {
-        setLoading(true);
+        setIsLoading(true);
         
         const res = await api.get(`/api/${slug}`);
         console.log(res);
@@ -52,7 +52,7 @@ const TenantStore = () => {
       } catch (err) {
         setError('Ocorreu um erro ao carregar a loja. Verifique o link ou tente novamente mais tarde.');
       } finally {
-        setLoading(false);
+        setIsLoading(false);
       }
     };
 
@@ -264,7 +264,7 @@ const TenantStore = () => {
     cartRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">

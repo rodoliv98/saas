@@ -148,9 +148,6 @@ function CardapioDashboard() {
             <ProductCard
               key={product.id}
               product={product}
-              setModalOpen={setModalOpen}
-              modalOpen={modalOpen}
-              reloadPage={reloadPage}
             />
           ))}
         </div>

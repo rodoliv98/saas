@@ -24,6 +24,7 @@ function ModalForm ({ modalOpen, setModalOpen, productId, type }) {
     categorias,
     button,
   } = modalConfig[type] || modalConfig.createProduct;
+  const [isLoading, setIsLoading] = useState(false);
   const { refreshHook } = useRefreshHook();
 
   useEffect(() => {
@@ -80,6 +81,8 @@ function ModalForm ({ modalOpen, setModalOpen, productId, type }) {
       formData.append(key, value)
     })
     formData.append('image', image);
+
+    setIsLoading(true);
   
     try {
       console.log('hit', type);
@@ -105,6 +108,8 @@ function ModalForm ({ modalOpen, setModalOpen, productId, type }) {
       }
 
       setError('Ocorreu um erro, reinicie a página ou tente mais tarde.');
+    } finally {
+      setIsLoading(false);
     }
     
     setForm({
@@ -258,6 +263,7 @@ function ModalForm ({ modalOpen, setModalOpen, productId, type }) {
                       </button>
                       <button
                         type="submit"
+                        disabled={isLoading}
                         className="px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
                       >
                         {button}

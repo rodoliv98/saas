@@ -19,7 +19,7 @@ import { Server } from 'socket.io';
 import { CustomError, errorHandler } from './src/middlewares/errorHandler'
 import { requestLogger } from './src/middlewares/request-logger';
 import { apiLimiter, authLimiter } from './src/middlewares/rate-limiter';
-import { verify } from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import 'dotenv/config'
 
 const app = express();
@@ -69,8 +69,8 @@ io.use((socket, next) => {
   }
 
   try {
-    const decoded = verify(token, jwtSecret); // dps usar a var
-    (socket as any).user = decoded
+    const decoded = jwt.verify(token, jwtSecret);
+    (socket as any).user = decoded; // ainda não uso essa var em nenhum lugar
     
     next();
   } catch (err) {

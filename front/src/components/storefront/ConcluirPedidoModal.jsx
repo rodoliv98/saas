@@ -17,7 +17,8 @@ function ConcluirPedidoModal ({ carrinho, setConcluirPedidoModal, taxaEntrega })
     tipoEntrega: '',
     observacao: ''
   });
-  const [error, setError] = useState(''); 
+  const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const { refreshHook } = useRefreshHook();
   const redirect = useNavigate();
 
@@ -115,6 +116,8 @@ function ConcluirPedidoModal ({ carrinho, setConcluirPedidoModal, taxaEntrega })
       form.taxaEntrega = taxaEntrega;
     }
 
+    setIsLoading(true);
+
     try {
       await refreshHook('post', '/api/orders', form);
       redirect('/usuario-perfil');
@@ -125,6 +128,8 @@ function ConcluirPedidoModal ({ carrinho, setConcluirPedidoModal, taxaEntrega })
         return setError(err.response.data.error.map(e => e.message).join(', '));
       }
       setError(err.response.data.error);
+    } finally {
+      setIsLoading(false);
     }
 
     setForm({
@@ -435,6 +440,7 @@ function ConcluirPedidoModal ({ carrinho, setConcluirPedidoModal, taxaEntrega })
               </button>
               <button
                 type="submit"
+                disabled={isLoading}
                 className="flex-1 bg-red-700 text-white py-3 px-6 rounded-lg font-semibold hover:bg-red-800 transition-colors disabled:bg-gray-400"
               >
                 🚀 Finalizar Pedido

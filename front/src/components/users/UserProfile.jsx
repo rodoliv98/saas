@@ -10,7 +10,8 @@ function UserProfile() {
   const [errors, setErrors] = useState(null);
   const [activeTab, setActiveTab] = useState('emAndamento');
   const { refreshHook } = useRefreshHook();
-  
+  const { token } = useAuth();
+
   useEffect(() => { 
     const fetch = async () => {
       try {
@@ -29,9 +30,7 @@ function UserProfile() {
   }, []);
 
   useEffect(() => {
-    const { token } = useAuth();
     const socket = io('http://localhost:3000', { auth: { token } });
-    
     socket.on('pedido-atualizado', (data) => {
       setPedidos(prev => {
         return prev.map(p => 

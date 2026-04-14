@@ -18,7 +18,7 @@ const config = {
 function ModalUploadLogo({ isOpen, type, onClose }) {
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
   const { refreshHook } = useRefreshHook();
@@ -55,7 +55,7 @@ function ModalUploadLogo({ isOpen, type, onClose }) {
       return;
     }
 
-    setLoading(true);
+    setIsLoading(true);
     setError("");
 
     try {
@@ -71,7 +71,7 @@ function ModalUploadLogo({ isOpen, type, onClose }) {
     } catch (err) {
       setError(err.message || "Ocorreu um erro inesperado.");
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   }
 
@@ -170,10 +170,10 @@ function ModalUploadLogo({ isOpen, type, onClose }) {
               </button>
               <button
                 type="submit"
-                disabled={loading || !image}
+                disabled={isLoading || !image}
                 className="px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {loading ? "Enviando..." : "Enviar"}
+                {isLoading ? "Enviando..." : "Enviar"}
               </button>
             </div>
 

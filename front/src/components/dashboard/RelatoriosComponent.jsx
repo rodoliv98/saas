@@ -8,7 +8,7 @@ function RelatoriosComponent () {
   const [month, setMonth] = useState(1);
   const [status, setStatus] = useState('concluido'); // novo estado
   const [orders, setOrders] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [totalVendas, setTotalVendas] = useState(0);
   const [totalPedidos, setTotalPedidos] = useState(0);
@@ -36,7 +36,7 @@ function RelatoriosComponent () {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
+    setIsLoading(true);
     setError(null);
     setOrders([]);
     setTotalVendas(0);
@@ -64,7 +64,7 @@ function RelatoriosComponent () {
     } catch (err) {
       setError('Falha ao carregar o relatório. Tente novamente.');
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -145,11 +145,11 @@ function RelatoriosComponent () {
 
           <button
             type="submit"
-            disabled={loading}
+            disabled={isLoading}
             className="mt-2 sm:mt-0 w-full sm:w-auto bg-red-700 text-white py-2 px-6 rounded-lg font-semibold
                        hover:bg-red-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {loading ? 'Carregando...' : 'Gerar Relatório'}
+            {isLoading ? 'Carregando...' : 'Gerar Relatório'}
           </button>
         </form>
 
