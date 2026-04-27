@@ -46,7 +46,10 @@ export class TenantFlavorsService implements ITenantFlavorsService {
       return flavor;
     }
 
-    const defaultImage = process.env.DEFAULT_IMAGE;
+    const defaultImage = process.env.NODE_ENV === 'production'
+    ? process.env.PROD_DEFAULT_IMAGE
+    : process.env.DEFAULT_IMAGE
+    
     if (!defaultImage) {
       throw new CustomError('Imagem padrão não configurada', 500, ErrorCode.INTERNAL_SERVER_ERROR);
     }

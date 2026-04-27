@@ -15,6 +15,7 @@ export class LoginController {
         httpOnly: process.env.NODE_ENV === 'production' ? true : false,
         secure: true,
         sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'none',
+        path: '/auth/refresh',
         maxAge: 7 * 24 * 60 * 60 * 1000
       })
       .status(200)

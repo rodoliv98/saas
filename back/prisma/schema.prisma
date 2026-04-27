@@ -18,6 +18,13 @@ model Users {
   @@map("users")
 }
 
+model Admins {
+  id          String     @id @default(cuid())
+  username    String     @unique
+  senha       String
+  createdAt   DateTime   @default(now()) @db.Timestamp(6)
+}
+
 model Tenant {
   id                   String             @id @default(cuid())
   nomeFantasia         String?

@@ -9,28 +9,28 @@ export function createLoginToken (id: string, slug?: string) {
   ? jwt.sign({ tenantId: id, tenantSlug: slug }, secretJWT, {
     expiresIn: '5m',
     algorithm: 'HS256',
-    issuer: 'api.automatizai.com.br',
-    audience: 'automatizai.com.br'
+    issuer: 'api.com.br',
+    audience: 'eldur.com.br'
   })
   : jwt.sign({ userId: id }, secretJWT, {
     expiresIn: '5m',
     algorithm: 'HS256',
-    issuer: 'api.automatizai.com.br',
-    audience: 'automatizai.com.br'
+    issuer: 'api.com.br',
+    audience: 'eldur.com.br'
   });
 
   const refreshToken = slug 
   ? jwt.sign({ tenantId: id }, secretJWT, {
     expiresIn: '7d',
     algorithm: 'HS256',
-    issuer: 'api.automatizai.com.br',
-    audience: 'automatizai.com.br'
+    issuer: 'api.com.br',
+    audience: 'eldur.com.br'
   })
   : jwt.sign({ userId: id }, secretJWT, {
     expiresIn: '7d',
     algorithm: 'HS256',
-    issuer: 'api.automatizai.com.br',
-    audience: 'automatizai.com.br'
+    issuer: 'api.com.br',
+    audience: 'eldur.com.br'
   });
 
   return [accessToken, refreshToken];
@@ -43,8 +43,8 @@ export function verifyToken (token: string) {
   try {
     return jwt.verify(token, secretJWT, {
       algorithms: ['HS256'],
-      issuer: 'api.automatizai.com.br',
-      audience: 'automatizai.com.br'
+      issuer: 'api.com.br',
+      audience: 'eldur.com.br'
     });
     
   } catch (err: any) {

@@ -12,6 +12,7 @@ import orderRoutes from './src/api/orders/ordersRoutes';
 import userRegister from './src/routes/user-register-routes';
 import userData from './src/routes/user-data-routes';
 import refreshRoutes from './src/api/refresh/refresh-routes';
+import adminRoutes from './src/api/admin/admin-routes';
 import telegram from './src/api/telegram/telegram-routes';
 import http from 'node:http';
 import helmet from 'helmet';
@@ -30,7 +31,7 @@ app.use(helmet());
 const server = http.createServer(app);
 const corsOptions = {
   origin: process.env.NODE_ENV === 'production'
-  ? 'still have to get a domain'
+  ? 'https://eldur.com.br'
   : ['http://localhost:5173', 'http://localhost'],
   credentials: true,
   allowedHeaders: ["Content-Type", "Authorization"]
@@ -48,7 +49,7 @@ export const io = new Server(server, {
   pingInterval: 25000,
   cors: {
     origin: process.env.NODE_ENV === 'production'
-    ? 'still have to get a domain'
+    ? 'https://eldur.com.br'
     : ['http://localhost:5173', 'http://localhost'],
     methods: ["GET"],
     credentials: true
@@ -94,6 +95,7 @@ app.use('/api/auth', userRegister);
 app.use('/api/auth', loginRoutes);
 app.use('/api/auth', registerRoutes);
 app.use('/api', refreshRoutes);
+app.use('/api/admin', adminRoutes);
 app.use('/api', userData);
 app.use('/api', tenantProducts);
 app.use('/api', tenantHome);

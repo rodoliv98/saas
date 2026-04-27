@@ -78,7 +78,6 @@ export function Login () {
             <Store className="w-8 h-8 text-red-700" />
           </div>
           <h1 className="text-2xl font-bold text-gray-800">Entrar na Plataforma</h1>
-          <p className="text-gray-600 mt-2">Acesse o painel da sua pizzaria</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">

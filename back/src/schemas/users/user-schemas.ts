@@ -51,7 +51,7 @@ export const registerSchema = z.object({
           .regex(/^(?=.*[A-Z])/, "Senha Deve conter pelo menos uma letra maiúscula") 
           .regex(/^(?=.*\d)/, "Senha Deve conter pelo menos um número")
           .regex(/^(?=.*[!@#$%^&*()_+\-=[\]{}|;:,.?])/, "Senha Deve conter pelo menos um símbolo")
-          .regex(/^[a-zA-Z\d!@#$%^&*()_+\-=[\]{}|;:,.?]+$/, "Caracteres não permitidos no campo Senha")
+          .regex(/^[a-zA-Z\d!@#$%^&*()_+\-=[\]{}|;:,.?]+$/, "Você usou caracteres que não permitidos no campo Senha")
           .refine((val) => !/[<>'"\\]/.test(val), "Caracteres < > ' \" \\ não são permitidos no campo Senha"),
   telefone: z.string()
              .min(14, 'Número de telefone deve ter o formato (XX) XXXX-XXXX')
