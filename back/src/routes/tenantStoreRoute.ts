@@ -2,18 +2,18 @@ import { Router } from 'express'
 import { TenantStoreController } from '../controllers/tenantStoreController';
 import { TenantStoreService } from '../services/tenantStoreService';
 import { TenantStoreRepository } from '../repository/tenantStoreRepository';
-import { checkLogin } from '../middlewares/checkLogin';
+import { checkTenant } from '../middlewares/check-tenant';
 
 const router = Router();
 const repo = new TenantStoreRepository();
 const service = new TenantStoreService(repo);
 const controller = new TenantStoreController(service);
 
-router.get('/tenant-is-open', checkLogin, controller.isOpen.bind(controller));
+router.get('/tenant-is-open', checkTenant, controller.isOpen.bind(controller));
 
-router.post('/tenant-delivery-code', checkLogin, controller.createDeliveryCode.bind(controller));
+router.post('/tenant-delivery-code', checkTenant, controller.createDeliveryCode.bind(controller));
 
-router.patch('/tenant-is-open', checkLogin, controller.patchIsOpen.bind(controller));
+router.patch('/tenant-is-open', checkTenant, controller.patchIsOpen.bind(controller));
 
 router.get('/:slug', controller.getData.bind(controller));
 

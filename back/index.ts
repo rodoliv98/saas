@@ -95,7 +95,7 @@ app.use('/api/auth', userRegister);
 app.use('/api/auth', loginRoutes);
 app.use('/api/auth', registerRoutes);
 app.use('/api', refreshRoutes);
-app.use('/api/admin', adminRoutes);
+app.use('/api', adminRoutes);
 app.use('/api', userData);
 app.use('/api', tenantProducts);
 app.use('/api', tenantHome);

@@ -10,7 +10,7 @@ import { BasicPlanFeatures, Plan } from "./entities/plan-entitie";
 export type RegisterType = z.infer<typeof registerSchema>;
 export type UserRegisterType = z.infer<typeof userRegisterSchema>;
 export type IdType = {
-  role: 'user' | 'tenant',
+  table: 'users' | 'tenant' | 'admins',
   id: string;
 }
 

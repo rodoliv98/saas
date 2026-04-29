@@ -22,7 +22,9 @@ export function useRefreshHook () {
       return res;
 
     } catch (err) {
-      if (err.response.data.code === "NOT_AUTHORIZED" || "TOKEN_EXPIRED") {
+      const errorCode = err.response.data.code;
+      
+      if (errorCode === "NOT_AUTHORIZED" || "TOKEN_EXPIRED") {
         try {
           const refreshRes = await api.post('/api/refresh');
           const newToken = refreshRes.data.token;
@@ -42,7 +44,7 @@ export function useRefreshHook () {
           
           }
         } catch (secErr) {
-          if (secErr.status === 404 || secErr.status === 401 || secErr.response?.status === 401 || secErr.status === 500) {
+          if (secErr.status === 404 || 401 || 500 || 403) {
             redirect('/');
           }
           

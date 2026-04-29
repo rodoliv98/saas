@@ -14,7 +14,7 @@ export const prodTransport = [
 export const devTransport = [
   new transports.File({ filename: 'logs/combined.log' }),
   new transports.File({ filename: 'logs/warning.log', level: 'warning' }),
-  new transports.Console({ format: combine(prettyConsoleJson) })
+  // new transports.Console({ format: combine(prettyConsoleJson) })
 ];
 
 // EXCEPTION HANDLERS
@@ -24,7 +24,7 @@ export const prodExceptionHandlers = [
 
 export const devExceptionHandlers = [
   new transports.File({ filename: 'logs/uncaught-exceptions.log' }),
-  new transports.Console({ format: combine(prettyConsoleJson) })
+  // new transports.Console({ format: combine(prettyConsoleJson) })
 ];
 
 // REJECTION HANDLERS
@@ -34,5 +34,5 @@ export const prodRejectionHandlers = [
 
 export const devRejectionHandlers = [
   new transports.File({ filename: 'logs/uncaught-rejections.log' }),
-  new transports.Console({ format: combine(prettyConsoleJson) })
+  // new transports.Console({ format: combine(prettyConsoleJson) })
 ];

@@ -9,6 +9,7 @@ declare module 'express-serve-static-core' {
     role?: string;
     cloud?: string;
     tenant?: string;
+    admin?: string;
     logger: Logger;
   }
 }

@@ -6,8 +6,10 @@ export class RefreshController {
   
   async refresh (req: Request, res: Response, next: NextFunction) {
     const refreshToken = req.cookies.refreshToken;
-    if (!refreshToken) return res.status(404).json({ error: 'refreshToken não encontrado' });
-    
+    if (!refreshToken) {
+      return res.status(404).json({ error: 'Token para refresh não encontrado' });
+    }
+
     try {
       const [accessToken, newRefreshToken] = await this.service.refresh(refreshToken);
   
@@ -16,6 +18,7 @@ export class RefreshController {
         httpOnly: process.env.NODE_ENV === 'production' ? true : false,
         secure: true,
         sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'none',
+        path: '/api/refresh',
         maxAge: 7 * 24 * 60 * 60 * 1000
       })
       .status(200)

@@ -1,12 +1,15 @@
 import { CustomError } from "../../middlewares/errorHandler";
 import { ErrorCode } from "../../types/constants/error-codes-constants";
 import { IAdminRepository } from "./admin-repo";
+import { createLoginToken } from "../../utils/tokenJWT";
+import { TenantAdminView } from "./types/admin-types";
 import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
-import { Admin } from "./types/admin-types";
+import { Tenant } from "../../generated/prisma/client";
 
 export interface IAdminService {
   login (data: { username: string, senha: string }): Promise<string[]>;
+  findAllTenants (): Promise<TenantAdminView[]>;
+  changeStoreStatus (tenantId: string, newStatus: boolean): Promise<Tenant>;
 }
 
 export class AdminService implements IAdminService {
@@ -23,27 +26,19 @@ export class AdminService implements IAdminService {
       throw new CustomError('Credenciais inválidas', 404, ErrorCode.ADMIN_BAD_REQUEST);
     }
 
-    return this.createToken(admin);
+    return createLoginToken(admin.id, 'adminId', 'admin');
   }
 
-  createToken (adminData: Admin) {
-    const secretJWT = process.env.JWT_SECRET as string;
-    if (!secretJWT) throw new CustomError('Chave JWT não configurada', 500);
+  async findAllTenants () {
+    return this.repo.findAllTenants();
+  }
+
+  async changeStoreStatus (tenantId: string, newStatus: boolean) {
+    const tenant = await this.repo.findTenant(tenantId);
+    if (!tenant) {
+      throw new CustomError('Tenant não encontrado na rota de admin', 404, ErrorCode.TENANT_NOT_FOUND);
+    }
     
-    const accessToken = jwt.sign({ adminId: adminData.id }, secretJWT, {
-      expiresIn: '15m',
-      algorithm: 'HS256',
-      issuer: 'api.com.br',
-      audience: 'eldur.com.br'
-    });
-
-    const refreshToken = jwt.sign({ adminId: adminData.id }, secretJWT, {
-      expiresIn: '7d',
-      algorithm: 'HS256',
-      issuer: 'api.com.br',
-      audience: 'eldur.com.br'
-    });
-
-    return [accessToken, refreshToken];
+    return this.repo.changeStoreStatus(tenantId, newStatus);
   }
 }

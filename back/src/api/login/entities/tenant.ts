@@ -6,4 +6,6 @@ export type TenantLogin = {
   active: boolean;
 }
 
-export type TenantRefresh = Pick<TenantLogin, 'id' | 'tenantSlug'>;
+export type TenantRefresh = Pick<TenantLogin, 'id' | 'tenantSlug'> & {
+  role: 'tenant';
+};

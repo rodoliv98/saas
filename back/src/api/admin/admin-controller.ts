@@ -25,4 +25,29 @@ export class AdminController {
       next(err);
     }
   }
+
+  async findAllTenants (_req: Request, res: Response, next: NextFunction) {
+    try {
+      const tenants = await this.service.findAllTenants();
+      
+      res.status(200).json(tenants);
+
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async changeStoreStatus (req: Request, res: Response, next: NextFunction) {
+    try {
+      const tenantId = req.body.tenantId;
+      const newStatus = req.body.status;
+
+      await this.service.changeStoreStatus(tenantId, newStatus);
+
+      res.status(200).json({ msg: 'Status atualizado' });
+
+    } catch (err) {
+      next(err);
+    }
+  }
 }

@@ -1,31 +1,47 @@
 import { PrismaClient } from "../../generated/prisma/client";
 import { TenantRefresh } from "../login/entities/tenant";
 import { UserRefresh } from "../login/entities/user";
-import { CustomError } from "../../middlewares/errorHandler";
-import { ErrorCode } from "../../types/constants/error-codes-constants";
 import { IdType } from "../../types/types-index";
+import { AdminRefresh } from "../admin/types/admin-types";
 
 export interface IRefreshRepository {
-  refresh (id: IdType): Promise<TenantRefresh | UserRefresh>;
+  refresh (id: IdType): Promise<TenantRefresh | UserRefresh | AdminRefresh | null>;
 }
 
 export class RefreshRepository implements IRefreshRepository {
   constructor (private prisma: PrismaClient) {}
   
-  async refresh (tokenId: IdType): Promise<TenantRefresh | UserRefresh> {
-    const identity = tokenId.role === 'user'
-    ? await this.prisma.users.findFirst({
-      where: { id: tokenId.id },
-      select: { id: true }
-    }) : await this.prisma.tenant.findFirst({
-      where: { id: tokenId.id },
-      select: { id: true, tenantSlug: true }
-    });
-    
-    if (!identity) {
-      throw new CustomError('Usuário não encontrado', 404, ErrorCode.NOT_FOUND);
-    }
+  async refresh (tokenId: IdType) {
+    switch (tokenId.table) {
+      case "users":
+        const user = await this.prisma.users.findFirst({
+          where: { id: tokenId.id },
+          select: { id: true }
+        });
 
-    return identity;
+        if (!user) return null;
+        return { ...user, role: 'user' } as UserRefresh;
+
+      case "tenant":
+        const tenant = await this.prisma.tenant.findFirst({
+          where: { id: tokenId.id },
+          select: { id: true, tenantSlug: true }
+        });
+
+        if (!tenant) return null;
+        return { ...tenant, role: 'tenant' } as TenantRefresh;
+      
+        case "admins":
+        const admin = await this.prisma.admins.findFirst({
+          where: { id: tokenId.id },
+          select: { id: true }
+        });
+
+        if (!admin) return null;
+        return { ...admin, role: 'admin' } as AdminRefresh;
+      
+      default:
+        return null;
+    } 
   }
 }

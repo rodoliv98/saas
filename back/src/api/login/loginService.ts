@@ -16,25 +16,25 @@ export class LoginService implements ILoginService {
   async login (data: LoginDTO): Promise<string[]> {
     const tenantOrUser = await this.repo.login(data);
     if (!tenantOrUser) {
-      throw new CustomError('Nenhum usuário encontrado com esse email', 404, ErrorCode.NOT_FOUND);
+      throw new CustomError('Nenhum usuário encontrado com esse email.', 404, ErrorCode.NOT_FOUND);
     }
 
     if (tenantOrUser.kind === 'tenant' && !(tenantOrUser as TenantLogin).active) {
-      throw new CustomError('Sua conta ainda não foi ativada, tente mais tarde', 403, ErrorCode.TENANT_INACTIVE);
+      throw new CustomError('Sua conta ainda não foi ativada, tente mais tarde.', 403, ErrorCode.TENANT_INACTIVE);
     }
 
     const decodedPassword = await bcrypt.compare(data.senha, tenantOrUser.senha);
     if (!decodedPassword) {
-      throw new CustomError('Email ou senha inválida', 400, ErrorCode.BAD_REQUEST);
+      throw new CustomError('Email ou senha inválida.', 400, ErrorCode.BAD_REQUEST);
     }
     
     const identity = tenantOrUser.kind === 'tenant'
     ? { id: tenantOrUser.id, tenantSlug: (tenantOrUser as TenantLogin).tenantSlug }
     : { id: tenantOrUser.id };
-    
+       
     const [accessToken, refreshToken] = identity.tenantSlug 
-    ? createLoginToken(identity.id, identity.tenantSlug)
-    : createLoginToken(identity.id);
+    ? createLoginToken(identity.id, 'tenantId', 'tenant', identity.tenantSlug)
+    : createLoginToken(identity.id, 'userId', 'user');
 
     return [accessToken, refreshToken];
   }

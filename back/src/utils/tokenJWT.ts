@@ -1,32 +1,20 @@
 import jwt from 'jsonwebtoken'
 import { CustomError } from '../middlewares/errorHandler';
 
-export function createLoginToken (id: string, slug?: string) {
+export function createLoginToken (id: string, type: string, role: string, slug?: string) {
   const secretJWT = process.env.JWT_SECRET as string;
-  if (!secretJWT) throw new CustomError('Chave JWT não configurada', 500);
-
-  const accessToken = slug 
-  ? jwt.sign({ tenantId: id, tenantSlug: slug }, secretJWT, {
-    expiresIn: '5m',
-    algorithm: 'HS256',
-    issuer: 'api.com.br',
-    audience: 'eldur.com.br'
-  })
-  : jwt.sign({ userId: id }, secretJWT, {
-    expiresIn: '5m',
+  if (!secretJWT) {
+    throw new CustomError('Chave JWT não configurada', 500);
+  }
+  // porque o token criado não vem com todas as propriedades?
+  const accessToken = jwt.sign({ [type]: id, tenantSlug: slug, role: role }, secretJWT, {
+    expiresIn: '15m',
     algorithm: 'HS256',
     issuer: 'api.com.br',
     audience: 'eldur.com.br'
   });
 
-  const refreshToken = slug 
-  ? jwt.sign({ tenantId: id }, secretJWT, {
-    expiresIn: '7d',
-    algorithm: 'HS256',
-    issuer: 'api.com.br',
-    audience: 'eldur.com.br'
-  })
-  : jwt.sign({ userId: id }, secretJWT, {
+  const refreshToken = jwt.sign({ [type]: id, role: role }, secretJWT, {
     expiresIn: '7d',
     algorithm: 'HS256',
     issuer: 'api.com.br',
@@ -38,7 +26,9 @@ export function createLoginToken (id: string, slug?: string) {
 
 export function verifyToken (token: string) {
   const secretJWT = process.env.JWT_SECRET as string;
-  if (!secretJWT) throw new CustomError('Chave JWT não configurada', 500);
+  if (!secretJWT) {
+    throw new CustomError('Chave JWT não configurada', 500);
+  }
 
   try {
     return jwt.verify(token, secretJWT, {

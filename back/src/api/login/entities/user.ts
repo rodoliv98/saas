@@ -4,4 +4,6 @@ export type UserLogin = {
   kind: string;
 }
 
-export type UserRefresh = Pick<UserLogin, 'id'>;
+export type UserRefresh = Pick<UserLogin, 'id'> & {
+  role: 'user'
+};

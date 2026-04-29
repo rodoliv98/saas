@@ -1,11 +1,8 @@
 // arrumar o lugar do genreated
 import { PrismaClient } from "../../generated/prisma/client";
-import { IdType } from "../../types/types-index";
 import { LoginDTO } from "./dto/login-dto";
-import { TenantLogin, TenantRefresh } from "./entities/tenant";
-import { UserLogin, UserRefresh } from "./entities/user";
-import { CustomError } from "../../middlewares/errorHandler";
-import { ErrorCode } from "../../types/constants/error-codes-constants";
+import { TenantLogin } from "./entities/tenant";
+import { UserLogin } from "./entities/user";
 
 export interface ILoginRepository {
   login (data: LoginDTO): Promise<TenantLogin | UserLogin | null>;
