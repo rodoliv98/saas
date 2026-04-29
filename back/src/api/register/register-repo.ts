@@ -6,15 +6,15 @@ export interface IRegisterRepository {
   register (tenantData: TenantCreationDTO): Promise<Tenant>
 }
 
-const prisma = new PrismaClient();
-
 export class RegisterRepository implements IRegisterRepository {
+  constructor (private readonly prisma: PrismaClient) {}
+  
   async register (tenantData: TenantCreationDTO) {
     const now = new Date();
     const FOURTEEN_DAYS_IN_MS = 14 * 24 * 60 * 60 * 1000;
     const expireTrialDate = new Date(now.getTime() + FOURTEEN_DAYS_IN_MS);
 
-    return prisma.tenant.create({
+    return this.prisma.tenant.create({
       data: {
         // passo 1
         nomeFantasia: tenantData.registerData.nomeFantasia,

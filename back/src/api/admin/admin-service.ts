@@ -7,7 +7,7 @@ import bcrypt from 'bcrypt';
 import { Tenant } from "../../generated/prisma/client";
 
 export interface IAdminService {
-  login (data: { username: string, senha: string }): Promise<string[]>;
+  login (data: { email: string, senha: string }): Promise<string[]>;
   findAllTenants (): Promise<TenantAdminView[]>;
   changeStoreStatus (tenantId: string, newStatus: boolean): Promise<Tenant>;
 }
@@ -15,7 +15,7 @@ export interface IAdminService {
 export class AdminService implements IAdminService {
   constructor (private repo: IAdminRepository) {}
 
-  async login (data: { username: string, senha: string }) {
+  async login (data: { email: string, senha: string }) {
     const admin = await this.repo.login(data);
     if (!admin) {
       throw new CustomError('Credenciais inválidas', 404, ErrorCode.ADMIN_BAD_REQUEST);

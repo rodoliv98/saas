@@ -3,16 +3,16 @@ import { CustomError } from "../../middlewares/errorHandler";
 import { ErrorCode } from "../../types/constants/error-codes-constants";
 import { HomeData, HomeOrders } from "./entities/home-entities";
 
-const prisma = new PrismaClient();
-
 export interface ITenantHomeRepository {
   getHomeData (tenantId: string): Promise<HomeData>;
   getHomeOrders (tenantSlug: string): Promise<HomeOrders[]>
 }
 
 export class TenantHomeRepository implements ITenantHomeRepository {
+  constructor (private readonly prisma: PrismaClient) {}
+
   async getHomeData (tenantId: string) {
-    const tenant = await prisma.tenant.findUnique({
+    const tenant = await this.prisma.tenant.findUnique({
       where: {
         id: tenantId
       },
@@ -46,7 +46,7 @@ export class TenantHomeRepository implements ITenantHomeRepository {
     const pastTwentyFour = new Date(now - MINUS_TWENTY_FOUR_HOURS);
     const rightNow = new Date()
 
-    return prisma.pedidos.findMany({
+    return this.prisma.pedidos.findMany({
       where: {
         tenantSlug: tenantSlug,
         createdAt: {

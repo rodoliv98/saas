@@ -1,9 +1,8 @@
 import { z } from 'zod';
 
 export const adminLoginSchema = z.object({
-  username: z.string({ message: 'Username tem que ser uma string' })
-             .regex(/^[a-zA-Z]{4,15}$/, 'Username tem que ter entre 4 e 15 caracteres')
-             .trim(),
+  email: z.string({ message: 'Email é obrigatório' })
+          .email({ message: 'Formato de email inválido' }),
   senha: z.string()
           .min(10, "Senha deve ter pelo menos 10 caracteres")
           .max(30, "Senha deve ter no máximo 30 caracteres")

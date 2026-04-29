@@ -2,8 +2,6 @@ import { Decimal } from "@prisma/client/runtime/library";
 import { PrismaClient } from "../generated/prisma/client";
 import { PedidoStatus } from "../types/types-index";
 
-const prisma = new PrismaClient();
-
 export interface UserDataFromDB {
   id: string;
   nomeCompleto: string;
@@ -56,8 +54,10 @@ export interface IUserDataRepository {
 }
 
 export class UserDataRepository implements IUserDataRepository {
+  constructor (private readonly prisma: PrismaClient) {}
+
   async getData (userId: string) {
-    return prisma.users.findFirst({
+    return this.prisma.users.findFirst({
       where: {
         id: userId
       },

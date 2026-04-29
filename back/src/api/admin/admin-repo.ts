@@ -3,7 +3,7 @@ import { TenantAdminView } from "./types/admin-types";
 import { Admins, Tenant } from "../../generated/prisma/client";
 
 export interface IAdminRepository {
-  login (data: { username: string, senha: string }): Promise<Admins | null>;
+  login (data: { email: string, senha: string }): Promise<Admins | null>;
   findAllTenants (): Promise<TenantAdminView[]>;
   findTenant (tenantId: string): Promise<Tenant | null>;
   changeStoreStatus (tenantId: string, newStatus: boolean): Promise<Tenant>;
@@ -12,10 +12,10 @@ export interface IAdminRepository {
 export class AdminRepository implements IAdminRepository {
   constructor (private readonly prisma: PrismaClient) {}
 
-  async login (data: { username: string, senha: string }) {
+  async login (data: { email: string, senha: string }) {
     return this.prisma.admins.findUnique({
       where: {
-        username: data.username
+        email: data.email
       }
     });
   }

@@ -7,8 +7,6 @@ import { CustomError } from "../../middlewares/errorHandler";
 import { IGetUserOrders } from "../../interfaces/orders-interfaces/orders-inter-index";
 import { Orders } from "./entities/order-entitie";
 
-const prisma = new PrismaClient();
-
 export interface PricesFromDB {
   precoProduto: Decimal
 }
@@ -87,10 +85,12 @@ export interface IOrderRepository {
 } 
 
 export class OrderRepository implements IOrderRepository {
+  constructor (private readonly prisma: PrismaClient) {}
+  
   // modificado para totalOrderPrice ser number e não Decimal, para evitar problemas de serialização e facilitar o consumo no front-end. 
   // O valor é convertido para number antes de retornar os dados.
   async getOrders (tenantSlug: string): Promise<Orders[] | []> {
-    const orders = await prisma.pedidos.findMany({
+    const orders = await this.prisma.pedidos.findMany({
       where: {
         tenantSlug: tenantSlug
       },
@@ -139,7 +139,7 @@ export class OrderRepository implements IOrderRepository {
   }
 
   async getTenantPin (tenantSlug: string) {
-    return prisma.tenant.findUnique({
+    return this.prisma.tenant.findUnique({
       where: {
         tenantSlug: tenantSlug
       },
@@ -157,7 +157,7 @@ export class OrderRepository implements IOrderRepository {
       PedidosStatus.entregando
     ];
     
-    return prisma.pedidos.findMany({
+    return this.prisma.pedidos.findMany({
       where: {
         userId: userId,
         status: { in: statusList } 
@@ -166,7 +166,7 @@ export class OrderRepository implements IOrderRepository {
   }
 
   async patchOrders (orderId: Cuid, body: PedidoStatus, tenantSlug: string): Promise<ICreateOrder> {
-    const order = await prisma.pedidos.findFirst({
+    const order = await this.prisma.pedidos.findFirst({
       where: {
         tenantSlug: tenantSlug,
         id: orderId
@@ -177,7 +177,7 @@ export class OrderRepository implements IOrderRepository {
       throw new CustomError('Pedido não encontrado', 404, 'ORDER_NOT_FOUND');
     }
 
-    return await prisma.pedidos.update({
+    return await this.prisma.pedidos.update({
       where: {
         id: orderId
       },
@@ -188,7 +188,7 @@ export class OrderRepository implements IOrderRepository {
   }
   
   async create (body: OrderSchema, userId: string, pin: string, shortId: string): Promise<ICreateOrder> {
-    return prisma.pedidos.create({
+    return this.prisma.pedidos.create({
       data: {
         tenantSlug: body.tenantSlug,
         pin: pin,
@@ -233,7 +233,7 @@ export class OrderRepository implements IOrderRepository {
   }
   
   async getProductsPrice (productsIds: string[]): Promise<PricesFromDB[]> {
-    const productsNoDups = await prisma.produtos.findMany({
+    const productsNoDups = await this.prisma.produtos.findMany({
       where: {
         id: { in: productsIds } // in = a set remove ids duplicados
       },
@@ -252,7 +252,7 @@ export class OrderRepository implements IOrderRepository {
   }
 
   async getAditionalsPrice (aditionalsIds: string[]): Promise<PricesFromDB[]> {
-    const aditionalNoDups = await prisma.sabores.findMany({
+    const aditionalNoDups = await this.prisma.sabores.findMany({
       where: {
         id: { in: aditionalsIds } // in = a set remove ids duplicados
       },

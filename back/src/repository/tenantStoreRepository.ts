@@ -13,11 +13,11 @@ export interface ITenantStoreRepository {
   createDeliveryCode (activationCode: ActivationCodeDTO): Promise<DeliveryCode>;
 }
 
-const prisma = new PrismaClient();
-
 export class TenantStoreRepository implements ITenantStoreRepository {
+  constructor (private readonly prisma: PrismaClient) {}
+
   async getData (slug: SlugType) {
-    return prisma.tenant.findFirst({
+    return this.prisma.tenant.findFirst({
       where: {
         tenantSlug: slug 
       }
@@ -25,7 +25,7 @@ export class TenantStoreRepository implements ITenantStoreRepository {
   }
 
   async getProducts (id: string) {
-    return prisma.produtos.findMany({
+    return this.prisma.produtos.findMany({
       where: {
         tenantId: id
       },
@@ -36,7 +36,7 @@ export class TenantStoreRepository implements ITenantStoreRepository {
   }
 
   async isOpen (id: string) {
-    return prisma.tenant.findFirst({
+    return this.prisma.tenant.findFirst({
       where: {
         id: id
       },
@@ -51,7 +51,7 @@ export class TenantStoreRepository implements ITenantStoreRepository {
 
   async patchIsOpen (data: boolean, tenantId: string) {
     try {
-      return prisma.tenant.update({
+      return this.prisma.tenant.update({
         where: {
           id: tenantId
         },
@@ -70,7 +70,7 @@ export class TenantStoreRepository implements ITenantStoreRepository {
   }
   
   async createDeliveryCode (activationCode: ActivationCodeDTO) {
-    return prisma.codigos_Ativacao.create({
+    return this.prisma.codigos_Ativacao.create({
       data: {
         codigo: activationCode.code,
         tenant_id: activationCode.tenant_id,

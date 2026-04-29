@@ -5,9 +5,10 @@ import { checkTenant } from "../../middlewares/check-tenant"
 import { Router } from "express"
 import { upload } from "../../../cloudinary/multer";
 import { validateImageType } from "../../middlewares/validateImageType";
+import prisma from "../../lib/client";
 
 const router = Router();
-const repository = new TenantDataRepository();
+const repository = new TenantDataRepository(prisma);
 const service = new TenantDataService(repository);
 const controller = new TenantDataController(service);
 

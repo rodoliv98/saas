@@ -25,7 +25,6 @@ export class RefreshController {
       .json({ msg: 'Tokens atualizados', token: accessToken });
 
     } catch (err) {
-      console.error('Erro no controlador login-controller refresh method:\n', err);
       next(err);
     }
   }

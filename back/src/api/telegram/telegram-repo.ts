@@ -7,8 +7,6 @@ import { OrdersDelivery } from "./intities/order-entities"
 import { ActivationCode } from "./intities/code-entities";
 import { DeliveryMan, DeliveryUpdate } from "./intities/delivery-entities";
 
-const prisma = new PrismaClient();
-
 export interface ITelegramRepo {
   getOrders(pin: string): Promise<OrdersDelivery[] | [] | null>;
   updateDeliveryOrder(updateObj: UpdateDeliveryDTO): Promise<DeliveryUpdate>;
@@ -18,8 +16,10 @@ export interface ITelegramRepo {
 }
 
 export class TelegramRepo implements ITelegramRepo {
+  constructor (private readonly prisma: PrismaClient) {}
+  
   async getOrders (pin: string) {
-    return prisma.pedidos.findMany({
+    return this.prisma.pedidos.findMany({
       where: {
         pin,
         status: 'pronto'
@@ -49,7 +49,7 @@ export class TelegramRepo implements ITelegramRepo {
   }
 
   async updateDeliveryOrder (updateObj: UpdateDeliveryDTO) {
-    const order = await prisma.pedidos.findUnique({
+    const order = await this.prisma.pedidos.findUnique({
       where: {
         short_id: updateObj.code
       }
@@ -63,7 +63,7 @@ export class TelegramRepo implements ITelegramRepo {
       throw new CustomError('Você não pode mais atualizar esse pedido', 400, ErrorCode.DELIVERY_ERROR);
     }
 
-    const updated = await prisma.pedidos.update({
+    const updated = await this.prisma.pedidos.update({
       where: {
         short_id: updateObj.code
       },
@@ -84,7 +84,7 @@ export class TelegramRepo implements ITelegramRepo {
   }
 
   async findDeliveryMan (pin: string, chat_id: bigint) {
-    return prisma.tenant.findUnique({
+    return this.prisma.tenant.findUnique({
       where: { pin },
       select: {
         entregadores: {
@@ -98,7 +98,7 @@ export class TelegramRepo implements ITelegramRepo {
   }
 
   async findActivationCode (activationCode: string): Promise<ActivationCode | null> {
-    return prisma.codigos_Ativacao.findUnique({
+    return this.prisma.codigos_Ativacao.findUnique({
       where: {
         codigo: activationCode
       },
@@ -112,7 +112,7 @@ export class TelegramRepo implements ITelegramRepo {
   }
 
   async registerDeliveryMan (data: RegisterDeliveryManDTO) {
-    await prisma.entregadores.create({
+    await this.prisma.entregadores.create({
       data: {
         chat_id: data.chat_id,
         nome_telegram: data.nome_telegram,
@@ -121,7 +121,7 @@ export class TelegramRepo implements ITelegramRepo {
       }
     });
 
-    await prisma.codigos_Ativacao.update({
+    await this.prisma.codigos_Ativacao.update({
       where: {
         codigo: data.codigo_ativacao
       },

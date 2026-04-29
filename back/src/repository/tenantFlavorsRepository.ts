@@ -26,11 +26,11 @@ export interface DeletedFlavor {
   imageUrl: string;
 }
 
-const prisma = new PrismaClient();
-
 export class TenantFlavorsRepository implements ITenantFlavorsRepository {
+  constructor (private readonly prisma: PrismaClient) {}
+
   async getFlavors (productId: string) {
-    return prisma.sabores.findMany({
+    return this.prisma.sabores.findMany({
       where: {
         produtoId: productId
       }
@@ -38,7 +38,7 @@ export class TenantFlavorsRepository implements ITenantFlavorsRepository {
   }
 
   async getFlavorById (flavorId: string, tenantId: string) {
-    return prisma.sabores.findFirst({
+    return this.prisma.sabores.findFirst({
       where: {
         tenantId: tenantId,
         id: flavorId
@@ -47,7 +47,7 @@ export class TenantFlavorsRepository implements ITenantFlavorsRepository {
   }
 
   async findFlavor (data: PatchFlavorDTO) {
-    return prisma.sabores.findFirst({
+    return this.prisma.sabores.findFirst({
       where: {
         id: data.flavorId,
         tenantId: data.tenantId
@@ -60,7 +60,7 @@ export class TenantFlavorsRepository implements ITenantFlavorsRepository {
   }
 
   async create (flavorData: CreateFlavorData) {
-    return prisma.sabores.create({
+    return this.prisma.sabores.create({
       data: {
         nomeProduto: flavorData.nomeProduto,
         descProduto: flavorData.descProduto,
@@ -75,7 +75,7 @@ export class TenantFlavorsRepository implements ITenantFlavorsRepository {
   }
 
   async patch (data: CreateFlavorData, flavorId: string) {
-    return prisma.sabores.update({
+    return this.prisma.sabores.update({
       where: {
         id: flavorId
       },
@@ -86,7 +86,7 @@ export class TenantFlavorsRepository implements ITenantFlavorsRepository {
   }
   
   async delete (productId: Cuid, tenantId: string) {
-    const flavor = await prisma.sabores.findFirst({
+    const flavor = await this.prisma.sabores.findFirst({
       where: {
         id: productId,
         tenantId: tenantId
@@ -97,7 +97,7 @@ export class TenantFlavorsRepository implements ITenantFlavorsRepository {
       throw new CustomError('Sabor não encontrado', 404, 'FLAVOR_NOT_FOUND');
     }
     
-    return await prisma.sabores.delete({
+    return await this.prisma.sabores.delete({
       where: {
         id: productId
       }

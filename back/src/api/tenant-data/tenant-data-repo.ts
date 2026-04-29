@@ -17,11 +17,11 @@ export interface ITenantDataRepository {
   getImagePublicId (tenantId: string): Promise<TenantPublicIdResult | null>;
 }
 
-const prisma = new PrismaClient();
-
 export class TenantDataRepository implements ITenantDataRepository {
+  constructor (private readonly prisma: PrismaClient) {}
+
   async getData (tenantId: string) {
-    return prisma.tenant.findUnique({
+    return this.prisma.tenant.findUnique({
       where: {
         id: tenantId
       },
@@ -47,7 +47,7 @@ export class TenantDataRepository implements ITenantDataRepository {
     const startOfMonth = new Date(dates.year, dates.month - 1, 1);
     const endOfMonth = new Date(dates.year, dates.month, 1);
 
-    return prisma.pedidos.findMany({
+    return this.prisma.pedidos.findMany({
       where: {
         tenantSlug: tenantSlug,
         status: dates.status,
@@ -83,7 +83,7 @@ export class TenantDataRepository implements ITenantDataRepository {
   }
 
   async patchData (tenantId: string, data: TenantDataStrDTO) {
-    const tenant = await prisma.tenant.findUnique({
+    const tenant = await this.prisma.tenant.findUnique({
       where: {
         id: tenantId
       }
@@ -97,7 +97,7 @@ export class TenantDataRepository implements ITenantDataRepository {
       throw new CustomError('Pin já foi cadastrado', 400, ErrorCode.BAD_REQUEST);
     }
     
-    return prisma.tenant.update({
+    return this.prisma.tenant.update({
       where: {
         id: tenantId
       },
@@ -119,7 +119,7 @@ export class TenantDataRepository implements ITenantDataRepository {
   }
 
   async addLogo (tenantId: string, cloudinaryData: CloudinaryImageResult) {
-    const tenant = await prisma.tenant.findUnique({
+    const tenant = await this.prisma.tenant.findUnique({
       where: {
         id: tenantId
       }
@@ -129,7 +129,7 @@ export class TenantDataRepository implements ITenantDataRepository {
       throw new CustomError('Tenant não encontrado', 404, ErrorCode.TENANT_NOT_FOUND);
     }
 
-    await prisma.tenant.update({
+    await this.prisma.tenant.update({
       where: {
         id: tenantId
       },
@@ -143,7 +143,7 @@ export class TenantDataRepository implements ITenantDataRepository {
   }
 
   async addBanner (tenantId: string, cloudinaryData: CloudinaryImageResult) {
-    const tenant = await prisma.tenant.findUnique({
+    const tenant = await this.prisma.tenant.findUnique({
       where: {
         id: tenantId
       }
@@ -153,7 +153,7 @@ export class TenantDataRepository implements ITenantDataRepository {
       throw new CustomError('Tenant não encontrado', 404, ErrorCode.TENANT_NOT_FOUND);
     }
 
-    await prisma.tenant.update({
+    await this.prisma.tenant.update({
       where: {
         id: tenantId
       },
@@ -167,7 +167,7 @@ export class TenantDataRepository implements ITenantDataRepository {
   }
 
   async getImagePublicId (tenantId: string) {
-    return await prisma.tenant.findUnique({
+    return await this.prisma.tenant.findUnique({
       where: {
         id: tenantId
       },

@@ -1,5 +1,4 @@
 import { PrismaClient } from "../generated/prisma/client"
-import { IPatchProductDTO } from "../controllers/tenantProductsController"
 import { IProdutos, ProductDTO } from "../controllers/tenantProductsController";
 import { CustomError } from "../middlewares/errorHandler";
 import { CloudinaryImageResult } from "../integrations/cloudinary/cloudinary-types";
@@ -13,11 +12,11 @@ export interface ITenantProductsRepository {
   delete (id: string, tenantId: string): Promise<IProdutos | null>;
 }
 
-const prisma = new PrismaClient();
-
 export class TenantProductsRepository implements ITenantProductsRepository {
+  constructor (private readonly prisma: PrismaClient) {}
+  
   async getProducts (id: string): Promise<IProdutos[]> {
-    return prisma.produtos.findMany({
+    return this.prisma.produtos.findMany({
       where: {
         tenantId: id
       }
@@ -25,7 +24,7 @@ export class TenantProductsRepository implements ITenantProductsRepository {
   }
 
   async getProductById (productId: string, tenantId: string) {
-    return prisma.produtos.findFirst({
+    return this.prisma.produtos.findFirst({
       where: {
         id: productId,
         tenantId: tenantId
@@ -34,7 +33,7 @@ export class TenantProductsRepository implements ITenantProductsRepository {
   }
   
   async create (product: ProductDTO, cloudinaryData: CloudinaryImageResult) {
-    return prisma.produtos.create({
+    return this.prisma.produtos.create({
       data: {
         nomeProduto: product.nomeProduto,
         descProduto: product.descProduto,
@@ -48,7 +47,7 @@ export class TenantProductsRepository implements ITenantProductsRepository {
   }
 
   async patch (productData: CreateProductData) {
-    await prisma.produtos.update({
+    await this.prisma.produtos.update({
       where: {
         id: productData.productId
       },
@@ -66,7 +65,7 @@ export class TenantProductsRepository implements ITenantProductsRepository {
   }
 
   async delete (id: string, tenantId: string) {
-    const product = await prisma.produtos.findFirst({
+    const product = await this.prisma.produtos.findFirst({
       where: {
         tenantId: tenantId,
         id: id
@@ -75,7 +74,7 @@ export class TenantProductsRepository implements ITenantProductsRepository {
 
     if (!product) throw new CustomError('Produto não encontrado', 404, 'PRODUCT_NOT_FOUND');
 
-    return await prisma.produtos.delete({
+    return await this.prisma.produtos.delete({
       where: {
         id: id
       }

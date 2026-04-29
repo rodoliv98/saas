@@ -3,9 +3,10 @@ import { TenantHomeController } from "./tenant-home-controller";
 import { TenantHomeService } from "./tenant-home-service";
 import { TenantHomeRepository } from "./tenant-home-repo";
 import { checkTenant } from "../../middlewares/check-tenant";
+import prisma from "../../lib/client";
 
 const router = Router();
-const repo = new TenantHomeRepository();
+const repo = new TenantHomeRepository(prisma);
 const service = new TenantHomeService(repo);
 const controller = new TenantHomeController(service);
 
