@@ -21,7 +21,7 @@ export class AdminService implements IAdminService {
       throw new CustomError('Credenciais inválidas', 404, ErrorCode.ADMIN_BAD_REQUEST);
     }
     
-    const isMatch = bcrypt.compare(data.senha, admin.senha);
+    const isMatch = await bcrypt.compare(data.senha, admin.senha);
     if (!isMatch) {
       throw new CustomError('Credenciais inválidas', 404, ErrorCode.ADMIN_BAD_REQUEST);
     }

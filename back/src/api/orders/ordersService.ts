@@ -1,7 +1,7 @@
 import { PedidoStatus } from "../../types/types-index";
 import { OrderSchema } from "./types/order-types";
 import { Cuid } from "../../types/types-index";
-import { ICreateOrder, IOrderRepository } from "./ordersRepository";
+import { ICreateOrder, IOrderRepository, PricesFromDB } from "./ordersRepository";
 import { Decimal } from "../../generated/prisma/internal/prismaNamespace";
 import { CustomError } from "../../middlewares/errorHandler";
 import { ErrorCode } from "../../types/constants/error-codes-constants";
@@ -52,10 +52,15 @@ export class OrdersService implements IOrdersService {
         item.adicionais.map(ads => ads.id))
     ).flat(2);
 
-    const [productsPrices, aditionalsPrices] = await Promise.all([
+    const [productsPrices, aditionalsPrices]: [PricesFromDB[], PricesFromDB[]] = await Promise.all([
       this.repo.getProductsPrice(itemsIds),
       this.repo.getAditionalsPrice(aditionalIds)
     ]);
+
+    if (productsPrices.length == 0 && aditionalsPrices.length == 0) {
+      throw new CustomError('Nenhum produto cadastrado', 404, ErrorCode.PRODUCT_NOT_FOUND);
+    }
+
     const allPrices = productsPrices.concat(aditionalsPrices);
     // return aqui pq se não o erro estora e quebra a aplicação
     return this.checkIfPricesMatch(allPrices, body.totalOrderPrice, body.taxaEntrega);

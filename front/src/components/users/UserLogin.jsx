@@ -26,10 +26,11 @@ function UserLogin() {
     setIsLoading(true);
 
     try {
-      const res = await refreshHook('post', '/api/login', form);
+      const res = await refreshHook('post', '/api/auth/login', form);
       login(res.data.token);
       navigate(redirectUrl);
-    } catch {
+    } catch (err) {
+      console.log(err);
       setError('Email ou senha inválidos');
     } finally {
       setIsLoading(false);

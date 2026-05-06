@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import { Clock, ChefHat, PackageCheck, Truck, CheckCircle2, XCircle } from "lucide-react";
 import { useRefreshHook } from "../utils/refresh-hook";
-import { io } from 'socket.io-client';
-import { useAuth } from "../auth/AuthProvider";
 
 function UserProfile() {
   const [data, setData] = useState(null);
@@ -10,16 +8,13 @@ function UserProfile() {
   const [errors, setErrors] = useState(null);
   const [activeTab, setActiveTab] = useState('emAndamento');
   const { refreshHook } = useRefreshHook();
-  const { token } = useAuth();
 
   useEffect(() => { 
     const fetch = async () => {
       try {
         const res = await refreshHook('get', '/api/user-data');
-        
         setData(res.data.user);
         setPedidos(res.data.pedidos);
-        
       } catch (err) {
         setErrors(err.error);
       }
@@ -27,21 +22,11 @@ function UserProfile() {
 
     fetch();
     
-  }, []);
+    const interval = setInterval(() => {
+      fetch();
+    }, 30000);
 
-  useEffect(() => {
-    const socket = io('http://localhost:3000', { auth: { token } });
-    socket.on('pedido-atualizado', (data) => {
-      setPedidos(prev => {
-        return prev.map(p => 
-          p.id === data.id ? { ...p, status: data.status } : p
-        );
-      });
-    });
-
-    return () => {
-      socket.disconnect();
-    };
+    return () => clearInterval(interval);
   }, []);
 
   const getStatusInfo = (status) => {

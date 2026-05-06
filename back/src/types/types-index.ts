@@ -9,10 +9,12 @@ import { BasicPlanFeatures, Plan } from "./entities/plan-entitie";
 // login and register types
 export type RegisterType = z.infer<typeof registerSchema>;
 export type UserRegisterType = z.infer<typeof userRegisterSchema>;
-export type IdType = {
+export type TableName = {
   table: 'users' | 'tenant' | 'admins',
   id: string;
 }
+export type IdType = 'userId' | 'tenantId' | 'adminId';
+export type RoleType = 'user' | 'tenant' | 'admin';
 
 // order types
 export type OrderSchema = z.infer<typeof orderSchema>;

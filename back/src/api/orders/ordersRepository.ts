@@ -80,8 +80,8 @@ export interface IOrderRepository {
   getUserOrders (userId: string): Promise<IGetUserOrders[]>;
   patchOrders (orderId: Cuid, body: PedidoStatus, tenantSlug: string): Promise<ICreateOrder>;
   create (body: OrderSchema, userId: string, pin: string, shortId: string): Promise<ICreateOrder>;
-  getProductsPrice (productsIds: string[]): Promise<PricesFromDB[]>;
-  getAditionalsPrice (aditionalsIds: string[]): Promise<PricesFromDB[]>;
+  getProductsPrice (productsIds: string[]): Promise<PricesFromDB[] | []>;
+  getAditionalsPrice (aditionalsIds: string[]): Promise<PricesFromDB[] | []>;
 } 
 
 export class OrderRepository implements IOrderRepository {
@@ -90,9 +90,17 @@ export class OrderRepository implements IOrderRepository {
   // modificado para totalOrderPrice ser number e não Decimal, para evitar problemas de serialização e facilitar o consumo no front-end. 
   // O valor é convertido para number antes de retornar os dados.
   async getOrders (tenantSlug: string): Promise<Orders[] | []> {
+    const statusList: PedidosStatus[] = [
+      PedidosStatus.pendente,
+      PedidosStatus.preparando,
+      PedidosStatus.pronto,
+      PedidosStatus.entregando
+    ]; 
+
     const orders = await this.prisma.pedidos.findMany({
       where: {
-        tenantSlug: tenantSlug
+        tenantSlug: tenantSlug,
+        status: { in: statusList } 
       },
       select: {
         id: true,
@@ -232,7 +240,7 @@ export class OrderRepository implements IOrderRepository {
     })
   }
   
-  async getProductsPrice (productsIds: string[]): Promise<PricesFromDB[]> {
+  async getProductsPrice (productsIds: string[]) {
     const productsNoDups = await this.prisma.produtos.findMany({
       where: {
         id: { in: productsIds } // in = a set remove ids duplicados
@@ -251,7 +259,7 @@ export class OrderRepository implements IOrderRepository {
                       );
   }
 
-  async getAditionalsPrice (aditionalsIds: string[]): Promise<PricesFromDB[]> {
+  async getAditionalsPrice (aditionalsIds: string[]) {
     const aditionalNoDups = await this.prisma.sabores.findMany({
       where: {
         id: { in: aditionalsIds } // in = a set remove ids duplicados

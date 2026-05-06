@@ -1,17 +1,17 @@
 import { PrismaClient } from "../../generated/prisma/client";
 import { TenantRefresh } from "../login/entities/tenant";
 import { UserRefresh } from "../login/entities/user";
-import { IdType } from "../../types/types-index";
+import { TableName } from "../../types/types-index";
 import { AdminRefresh } from "../admin/types/admin-types";
 
 export interface IRefreshRepository {
-  refresh (id: IdType): Promise<TenantRefresh | UserRefresh | AdminRefresh | null>;
+  refresh (id: TableName): Promise<TenantRefresh | UserRefresh | AdminRefresh | null>;
 }
 
 export class RefreshRepository implements IRefreshRepository {
   constructor (private prisma: PrismaClient) {}
   
-  async refresh (tokenId: IdType) {
+  async refresh (tokenId: TableName) {
     switch (tokenId.table) {
       case "users":
         const user = await this.prisma.users.findFirst({

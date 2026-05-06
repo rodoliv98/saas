@@ -3,7 +3,7 @@ import { IRefreshService } from "./refresh-service";
 
 export class RefreshController {
   constructor (private service: IRefreshService) {}
-  
+
   async refresh (req: Request, res: Response, next: NextFunction) {
     const refreshToken = req.cookies.refreshToken;
     if (!refreshToken) {
@@ -12,7 +12,7 @@ export class RefreshController {
 
     try {
       const [accessToken, newRefreshToken] = await this.service.refresh(refreshToken);
-  
+
       res
       .cookie('refreshToken', newRefreshToken, {
         httpOnly: process.env.NODE_ENV === 'production' ? true : false,

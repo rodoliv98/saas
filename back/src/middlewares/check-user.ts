@@ -8,7 +8,7 @@ export function checkUser (req: Request, res: Response, next: NextFunction) {
   if (!token || token == 'undefined') {
     return res.status(401).json({ error: 'Token não encontrado', code: ErrorCode.TOKEN_NOT_FOUND });
   }
-
+  
   const decoded = verifyToken(token) as JwtPayload;
   if (decoded.role != 'user') {
     return res.status(403).json({ error: 'Não autorizado', code: ErrorCode.NOT_AUTHORIZED });

@@ -3,7 +3,6 @@ import { IOrdersService } from "./ordersService";
 import { cuidSchema } from "../../schemas/products/products-schemas";
 import { orderSchema } from "../../schemas/orders/order-schemas";
 import { orderStatusSchema } from "./schemas/order-schema";
-import { io } from '../../../index';
 
 export class OrdersController {
   constructor (private service: IOrdersService) {}
@@ -15,7 +14,7 @@ export class OrdersController {
 
       const orders = await this.service.getOrders(tenantSlug);
 
-      res.status(200).json({ orders: orders, tenant: tenantSlug });
+      res.status(200).json({ orders: orders });
 
     } catch (err) {
       next(err);
@@ -31,9 +30,7 @@ export class OrdersController {
       if (!tenantSlug) return res.status(401).json({ error: 'Não autorizado' });
 
       const body = orderStatusSchema.parse(req.body.status);
-      const updatedOrder = await this.service.patchOrders(orderId, body, tenantSlug);
-      
-      io.emit('pedido-atualizado', { id: updatedOrder.id, status: updatedOrder.status });
+      await this.service.patchOrders(orderId, body, tenantSlug);
 
       res.status(200).json({ msg: 'Pedido atualizado' });
 
@@ -48,9 +45,7 @@ export class OrdersController {
       if (!userId) return res.status(401).json({ error: 'Não autorizado' });
       
       const body = orderSchema.parse(req.body);
-      const order = await this.service.create(body, userId);
-
-      io.emit('pedido-criado', { tenant: order.tenantSlug });
+      await this.service.create(body, userId);
 
       res.status(200).json({ msg: 'Pedido criado' });
       

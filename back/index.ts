@@ -16,11 +16,9 @@ import adminRoutes from './src/api/admin/admin-routes';
 import telegram from './src/api/telegram/telegram-routes';
 import http from 'node:http';
 import helmet from 'helmet';
-import { Server } from 'socket.io';
-import { CustomError, errorHandler } from './src/middlewares/errorHandler'
+import { errorHandler } from './src/middlewares/errorHandler'
 import { requestLogger } from './src/middlewares/request-logger';
 import { apiLimiter, authLimiter } from './src/middlewares/rate-limiter';
-import jwt from 'jsonwebtoken';
 import 'dotenv/config'
 
 const app = express();
@@ -43,50 +41,6 @@ app.use('/static', express.static('public'));
 app.use(express.json({ limit: '10kb' }));
 app.use(cors(corsOptions));
 app.use(cookieParser());
-
-export const io = new Server(server, {
-  pingTimeout: 60000,
-  pingInterval: 25000,
-  cors: {
-    origin: process.env.NODE_ENV === 'production'
-    ? 'https://eldur.com.br'
-    : ['http://localhost:5173', 'http://localhost'],
-    methods: ["GET"],
-    credentials: true
-  },
-  transports: ['websocket', 'polling'],
-});
-
-io.use((socket, next) => {
-  const token = socket.handshake.auth?.token;
-  const jwtSecret = process.env.JWT_SECRET;
-
-  if (!token) {
-    return next(new CustomError('Token não enviado', 400, 'TOKEN_NOT_FOUND'));
-  }
-
-  if (!jwtSecret) {
-    return next(new CustomError('Chave não configurada', 500, 'INTERNAL_ERROR')); // mudar msg de erro dps
-  }
-
-  try {
-    const decoded = jwt.verify(token, jwtSecret);
-    (socket as any).user = decoded; // ainda não uso essa var em nenhum lugar
-    
-    next();
-  } catch (err) {
-    next(new CustomError('Token inválido', 400, 'TOKEN_EXPIRED'));
-  }
-})
-
-io.on('connection', (socket) => {
-  console.log('User connected:', socket.id);
-  console.log('IP:', socket.handshake.address);
-  
-  socket.on('disconnect', () => {
-    console.log('User disconnected:', socket.id);
-  });
-});
 
 app.use('/api', apiLimiter);
 app.use('/api/auth', authLimiter);

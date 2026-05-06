@@ -1,17 +1,21 @@
 import { useEffect, useState, useRef } from "react"
 import { useRefreshHook } from '../utils/refresh-hook'
-import { io } from 'socket.io-client'
-import { useAuth } from "../auth/AuthProvider";
+import WarningModal from "./WarningModal";
 
 function PedidosDashboard() {
   const [pedidos, setPedidos] = useState([]);
-  const [tenant, setTenant] = useState('');
   const [activeTab, setActiveTab] = useState('ativos');
   const [error, setError] = useState('');
   const [currentTime, setCurrentTime] = useState(Date.now());
-  const previousOrderCount = useRef(0);
+  // const previousOrderCount = useRef(null);
   const { refreshHook } = useRefreshHook();
-  const { token } = useAuth();
+
+  // Estado do modal de confirmação
+  const [confirmModal, setConfirmModal] = useState({
+    isOpen: false,
+    orderId: null,
+    novoStatus: null,
+  });
 
   const activosColumns = [
     { key: 'pendente', title: 'Pendente' },
@@ -34,6 +38,8 @@ function PedidosDashboard() {
     { value: 'cancelado', label: 'Cancelado' }
   ];
 
+  const STATUS_IRREVERSIVEIS = ['concluido', 'cancelado'];
+
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentTime(Date.now());
@@ -47,59 +53,40 @@ function PedidosDashboard() {
       try {
         const res = await refreshHook('get', `/api/orders`);
         setPedidos(res.data.orders);
-        setTenant(res.data.tenant);
-        previousOrderCount.current = res.data.orders.length;
       } catch (err) {
         setError('Ocorreu um erro ao carregar os pedidos');
       }
     }
-
     fetchOrders();
+    
+    const interval = setInterval(() => {
+      fetchOrders();
+      console.log('chamou a função');
+    }, 30000);
+
+    return () => clearInterval(interval);
   }, []);
 
-  useEffect(() => {
-    const socket = io('http://localhost:3000', { auth: { token } });
-    
-    socket.on('pedido-criado', async (data) => {
-      if (data.tenant === tenant) {
-        const res = await refreshHook('get', '/api/orders');
-        const newOrderCount = res.data.orders.length;
-        
-        if (newOrderCount > previousOrderCount.current) {
-          playNotificationSound();
-        }
-        
-        previousOrderCount.current = newOrderCount;
-        setPedidos(res.data.orders);
-      }
-    });
-
-    return () => {
-      socket.disconnect();
-    };
-  }, [tenant]);
-
-  const playNotificationSound = () => {
-    try {
-      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-      const audioContext = new AudioContextClass();
-      const oscillator = audioContext.createOscillator();
-      const gainNode = audioContext.createGain();
-
-      oscillator.connect(gainNode);
-      gainNode.connect(audioContext.destination);
-
-      oscillator.frequency.value = 800;
-      oscillator.type = 'sine';
-
-      gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
-      gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
-
-      oscillator.start(audioContext.currentTime);
-      oscillator.stop(audioContext.currentTime + 0.5);
-    } catch (error) {
-      console.error('Erro ao reproduzir som de notificação:', error);
+  // Chamado pelo <select>. Se o novo status for irreversível, abre o modal.
+  // Caso contrário, atualiza direto.
+  const handleStatusChange = (orderId, novoStatus) => {
+    if (STATUS_IRREVERSIVEIS.includes(novoStatus)) {
+      setConfirmModal({ isOpen: true, orderId, novoStatus });
+      return;
     }
+    handleUpdateOrder(orderId, novoStatus);
+  };
+
+  // Chamado quando o usuário confirma no modal
+  const handleConfirmModal = async () => {
+    const { orderId, novoStatus } = confirmModal;
+    setConfirmModal({ isOpen: false, orderId: null, novoStatus: null });
+    await handleUpdateOrder(orderId, novoStatus);
+  };
+
+  // Chamado quando o usuário cancela no modal
+  const handleCancelModal = () => {
+    setConfirmModal({ isOpen: false, orderId: null, novoStatus: null });
   };
 
   const handleUpdateOrder = async (orderId, newStatus) => {
@@ -182,6 +169,14 @@ function PedidosDashboard() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* Modal de confirmação */}
+      <WarningModal
+        isOpen={confirmModal.isOpen}
+        novoStatus={confirmModal.novoStatus}
+        onConfirm={handleConfirmModal}
+        onCancel={handleCancelModal}
+      />
+
       {/* Header */}
       <div className="bg-white border-b border-gray-200 sticky top-0 z-10">
         <div className="px-6 py-4">
@@ -210,23 +205,6 @@ function PedidosDashboard() {
                     : 'bg-gray-100 text-gray-600'
                 }`}>
                   {activosColumns.reduce((sum, col) => sum + getPedidosByStatus(col.key).length, 0)}
-                </span>
-              </button>
-              <button
-                onClick={() => setActiveTab('finalizados')}
-                className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
-                  activeTab === 'finalizados'
-                    ? 'border-red-700 text-red-700'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                }`}
-              >
-                Finalizados
-                <span className={`ml-2 px-2 py-1 rounded-full text-xs font-medium ${
-                  activeTab === 'finalizados' 
-                    ? 'bg-red-100 text-red-800' 
-                    : 'bg-gray-100 text-gray-600'
-                }`}>
-                  {finalizadosColumns.reduce((sum, col) => sum + getPedidosByStatus(col.key).length, 0)}
                 </span>
               </button>
             </nav>
@@ -300,7 +278,7 @@ function PedidosDashboard() {
                             </div>
                           </div>
 
-                          {/* Card Body - Todos os detalhes sempre visíveis */}
+                          {/* Card Body */}
                           <div className="p-3">
                             {/* Todos os itens do pedido */}
                             <div className="mb-3">
@@ -358,10 +336,11 @@ function PedidosDashboard() {
                                 </div>
                               </div>
                             )}
+
                             {/* Status Selector */}
                             <select
                               value={pedido.status}
-                              onChange={(e) => handleUpdateOrder(pedido.id, e.target.value)}
+                              onChange={(e) => handleStatusChange(pedido.id, e.target.value)}
                               className="w-full text-xs px-2 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-red-700 focus:border-transparent bg-white font-medium"
                             >
                               {statusOptions.map(option => (

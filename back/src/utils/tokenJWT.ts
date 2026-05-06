@@ -1,20 +1,21 @@
 import jwt from 'jsonwebtoken'
 import { CustomError } from '../middlewares/errorHandler';
+import { IdType, RoleType } from '../types/types-index';
 
-export function createLoginToken (id: string, type: string, role: string, slug?: string) {
+export function createLoginToken (id: string, idType: IdType, role: RoleType, slug?: string) {
   const secretJWT = process.env.JWT_SECRET as string;
   if (!secretJWT) {
     throw new CustomError('Chave JWT não configurada', 500);
   }
   // porque o token criado não vem com todas as propriedades?
-  const accessToken = jwt.sign({ [type]: id, tenantSlug: slug, role: role }, secretJWT, {
+  const accessToken = jwt.sign({ [idType]: id, tenantSlug: slug, role: role }, secretJWT, {
     expiresIn: '15m',
     algorithm: 'HS256',
     issuer: 'api.com.br',
     audience: 'eldur.com.br'
   });
 
-  const refreshToken = jwt.sign({ [type]: id, role: role }, secretJWT, {
+  const refreshToken = jwt.sign({ [idType]: id, role: role }, secretJWT, {
     expiresIn: '7d',
     algorithm: 'HS256',
     issuer: 'api.com.br',
