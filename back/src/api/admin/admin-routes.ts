@@ -4,18 +4,20 @@ import { AdminRepository } from "./admin-repo";
 import { Router } from "express";
 import { checkAdmin } from "../../middlewares/check-admin";
 import prisma from '../../lib/client';
-import bcrypt from 'bcrypt';
+// import bcrypt from 'bcrypt';
 
 const router = Router();
 const repo = new AdminRepository(prisma);
 const service = new AdminService(repo);
 const controller = new AdminController(service);
 
-router.post('/admin/login', checkAdmin, controller.login.bind(controller));
+router.post('/admin/login', controller.login.bind(controller));
 
-router.post('/admin/tenants', checkAdmin, controller.findAllTenants.bind(controller));
+router.get('/admin/tenants', checkAdmin, controller.findAllTenants.bind(controller));
 
-router.post('/admin/tenants/update', checkAdmin, controller.changeStoreStatus.bind(controller));
+router.patch('/admin/tenants/store', checkAdmin, controller.changeStoreStatus.bind(controller));
+
+router.patch('/admin/tenants/active', checkAdmin, controller.changeStoreActiveStatus.bind(controller));
 
 /* router.post('/test-acc', async (req, res) => {
   console.log('hit')

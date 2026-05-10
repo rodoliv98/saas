@@ -2,14 +2,15 @@ import { CustomError } from "../../middlewares/errorHandler";
 import { ErrorCode } from "../../types/constants/error-codes-constants";
 import { IAdminRepository } from "./admin-repo";
 import { createLoginToken } from "../../utils/tokenJWT";
-import { TenantAdminView } from "./types/admin-types";
-import bcrypt from 'bcrypt';
+import { ActiveStatusResult, TenantAdminView } from "./types/admin-types";
 import { Tenant } from "../../generated/prisma/client";
+import bcrypt from 'bcrypt';
 
 export interface IAdminService {
   login (data: { email: string, senha: string }): Promise<string[]>;
   findAllTenants (): Promise<TenantAdminView[]>;
   changeStoreStatus (tenantId: string, newStatus: boolean): Promise<Tenant>;
+  changeStoreActiveStatus (tenantId: string, newActiveStatus: boolean): Promise<ActiveStatusResult>;
 }
 
 export class AdminService implements IAdminService {
@@ -33,12 +34,26 @@ export class AdminService implements IAdminService {
     return this.repo.findAllTenants();
   }
 
-  async changeStoreStatus (tenantId: string, newStatus: boolean) {
+  async changeStoreStatus (tenantId: string, storeOpenStatus: boolean) {
     const tenant = await this.repo.findTenant(tenantId);
     if (!tenant) {
       throw new CustomError('Tenant não encontrado na rota de admin', 404, ErrorCode.TENANT_NOT_FOUND);
     }
     
-    return this.repo.changeStoreStatus(tenantId, newStatus);
+    return this.repo.changeStoreStatus(tenantId, storeOpenStatus);
+  }
+
+  async changeStoreActiveStatus (tenantId: string, tenantActiveStatus: boolean) {
+    const tenant = await this.repo.findTenant(tenantId);
+    if (!tenant) {
+      throw new CustomError('Tenant não encontrado na rota de admin', 404, ErrorCode.TENANT_NOT_FOUND);
+    }
+
+    const updatedTenant = await this.repo.changeStoreActiveStatus(tenantId, tenantActiveStatus);
+    
+    return updatedTenant.active === true
+    ? 'A conta do tenant foi ativada'
+    : 'A conta do tenant foi desativada';
+
   }
 }

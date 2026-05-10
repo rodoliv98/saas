@@ -9,13 +9,13 @@ export class AdminController {
     try {
       const data = adminLoginSchema.parse(req.body);
       const [accessToken, refreshToken] = await this.service.login(data);
-
+      console.log(refreshToken);
       res
       .cookie('refreshToken', refreshToken, {
         httpOnly: process.env.NODE_ENV === 'production' ? true : false,
         secure: true,
         sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'none',
-        path: '/auth/refresh',
+        path: '/api/refresh',
         maxAge: 7 * 24 * 60 * 60 * 1000
       })
       .status(200)
@@ -30,7 +30,7 @@ export class AdminController {
     try {
       const tenants = await this.service.findAllTenants();
       
-      res.status(200).json(tenants);
+      res.status(200).json({ tenants });
 
     } catch (err) {
       next(err);
@@ -40,11 +40,25 @@ export class AdminController {
   async changeStoreStatus (req: Request, res: Response, next: NextFunction) {
     try {
       const tenantId = req.body.tenantId;
-      const newStatus = req.body.status;
+      const storeOpenStatus = req.body.storeOpenStatus;
 
-      await this.service.changeStoreStatus(tenantId, newStatus);
+      await this.service.changeStoreStatus(tenantId, storeOpenStatus);
 
       res.status(200).json({ msg: 'Status atualizado' });
+
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async changeStoreActiveStatus (req: Request, res: Response, next: NextFunction) {
+    try {
+      const tenantId = req.body.tenantId;
+      const tenantActiveStatus = req.body.tenantActiveStatus;
+
+      const resultMessage = await this.service.changeStoreActiveStatus(tenantId, tenantActiveStatus);
+
+      res.status(200).json({ msg: resultMessage });
 
     } catch (err) {
       next(err);

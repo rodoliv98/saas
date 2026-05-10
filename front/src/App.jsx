@@ -12,6 +12,8 @@ import UserProfile from "./components/users/UserProfile";
 import AuthProvider from "./components/auth/AuthProvider";
 import UserNav from "./components/users/UserNav";
 import RecoveryPassword from "./components/RecoveryPassword";
+import AdminDashboard from "./components/admin/AdminDashboard";
+import AdminLogin from "./components/admin/AdminLogin";
 
 const MainLayout = () => {
   return (
@@ -46,6 +48,8 @@ function App () {
             <Route path="/termos" element={<Terms />} />
             <Route path="/recuperar-senha" element={<RecoveryPassword />} />
           </Route>
+          <Route path="/admin/dashboard" element={<AdminDashboard />} />
+          <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/dashboard" element={<Dashboard />} />
 
           {/* Pagina das lojas */}

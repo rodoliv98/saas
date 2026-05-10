@@ -7,6 +7,7 @@ export interface IAdminRepository {
   findAllTenants (): Promise<TenantAdminView[]>;
   findTenant (tenantId: string): Promise<Tenant | null>;
   changeStoreStatus (tenantId: string, newStatus: boolean): Promise<Tenant>;
+  changeStoreActiveStatus (tenantId: string, newActiveStatus: boolean): Promise<Tenant>;
 }
 
 export class AdminRepository implements IAdminRepository {
@@ -25,7 +26,10 @@ export class AdminRepository implements IAdminRepository {
       select: {
         id: true,
         tenantSlug: true,
-        isOpen: true
+        isOpen: true,
+        active: true,
+        diasFuncionamento: true,
+        horarioFuncionamento: true
       }
     });
   }
@@ -38,13 +42,24 @@ export class AdminRepository implements IAdminRepository {
     })
   }
  
-  async changeStoreStatus (tenantId: string, newStatus: boolean) {
+  async changeStoreStatus (tenantId: string, storeOpenStatus: boolean) {
     return this.prisma.tenant.update({
       where: {
         id: tenantId
       },
       data: {
-        isOpen: newStatus
+        isOpen: storeOpenStatus
+      }
+    })
+  }
+  
+  async changeStoreActiveStatus (tenantId: string, tenantActiveStatus: boolean) {
+    return this.prisma.tenant.update({
+      where: {
+        id: tenantId
+      },
+      data: {
+        active: tenantActiveStatus
       }
     })
   }

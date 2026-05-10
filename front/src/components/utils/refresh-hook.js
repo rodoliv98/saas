@@ -48,7 +48,7 @@ export function useRefreshHook () {
       return res;
 
     } catch (err) {
-      const errorCode = err.response.data.code;
+      const errorCode = err.response?.data?.code;
       if (["NOT_AUTHORIZED", "TOKEN_EXPIRED", "TOKEN_NOT_FOUND"].includes(errorCode)) {
         return await retryRequest(method, url, data);
       }
