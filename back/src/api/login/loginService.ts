@@ -1,4 +1,4 @@
-import bcrypt from 'bcrypt'
+import * as bcrypt from 'bcrypt'
 import { LoginDTO } from './dto/login-dto' 
 import { createLoginToken } from '../../utils/tokenJWT'
 import { ILoginRepository } from './loginRepository' 

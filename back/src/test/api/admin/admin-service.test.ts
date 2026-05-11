@@ -7,7 +7,7 @@ import { ErrorCode } from '../../../types/constants/error-codes-constants';
 vi.mock('bcrypt', () => ({
   default: { compare: vi.fn() }
 }));
-import bcrypt from 'bcrypt';
+import * as bcrypt from 'bcrypt';
 
 vi.mock('../../../utils/tokenJWT', () => ({
   createLoginToken: vi.fn(() => ['access', 'refresh'])
@@ -23,7 +23,8 @@ describe('AdminService', () => {
       login: vi.fn(),
       findAllTenants: vi.fn(),
       findTenant: vi.fn(),
-      changeStoreStatus: vi.fn()
+      changeStoreStatus: vi.fn(),
+      changeStoreActiveStatus: vi.fn()
     };
     service = new AdminService(repoMock);
     (createLoginToken as any).mockClear();

@@ -4,7 +4,7 @@ import { IAdminRepository } from "./admin-repo";
 import { createLoginToken } from "../../utils/tokenJWT";
 import { ActiveStatusResult, TenantAdminView } from "./types/admin-types";
 import { Tenant } from "../../generated/prisma/client";
-import bcrypt from 'bcrypt';
+import * as bcrypt from 'bcrypt';
 
 export interface IAdminService {
   login (data: { email: string, senha: string }): Promise<string[]>;

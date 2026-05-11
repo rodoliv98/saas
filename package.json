@@ -2,8 +2,10 @@
   "scripts": {
     "dev:db": "docker exec -it db psql -U root postgres -d meu-banco",
     "dev:up": "docker compose --profile dev up",
-    "dev:down": "docker compose --profile dev down",
+    "dev:down": "docker compose --profile dev down --remove-orphans",
     "dev:nginx-up": "docker compose --profile dev-nginx up",
-    "dev:nginx-down": "docker compose --profile dev-nginx down"
+    "dev:nginx-down": "docker compose --profile dev-nginx down --remove-orphans",
+    "dev:dist-up": "docker compose --profile dev-dist up",
+    "dev:dist-down": "docker compose --profile dev-dist down --remove-orphans"
   }
 }

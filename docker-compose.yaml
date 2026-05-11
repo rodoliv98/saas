@@ -17,6 +17,7 @@ services:
       context: ./back
       dockerfile: dockerfile.dev
     container_name: api
+    profiles: ["dev"]
     depends_on:
        - db
     environment:
@@ -32,6 +33,34 @@ services:
   front-dev:
     container_name: front
     profiles: ["dev"]
+    build:
+      context: ./front
+      dockerfile: dockerfile.dev
+    ports:
+       - '5173:5173'
+    volumes:
+       - ./front:/app
+       - /app/node_modules
+
+  api-dist:
+    build: 
+      context: ./back
+      dockerfile: dockerfile.dist.dev
+    container_name: api_dist
+    profiles: ["dev-dist"]
+    depends_on:
+       - db
+    env_file:
+       - ./back/.env
+    ports:
+       - '3000:3000'
+    volumes:
+       - ./back:/app:delegated
+       - /app/node_modules
+
+  front-dev-dist:
+    container_name: front_dist
+    profiles: ["dev-dist"]
     build:
       context: ./front
       dockerfile: dockerfile.dev

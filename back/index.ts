@@ -1,3 +1,15 @@
+process.on('unhandledRejection', (code) => {
+  console.error('unhandledRejection', code, new Error().stack);
+});
+
+process.on('uncaughtException', (code) => {
+  console.error('uncaughtException', code, new Error().stack);
+});
+
+process.on('exit', (code) => {
+  console.error('[EXIT]', code, new Error().stack);
+});
+
 import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
@@ -57,6 +69,7 @@ app.use('/api', tenantData);
 app.use('/api', orderRoutes);
 app.use('/api', tenantFlavors);
 app.use('/api', telegram);
+app.use('/api/health', (_req, res) => res.status(200).json({ message: 'oksss' }));
 app.use('/api', tenantStore);
 app.use(errorHandler);
 

@@ -39,9 +39,10 @@
   "scripts": {
     "test": "vitest",
     "build": "tsc && node fix-imports.mjs",
+    "postbuild": "cp -r src/generated/prisma/. dist/src/generated/prisma/",
     "dev": "tsx watch index.ts",
     "container": "tsx watch index.ts --poll",
-    "compiled": "node ./dist/index.js"
+    "start": "node ./dist/index.js"
   },
   "keywords": [],
   "author": "",

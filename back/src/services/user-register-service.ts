@@ -1,6 +1,6 @@
 import { IUserRegisterRepository } from "../repository/user-register-repo";
 import { UserRegisterType } from "../types/types-index";
-import bcrypt from 'bcrypt';
+import * as bcrypt from 'bcrypt';
 import { createLoginToken } from "../utils/tokenJWT";
 
 export interface IUserRegisterService {
@@ -14,7 +14,7 @@ export class UserRegisterService implements IUserRegisterService {
     const hashedPassword = await bcrypt.hash(body.senha, 10);
     const user = await this.repo.register(body, hashedPassword);
 
-    const [accessToken, refreshToken] = createLoginToken(user.id);
+    const [accessToken, refreshToken] = createLoginToken(user.id, 'userId', 'user');
     return [accessToken, refreshToken];
   }
 }
