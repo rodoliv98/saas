@@ -31,15 +31,11 @@ function ModalForm ({ modalOpen, setModalOpen, productId, type }) {
     if (productId && (type === 'editProduct' || type === 'editFlavor')) {
       const fetch = async () => {
         try {
-          console.log('test', productId);
           const res = type === 'editProduct' ? await refreshHook('get', `/api/products/${productId}`)
                                              : await refreshHook('get', `/api/tenant-flavors/${productId}`);
-
-          console.log(res.data);
           setForm(res.data);
 
         } catch (err) {
-          console.error(err);
           setError('Ocorreu um erro, reinicie a página ou tente mais tarde.');
         }
       }
@@ -85,11 +81,8 @@ function ModalForm ({ modalOpen, setModalOpen, productId, type }) {
     setIsLoading(true);
   
     try {
-      console.log('hit', type);
       if (type === 'createProduct') {
-        console.log('test');
-        const res = await refreshHook('post', '/api/products', formData);
-        console.log(res);
+        await refreshHook('post', '/api/products', formData);
       } else if (type === 'editProduct') {
         await refreshHook('patch', `/api/products/${productId}`, formData);
       } else if (type === 'createFlavor') {
@@ -102,8 +95,8 @@ function ModalForm ({ modalOpen, setModalOpen, productId, type }) {
       setModalOpen(false);
 
     } catch (err) {
-      console.log(err);
-      if (err.response.data.code === "VALIDATION_ERROR") {
+      const errorCode = err.response?.data?.code;
+      if (errorCode === "VALIDATION_ERROR") {
         return setError(err.response.data.error.map(err => err.message).join(', '));
       }
 

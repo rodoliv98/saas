@@ -61,7 +61,6 @@ function PedidosDashboard() {
     
     const interval = setInterval(() => {
       fetchOrders();
-      console.log('chamou a função');
     }, 30000);
 
     return () => clearInterval(interval);

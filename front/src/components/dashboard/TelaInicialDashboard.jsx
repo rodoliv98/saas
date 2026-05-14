@@ -13,7 +13,6 @@ function TelaInicialDashboard() {
         const res = await refreshHook('get', '/api/tenant/home');
         setData(res.data);
       } catch (err) {
-        console.log(err);
       } finally {
         setIsLoading(false);
       }

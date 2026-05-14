@@ -161,9 +161,9 @@ function AdminDashboard() {
         const res = await refreshHook('get', '/api/admin/tenants');
         // Usar res.data.tenants quando a API estiver pronta
         setTenants(res.data.tenants);
-        console.log(res);
+        // console.log(res);
       } catch (err) {
-        console.log('erro', err);
+        // console.log('erro', err);
       }
     }
 
@@ -182,7 +182,7 @@ function AdminDashboard() {
         prev.map((t) => (t.id === id ? { ...t, [type]: !campo } : t))
       );
     } catch (err) {
-      console.error("Erro ao atualizar tenant:", err);
+      // console.error("Erro ao atualizar tenant:", err);
     } finally {
       setLoadingId(null);
     }

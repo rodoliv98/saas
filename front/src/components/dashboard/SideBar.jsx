@@ -25,9 +25,7 @@ function Sidebar({ selectedSection, onSectionChange }) {
           setIsStoreOpen(res.data.isStoreOpen);
 					setLogoUrl(res.data.logoUrl);
 					setBannerUrl(res.data.bannerUrl);
-          console.log(res);
 				} catch (err) {
-					console.log(err);
 				}
 			}
 

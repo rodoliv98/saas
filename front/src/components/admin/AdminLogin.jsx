@@ -123,7 +123,7 @@ function AdminLogin() {
     try {
       const res = await refreshHook('post', '/api/admin/login', { email, senha: password });
       login(res.data.token);
-      console.log(res);
+      // console.log(res);
       redirect('/admin/dashboard');
 
     } catch (err) {

@@ -59,31 +59,3 @@ export function useRefreshHook () {
 
   return { refreshHook };
 }
-
-/* async function retryRequest (method, url, data, makeConfig, login, redirect) {
-  try {
-    const refreshRes = await api.post('/api/refresh');
-    const newToken = refreshRes.data.token;
-
-    if (newToken) {
-      login(newToken);
-      const newConfig = makeConfig(newToken);
-
-      const retryRes = data === undefined
-      ? await api[method](url, newConfig)
-      : await api[method](url, data, newConfig);
-
-      if (retryRes.statusText === 'OK') {
-        return retryRes;
-      }
-    
-    }
-  } catch (secErr) {
-    console.log('secErr', secErr);
-    if (secErr.status === 404 || 401 || 500 || 403) {
-      // redirect('/');
-    }
-    
-    throw secErr;
-  }
-} */

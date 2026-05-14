@@ -2,10 +2,7 @@ import { createLogger, format, config } from 'winston';
 import {
   devExceptionHandlers, 
   devRejectionHandlers, 
-  devTransport, 
-  prodExceptionHandlers, 
-  prodRejectionHandlers, 
-  prodTransport
+  devTransport,
 } from './winston-helper';
 const { combine, timestamp, json, errors } = format;
 
@@ -32,14 +29,17 @@ const formated = combine(
     debug: 7
   }
 */
-
+// mudar assim que possível pra grafana ou outra coisa
 const logger = createLogger({
   levels: config.syslog.levels,
   level: process.env.NODE_ENV === 'prod' ? 'info' : 'debug',
   format: formated,
-  transports: process.env.NODE_ENV === 'prod' ? prodTransport : devTransport,
-  exceptionHandlers: process.env.NODE_ENV === 'prod' ? prodExceptionHandlers : devExceptionHandlers,
-  rejectionHandlers: process.env.NODE_ENV === 'prod' ? prodRejectionHandlers : devRejectionHandlers
+  transports: devTransport,
+  exceptionHandlers: devExceptionHandlers,
+  rejectionHandlers: devRejectionHandlers
+  // transports: process.env.NODE_ENV === 'prod' ? prodTransport : devTransport,
+  // exceptionHandlers: process.env.NODE_ENV === 'prod' ? prodExceptionHandlers : devExceptionHandlers,
+  // rejectionHandlers: process.env.NODE_ENV === 'prod' ? prodRejectionHandlers : devRejectionHandlers
 });
 
 export default logger;

@@ -30,7 +30,6 @@ function UserLogin() {
       login(res.data.token);
       navigate(redirectUrl);
     } catch (err) {
-      console.log(err);
       setError('Email ou senha inválidos');
     } finally {
       setIsLoading(false);

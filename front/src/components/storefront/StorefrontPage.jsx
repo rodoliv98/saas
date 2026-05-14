@@ -45,7 +45,6 @@ const TenantStore = () => {
         setIsLoading(true);
         
         const res = await api.get(`/api/${slug}`);
-        console.log(res);
         setStoreData(res.data.store);
         setProducts(res.data.products || []);
         

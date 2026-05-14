@@ -12,4 +12,16 @@ export const adminLoginSchema = z.object({
           .regex(/^(?=.*[!@#$%^&*()_+\-=[\]{}|;:,.?])/, "Senha Deve conter pelo menos um símbolo")
           .regex(/^[a-zA-Z\d!@#$%^&*()_+\-=[\]{}|;:,.?]+$/, "Você usou caracteres que não permitidos no campo Senha")
           .refine((val) => !/[<>'"\\]/.test(val), "Caracteres < > ' \" \\ não são permitidos no campo Senha")
-})
+});
+
+export const storeStatusSchema = z.object({
+	tenantId: z.string()
+						 .regex(/^[a-z0-9]{25,26}$/, { message: 'ID inválido' }),
+	storeOpenStatus: z.boolean()
+});
+
+export const storeActiveStatusSchema = z.object({
+	tenantId: z.string()
+						 .regex(/^[a-z0-9]{25,26}$/, { message: 'ID inválido' }),
+	tenantActiveStatus: z.boolean()
+});

@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { adminLoginSchema } from "./schemas/admin-login-schema";
+import { adminLoginSchema, storeActiveStatusSchema, storeStatusSchema } from "./schemas/admin-login-schema";
 import { IAdminService } from "./admin-service";
 
 export class AdminController {
@@ -39,8 +39,7 @@ export class AdminController {
 
   async changeStoreStatus (req: Request, res: Response, next: NextFunction) {
     try {
-      const tenantId = req.body.tenantId;
-      const storeOpenStatus = req.body.storeOpenStatus;
+      const { tenantId, storeOpenStatus } = storeStatusSchema.parse(req.body);
 
       await this.service.changeStoreStatus(tenantId, storeOpenStatus);
 
@@ -53,8 +52,7 @@ export class AdminController {
 
   async changeStoreActiveStatus (req: Request, res: Response, next: NextFunction) {
     try {
-      const tenantId = req.body.tenantId;
-      const tenantActiveStatus = req.body.tenantActiveStatus;
+      const { tenantId, tenantActiveStatus } = storeActiveStatusSchema.parse(req.body);
 
       const resultMessage = await this.service.changeStoreActiveStatus(tenantId, tenantActiveStatus);
 

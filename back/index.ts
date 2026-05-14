@@ -41,8 +41,8 @@ app.use(helmet());
 const server = http.createServer(app);
 const corsOptions = {
   origin: process.env.NODE_ENV === 'production'
-  ? 'https://eldur.com.br'
-  : ['http://localhost:5173', 'http://localhost'],
+  ? process.env.CORS_PRODUCTION
+  : process.env.CORS_DEVELOPMENT,
   credentials: true,
   allowedHeaders: ["Content-Type", "Authorization"]
 }
@@ -73,4 +73,5 @@ app.use('/api/health', (_req, res) => res.status(200).json({ message: 'oksss' })
 app.use('/api', tenantStore);
 app.use(errorHandler);
 
-server.listen(3000, () => console.log('running'));
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, () => console.log(`running port ${PORT}`));
