@@ -19,7 +19,7 @@ router.patch('/admin/tenants/store', checkAdmin, controller.changeStoreStatus.bi
 
 router.patch('/admin/tenants/active', checkAdmin, controller.changeStoreActiveStatus.bind(controller));
 
-router.post('/test-acc', async (_req, res) => {
+router.get('/test-acc', async (_req, res) => {
   console.log('entrou');
   const body = {
     email: 'rodoliv@email.com',
