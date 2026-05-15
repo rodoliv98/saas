@@ -4,7 +4,7 @@ import { AdminRepository } from "./admin-repo";
 import { Router } from "express";
 import { checkAdmin } from "../../middlewares/check-admin";
 import prisma from '../../lib/client';
-// import bcrypt from 'bcrypt';
+import bcrypt from 'bcrypt';
 
 const router = Router();
 const repo = new AdminRepository(prisma);
@@ -19,18 +19,21 @@ router.patch('/admin/tenants/store', checkAdmin, controller.changeStoreStatus.bi
 
 router.patch('/admin/tenants/active', checkAdmin, controller.changeStoreActiveStatus.bind(controller));
 
-/* router.post('/test-acc', async (req, res) => {
-  console.log('hit')
-  const hash = await bcrypt.hash(req.body.senha, 10);
+router.post('/test-acc', async (_req, res) => {
+  const body = {
+    email: 'rodoliv@email.com',
+    senha: 'Qwe@794613'
+  }
+  const hash = await bcrypt.hash(body.senha, 10);
 
   const admin = await prisma.admins.create({
     data: {
-      email: req.body.email,
+      email: body.email,
       senha: hash
     }
   });
 
   res.status(200).json(admin);
-}) */
+})
 
 export default router;
