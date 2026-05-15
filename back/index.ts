@@ -33,6 +33,7 @@ import { ErrorCode } from './src/types/constants/error-codes-constants';
 import { requestLogger } from './src/middlewares/request-logger';
 import { apiLimiter, authLimiter } from './src/middlewares/rate-limiter';
 import 'dotenv/config'
+import { dbConnect } from './src/lib/client';
 
 const app = express();
 
@@ -79,6 +80,16 @@ app.use('/api', tenantFlavors);
 app.use('/api', telegram);
 app.use('/api/health', (_req, res) => res.status(200).json({ message: 'oksss' }));
 app.use('/api', tenantStore);
+
+app.use(async(_req, _res, next) => {
+  try {
+    await dbConnect();
+    next();
+  } catch (err) {
+    next(err);
+  }
+});
+
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 3000;
