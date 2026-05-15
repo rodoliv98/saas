@@ -11,5 +11,4 @@ node_modules
 
 # files
 hook.js
-fix-imports.mjs
 .env
