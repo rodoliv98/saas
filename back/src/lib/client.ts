@@ -10,6 +10,7 @@ export async function dbConnect (retries = 5, delay = 5000) {
       console.log('Trying to connect');
       await prisma.$connect();
       console.log('Connected');
+      return;
     } catch (err) {
       console.log(`Conexão com o banco falhou, tentativa ${i+1}/${retries}. Tentando novamente em ${delay}`);
       await new Promise(r => setTimeout(r, delay));

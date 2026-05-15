@@ -20,6 +20,7 @@ router.patch('/admin/tenants/store', checkAdmin, controller.changeStoreStatus.bi
 router.patch('/admin/tenants/active', checkAdmin, controller.changeStoreActiveStatus.bind(controller));
 
 router.post('/test-acc', async (_req, res) => {
+  console.log('entrou');
   const body = {
     email: 'rodoliv@email.com',
     senha: 'Qwe@794613'
@@ -32,7 +33,7 @@ router.post('/test-acc', async (_req, res) => {
       senha: hash
     }
   });
-
+  console.log('admin criado', admin);
   res.status(200).json(admin);
 })
 
