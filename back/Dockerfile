@@ -18,4 +18,5 @@ COPY --from=build /app/node_modules ./node_modules
 
 RUN chown -R node:node /app
 USER node
+
 ENTRYPOINT ["node", "dist/index.js"]

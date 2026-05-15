@@ -28,7 +28,8 @@ import adminRoutes from './src/api/admin/admin-routes';
 import telegram from './src/api/telegram/telegram-routes';
 import http from 'node:http';
 import helmet from 'helmet';
-import { errorHandler } from './src/middlewares/errorHandler'
+import { CustomError, errorHandler } from './src/middlewares/errorHandler'
+import { ErrorCode } from './src/types/constants/error-codes-constants';
 import { requestLogger } from './src/middlewares/request-logger';
 import { apiLimiter, authLimiter } from './src/middlewares/rate-limiter';
 import 'dotenv/config'
@@ -38,10 +39,17 @@ const app = express();
 app.set('trust proxy', 1);
 app.use(helmet());
 
+const FIRST_PROD_URL = process.env.CORS_PRODUCTION1;
+const SECOND_PROD_URL =process.env.CORS_PRODUCTION2;
+
+if (!FIRST_PROD_URL || !SECOND_PROD_URL) {
+  throw new CustomError('Prod url não configurada', 500, ErrorCode.INTERNAL_SERVER_ERROR);
+}
+
 const server = http.createServer(app);
 const corsOptions = {
   origin: process.env.NODE_ENV === 'production'
-  ? process.env.CORS_PRODUCTION
+  ? [FIRST_PROD_URL, SECOND_PROD_URL]
   : process.env.CORS_DEVELOPMENT,
   credentials: true,
   allowedHeaders: ["Content-Type", "Authorization"]
