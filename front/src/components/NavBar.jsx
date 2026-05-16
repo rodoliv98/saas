@@ -1,5 +1,6 @@
-import { Link } from "react-router-dom"
+import { Link } from "react-router-dom";
 import { useState } from "react";
+import logo from "../assets/logo.png";
 
 function NavBar () {
   const [isOpen, setIsOpen] = useState(false);
@@ -10,7 +11,7 @@ function NavBar () {
 						<div className="flex justify-between items-center h-16">
 								<div className="flex items-center gap-2">
                   <Link to="/" className="text-4xl text-gray-900 tracking-widest" style={{fontFamily: 'Bebas Neue'}}>
-                    Eldur
+                    <img src={logo} alt="Logo" className="w-35" />
                   </Link>
                 </div>
                 <nav className="hidden md:flex space-x-8">
