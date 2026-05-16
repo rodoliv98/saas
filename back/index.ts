@@ -1,15 +1,3 @@
-process.on('unhandledRejection', (code) => {
-  console.error('unhandledRejection', code, new Error().stack);
-});
-
-process.on('uncaughtException', (code) => {
-  console.error('uncaughtException', code, new Error().stack);
-});
-
-process.on('exit', (code) => {
-  console.error('[EXIT]', code, new Error().stack);
-});
-
 import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
@@ -32,8 +20,8 @@ import { CustomError, errorHandler } from './src/middlewares/errorHandler'
 import { ErrorCode } from './src/types/constants/error-codes-constants';
 import { requestLogger } from './src/middlewares/request-logger';
 import { apiLimiter, authLimiter } from './src/middlewares/rate-limiter';
-import 'dotenv/config'
 import { dbConnect } from './src/lib/client';
+import 'dotenv/config'
 
 const app = express();
 
