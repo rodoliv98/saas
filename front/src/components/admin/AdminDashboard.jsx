@@ -48,40 +48,40 @@ function parseDias(diasRaw) {
 }
 
 // Dados mock atualizados com os formatos de string em diasFuncionamento e o horarioFuncionamento
-const MOCK_TENANTS = [
-  {
-    id: "1",
-    tenantSlug: "pizzaria-do-ze",
-    isOpen: true,
-    diasFuncionamento: "[seg,ter,qua,qui,sex,sab]",
-    horarioFuncionamento: "18:00-23:30",
-    active: true,
-  },
-  {
-    id: "2",
-    tenantSlug: "burguer-top",
-    isOpen: false,
-    diasFuncionamento: "[ter,qua,qui,sex,sab]",
-    horarioFuncionamento: "18:00-22:00",
-    active: true,
-  },
-  {
-    id: "3",
-    tenantSlug: "sushi-nakamura",
-    isOpen: false,
-    diasFuncionamento: "[qua,qui,sex,sab,dom]",
-    horarioFuncionamento: "19:00-23:00",
-    active: false,
-  },
-  {
-    id: "4",
-    tenantSlug: "cantina-da-nonna",
-    isOpen: true,
-    diasFuncionamento: "[seg,ter,qua,qui,sex]",
-    horarioFuncionamento: "11:30-15:00",
-    active: true,
-  },
-];
+// const MOCK_TENANTS = [
+//   {
+//     id: "1",
+//     tenantSlug: "pizzaria-do-ze",
+//     isOpen: true,
+//     diasFuncionamento: "[seg,ter,qua,qui,sex,sab]",
+//     horarioFuncionamento: "18:00-23:30",
+//     active: true,
+//   },
+//   {
+//     id: "2",
+//     tenantSlug: "burguer-top",
+//     isOpen: false,
+//     diasFuncionamento: "[ter,qua,qui,sex,sab]",
+//     horarioFuncionamento: "18:00-22:00",
+//     active: true,
+//   },
+//   {
+//     id: "3",
+//     tenantSlug: "sushi-nakamura",
+//     isOpen: false,
+//     diasFuncionamento: "[qua,qui,sex,sab,dom]",
+//     horarioFuncionamento: "19:00-23:00",
+//     active: false,
+//   },
+//   {
+//     id: "4",
+//     tenantSlug: "cantina-da-nonna",
+//     isOpen: true,
+//     diasFuncionamento: "[seg,ter,qua,qui,sex]",
+//     horarioFuncionamento: "11:30-15:00",
+//     active: true,
+//   },
+// ];
 
 // ─── Componente: Tags de dias ─────────────────────────────────────────────
 function DiasTag({ diasFuncionamento }) {
@@ -150,7 +150,7 @@ function ToggleButton({ isOn, onLabel, offLabel, onClick, disabled }) {
 
 // ─── Página principal ─────────────────────────────────────────────────────
 function AdminDashboard() {
-  const [tenants, setTenants] = useState(MOCK_TENANTS);
+  const [tenants, setTenants] = useState([]);
   const [loadingId, setLoadingId] = useState(null);
   const [busca, setBusca] = useState("");
   const { refreshHook } = useRefreshHook();
