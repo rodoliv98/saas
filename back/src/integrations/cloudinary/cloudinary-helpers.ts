@@ -10,7 +10,9 @@ export async function uploadImageCloudinary(filePath: string, tenantSlug: string
     width: 800,
     crop: 'scale',
     strip_profile: true,
-    asset_folder: tenantSlug,
+    asset_folder: process.env.NODE_ENV === 'production'
+    ? tenantSlug
+    : 'dev',
     use_asset_folder_as_public_id_prefix: true
   }).catch((err) => {
     console.log(err);
