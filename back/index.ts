@@ -15,7 +15,6 @@ import refreshRoutes from './src/api/refresh/refresh-routes';
 import adminRoutes from './src/api/admin/admin-routes';
 import telegram from './src/api/telegram/telegram-routes';
 import http from 'node:http';
-import path from 'path';
 import helmet from 'helmet';
 import { CustomError, errorHandler } from './src/middlewares/errorHandler'
 import { ErrorCode } from './src/types/constants/error-codes-constants';
@@ -47,7 +46,7 @@ const corsOptions = {
 
 app.use(requestLogger);
 
-app.use('/static', express.static(path.join(__dirname, 'static')));
+app.use('/static', express.static('public'));
 app.use(express.json({ limit: '10kb' }));
 app.use(cors(corsOptions));
 app.use(cookieParser());
