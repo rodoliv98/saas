@@ -1,6 +1,6 @@
 import { RegisterType } from "../types/types-index";
 import { CustomError } from "../middlewares/errorHandler";
-
+// não usada em nenhum lugar
 export async function apiCompare (registerBody: RegisterType) {
   const formatedCnpj = registerBody.CNPJ.replace(/[\.\/-]/g, '');
   const res = await fetch(`https://receitaws.com.br/v1/cnpj/${formatedCnpj}`, {

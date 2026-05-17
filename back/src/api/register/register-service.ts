@@ -1,7 +1,6 @@
 import bcrypt from "bcrypt";
 import { RegisterType } from "../../types/types-index";
 import { IRegisterRepository } from "./register-repo";
-import { apiCompare } from '../../utils/apiCompare';
 import { Tenant } from "../../types/entities/tenant-entitie";
 import { CustomError } from "../../middlewares/errorHandler";
 import { ErrorCode } from "../../types/constants/error-codes-constants";
@@ -36,6 +35,7 @@ export class RegisterService implements IRegisterService {
     }
     
     const res = await fetch(webhookUrl, {
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
