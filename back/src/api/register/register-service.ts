@@ -30,7 +30,10 @@ export class RegisterService implements IRegisterService {
   }
 
   async notifyDiscord (tenant: Tenant) {
-    const webhookUrl = 'https://discord.com/api/webhooks/1457829506101285018/xV5bXmUJbz-B18yDAzoO3ipj077trWkxXctzbMxAxw37F05MoxYy3lji2JjGqHj4NNbV';
+    const webhookUrl = process.env.DISCORD_WEBHOOK_URL;
+    if (!webhookUrl) {
+      throw new CustomError('Url do webhook não configurada', 500, ErrorCode.INTERNAL_SERVER_ERROR);
+    }
     
     const res = await fetch(webhookUrl, {
       headers: {
