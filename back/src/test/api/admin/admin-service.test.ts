@@ -38,7 +38,7 @@ describe('AdminService', () => {
   });
 
   it('should throw if password does not match', async () => {
-    repoMock.login.mockResolvedValue({ id: '1', senha: 'hash' });
+    (repoMock.login as any).mockResolvedValue({ id: '1', senha: 'hash' });
     (bcrypt.compare as any).mockResolvedValue(false);
     await expect(service.login({ email: 'admin@a.com', senha: '123' }))
       .rejects.toThrowError(new CustomError('Credenciais inválidas', 404, ErrorCode.ADMIN_BAD_REQUEST));
