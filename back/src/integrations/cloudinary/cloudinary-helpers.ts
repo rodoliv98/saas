@@ -3,13 +3,15 @@ import { ErrorCode } from '../../types/constants/error-codes-constants';
 import { CustomError } from '../../middlewares/errorHandler';
 import { CloudinaryImageResult } from './cloudinary-types';
 
-export async function uploadImageCloudinary(filePath: string): Promise<CloudinaryImageResult> {
+export async function uploadImageCloudinary(filePath: string, tenantSlug: string): Promise<CloudinaryImageResult> {
   const result = await cloudinary.uploader.upload(filePath, {
     quality: 'auto',
     format: 'webp',
     width: 800,
     crop: 'scale',
-    strip_profile: true
+    strip_profile: true,
+    asset_folder: tenantSlug,
+    use_asset_folder_as_public_id_prefix: true
   }).catch((err) => {
     console.log(err);
     throw new CustomError('Erro ao fazer upload da imagem', 502, ErrorCode.BAD_GATEWAY);

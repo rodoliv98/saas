@@ -63,6 +63,11 @@ export class TenantFlavorsController {
     if (!tenantId) {
       return res.status(401).json({ error: 'Não autorizado' });
     }
+
+    const tenantSlug = req.slug;
+    if (!tenantSlug) {
+      return res.status(400).json({ error: 'Slug não configurado' });
+    }
     
     try {
       const productId = cuidSchema.parse(req.params.id);
@@ -76,6 +81,7 @@ export class TenantFlavorsController {
       const createFlavor = {
         data,
         tenantId,
+        tenantSlug,
         productId,
         multerImagePath: imagePath
       }
@@ -95,6 +101,11 @@ export class TenantFlavorsController {
       return res.status(401).json({ error: 'Não autorizado' });
     }
 
+    const tenantSlug = req.slug;
+    if (!tenantSlug) {
+      return res.status(400).json({ error: 'Slug não configurado' });
+    }
+
     try {
       const body = req.body;
       body.precoProduto = Number(body.precoProduto);
@@ -106,6 +117,7 @@ export class TenantFlavorsController {
         data,
         flavorId,
         tenantId,
+        tenantSlug,
         multerImagePath: req.file?.path
       }
 

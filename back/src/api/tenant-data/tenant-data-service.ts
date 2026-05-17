@@ -11,8 +11,8 @@ export interface ITenantDataService {
   getData (tenantId: string): Promise<TenantData>;
   getOrders (tenantSlug: string, dates: TenantReportDTO): Promise<OrdersData[] | []>;
   patchData (tenantId: string, data: TenantDataDTO): Promise<TenantData>;
-  addLogo (tenantId: string, logoUrl: string): Promise<void>;
-  addBanner (tenantId: string, bannerUrl: string): Promise<void>;
+  addLogo (tenantId: string, logoUrl: string, tenantSlug: string): Promise<void>;
+  addBanner (tenantId: string, bannerUrl: string, tenantSlug: string): Promise<void>;
 }
 
 export class TenantDataService implements ITenantDataService {
@@ -44,23 +44,23 @@ export class TenantDataService implements ITenantDataService {
     return updatedData;
   }
 
-  async addLogo (tenantId: string, logoUrl: string) {
+  async addLogo (tenantId: string, logoUrl: string, tenantSlug: string) {
     const publicId = await this.repo.getImagePublicId(tenantId);
     if (!publicId) {
       throw new CustomError('Estabelecimento não encontrado', 404, ErrorCode.TENANT_NOT_FOUND);
     }
 
-    const cloudinaryData = await uploadToCloudinary(logoUrl, publicId.logoPublicId);
+    const cloudinaryData = await uploadToCloudinary(logoUrl, publicId.logoPublicId, tenantSlug);
     return this.repo.addLogo(tenantId, cloudinaryData);
   }
 
-  async addBanner (tenantId: string, bannerUrl: string) {
+  async addBanner (tenantId: string, bannerUrl: string, tenantSlug: string) {
     const publicId = await this.repo.getImagePublicId(tenantId);
     if (!publicId) {
       throw new CustomError('Estabelecimento não encontrado', 404, ErrorCode.TENANT_NOT_FOUND);
     }
 
-    const cloudinaryData = await uploadToCloudinary(bannerUrl, publicId.bannerPublicId);
+    const cloudinaryData = await uploadToCloudinary(bannerUrl, publicId.bannerPublicId, tenantSlug);
     return this.repo.addBanner(tenantId, cloudinaryData);
   }
 }

@@ -40,6 +40,7 @@ export interface ProductDTO {
   nomeProduto: string;
   precoProduto: number;
   tenantId: string;
+  tenantSlug: string;
   imagePath: string;
 }
 
@@ -86,19 +87,28 @@ export class TenantProductsController {
   }
   
   async create (req: Request, res: Response, next: NextFunction) {
+    const tenantId = req.tenant;
+    if (!tenantId) return res.status(401).json({ error: 'Não autorizado' });
+    
+    const imagePath = req.file?.path;
+    if (!imagePath) return res.status(400).json({ error: 'Nenhuma imagem encontrada' });
+    
+    const tenantSlug = req.slug;
+    if (!tenantSlug) return res.status(400).json({ error: 'Slug não configurado' });
+
     try {
-      const tenantId = req.tenant;
-      if (!tenantId) return res.status(401).json({ error: 'Não autorizado' });
-      
-      const imagePath = req.file?.path;
-      if (!imagePath) return res.status(400).json({ error: 'Nenhuma imagem encontrada' });
       // preço vem como string por causa do formData
       // usando decimal no prisma
       const body = req.body;
       body.precoProduto = Number(body.precoProduto);
 
       const data = createProductSchema.parse(body);
-      const newProduct = { ...data, imagePath: imagePath, tenantId: tenantId };
+      const newProduct = {
+        ...data, 
+        imagePath, 
+        tenantId,
+        tenantSlug
+      };
       await this.service.create(newProduct);
       
       res.status(200).json({ msg: 'Produto criado com sucesso!' });
@@ -110,10 +120,11 @@ export class TenantProductsController {
 
   async patch (req: Request, res: Response, next: NextFunction) {
     const tenantId = req.tenant;
-    if (!tenantId) {
-      return res.status(401).json({ error: 'Não autorizado' });
-    }
+    if (!tenantId) return res.status(401).json({ error: 'Não autorizado' });
     
+    const tenantSlug = req.slug;
+    if (!tenantSlug) return res.status(400).json({ error: 'Slug não configurado' });
+
     try {
       const productId = cuidSchema.parse(req.params.id);
       // preço vem como string por causa do formData
@@ -125,6 +136,7 @@ export class TenantProductsController {
       const patchProduct = {
         ...parsedBody,
         tenantId,
+        tenantSlug,
         productId,
         multerImagePath: req.file?.path
       }

@@ -37,7 +37,11 @@ export class TenantProductsService implements ITenantProductsService {
   }
   
   async create (product: ProductDTO) {
-    const cloudinaryData = await uploadToCloudinary(product.imagePath, null);
+    const cloudinaryData = await uploadToCloudinary(
+      product.imagePath, 
+      null, 
+      product.tenantSlug
+    );
     const createdProduct = await this.repo.create(product, cloudinaryData);
 
     return createdProduct;
@@ -50,7 +54,11 @@ export class TenantProductsService implements ITenantProductsService {
     }
 
     if (productData.multerImagePath) {
-      const cloudinaryData = await uploadToCloudinary(productData.multerImagePath, foundProduct.imagePublicId);
+      const cloudinaryData = await uploadToCloudinary(
+        productData.multerImagePath, 
+        foundProduct.imagePublicId,
+        productData.tenantSlug
+      );
       const updateProductData = {
         nomeProduto: productData.nomeProduto,
         descProduto: productData.descProduto,

@@ -76,8 +76,13 @@ export class TenantDataController {
       return res.status(400).json({ error: 'Imagem não enviada' });
     }
 
+    const tenantSlug = req.slug;
+    if (!tenantSlug) {
+      return res.status(400).json({ error: 'Slug não configurado' });
+    }
+
     try {
-      await this.service.addLogo(tenantId, logoUrl);
+      await this.service.addLogo(tenantId, logoUrl, tenantSlug);
 
       res.status(200).json({ message: 'Logo adicionada com sucesso' });
 
@@ -98,8 +103,13 @@ export class TenantDataController {
       return res.status(400).json({ error: 'Imagem não enviada' });
     }
 
+    const tenantSlug = req.slug;
+    if (!tenantSlug) {
+      return res.status(400).json({ error: 'Slug não configurado' });
+    }
+
     try {
-      await this.service.addBanner(tenantId, bannerUrl);
+      await this.service.addBanner(tenantId, bannerUrl, tenantSlug);
 
       res.status(200).json({ message: 'Banner adicionado com sucesso' });
 

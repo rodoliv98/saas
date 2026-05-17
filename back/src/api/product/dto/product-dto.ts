@@ -5,5 +5,6 @@ export interface PatchProductDTO {
   precoProduto: number;
   multerImagePath: string | undefined;
   tenantId: string;
+  tenantSlug: string;
   productId: string;
 }

@@ -1,4 +1,4 @@
-import { describe, it, beforeEach, expect, vi } from 'vitest';
+import { describe, it, beforeEach, expect, vi, Mocked } from 'vitest';
 import { AdminService } from '../../../api/admin/admin-service';
 import type { IAdminRepository } from '../../../api/admin/admin-repo';
 import { CustomError } from '../../../middlewares/errorHandler';
@@ -15,7 +15,7 @@ vi.mock('../../../utils/tokenJWT', () => ({
 import { createLoginToken } from '../../../utils/tokenJWT';
 
 describe('AdminService', () => {
-  let repoMock: IAdminRepository;
+  let repoMock: Mocked<IAdminRepository>;
   let service: AdminService;
 
   beforeEach(() => {
@@ -32,13 +32,13 @@ describe('AdminService', () => {
   });
 
   it('should throw if admin not found', async () => {
-    (repoMock.login as any).mockResolvedValue(null);
+    repoMock.login.mockResolvedValue(null);
     await expect(service.login({ email: 'admin@a.com', senha: '123' }))
       .rejects.toThrowError(new CustomError('Credenciais inválidas', 404, ErrorCode.ADMIN_BAD_REQUEST));
   });
 
   it('should throw if password does not match', async () => {
-    (repoMock.login as any).mockResolvedValue({ id: '1', senha: 'hash' });
+    repoMock.login.mockResolvedValue({ id: '1', senha: 'hash' });
     (bcrypt.compare as any).mockResolvedValue(false);
     await expect(service.login({ email: 'admin@a.com', senha: '123' }))
       .rejects.toThrowError(new CustomError('Credenciais inválidas', 404, ErrorCode.ADMIN_BAD_REQUEST));

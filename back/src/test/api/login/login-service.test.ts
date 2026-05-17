@@ -28,7 +28,7 @@ describe('LoginService', () => {
   });
 
   it('should throw if user not found', async () => {
-    (repoMock.login as any).mockResolvedValue(null);
+    repoMock.login.mockResolvedValue(null);
     await expect(service.login({ email: 'a@a.com', senha: '123' }))
       .rejects.toThrow(new CustomError('Nenhum usuário encontrado com esse email.', 404, ErrorCode.NOT_FOUND));
   });

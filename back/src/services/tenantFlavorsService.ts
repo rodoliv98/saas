@@ -32,7 +32,11 @@ export class TenantFlavorsService implements ITenantFlavorsService {
 
   async create (flavorData: CreateFlavorDTO) {
     if (flavorData.multerImagePath) {
-      const cloudinaryData = await uploadToCloudinary(flavorData.multerImagePath, null);
+      const cloudinaryData = await uploadToCloudinary(
+        flavorData.multerImagePath, 
+        null, 
+        flavorData.tenantSlug
+      );
 
       const createFlavorData = {
         ...flavorData.data,
@@ -76,7 +80,11 @@ export class TenantFlavorsService implements ITenantFlavorsService {
     } 
 
     if (flavorData.multerImagePath) {
-      const cloudinaryData = await uploadToCloudinary(flavorData.multerImagePath, foundFlavor.imagePublicId);
+      const cloudinaryData = await uploadToCloudinary(
+        flavorData.multerImagePath, 
+        foundFlavor.imagePublicId, 
+        flavorData.tenantSlug
+      );
       const updateFlavorData = {
         ...flavorData.data,
         imagePublicId: cloudinaryData.public_id,

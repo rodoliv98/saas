@@ -80,25 +80,25 @@ describe('TenantDataService', () => {
 
   it('should throw if tenant not found on addLogo', async () => {
     repoMock.getImagePublicId.mockResolvedValue(null);
-    await expect(service.addLogo('1', 'logo-url')).rejects.toThrow(new CustomError('Estabelecimento não encontrado', 404, ErrorCode.TENANT_NOT_FOUND));
+    await expect(service.addLogo('1', 'logo-url', 'tenantSlug')).rejects.toThrow(new CustomError('Estabelecimento não encontrado', 404, ErrorCode.TENANT_NOT_FOUND));
   });
 
   it('should upload logo and call repo.addLogo', async () => {
     repoMock.getImagePublicId.mockResolvedValue({ logoPublicId: 'logo-public-id' });
-    await service.addLogo('1', 'logo-url');
-    expect(uploadToCloudinary).toHaveBeenCalledWith('logo-url', 'logo-public-id');
+    await service.addLogo('1', 'logo-url', 'tenantSlug');
+    expect(uploadToCloudinary).toHaveBeenCalledWith('logo-url', 'logo-public-id', 'tenantSlug');
     expect(repoMock.addLogo).toHaveBeenCalledWith('1', { url: 'cloud-url', public_id: 'cloud-id' });
   });
 
   it('should throw if tenant not found on addBanner', async () => {
     repoMock.getImagePublicId.mockResolvedValue(null);
-    await expect(service.addBanner('1', 'banner-url')).rejects.toThrow(new CustomError('Estabelecimento não encontrado', 404, ErrorCode.TENANT_NOT_FOUND));
+    await expect(service.addBanner('1', 'banner-url', 'tenantSlug')).rejects.toThrow(new CustomError('Estabelecimento não encontrado', 404, ErrorCode.TENANT_NOT_FOUND));
   });
 
   it('should upload banner and call repo.addBanner', async () => {
     repoMock.getImagePublicId.mockResolvedValue({ bannerPublicId: 'banner-public-id' });
-    await service.addBanner('1', 'banner-url');
-    expect(uploadToCloudinary).toHaveBeenCalledWith('banner-url', 'banner-public-id');
+    await service.addBanner('1', 'banner-url', 'tenantSlug');
+    expect(uploadToCloudinary).toHaveBeenCalledWith('banner-url', 'banner-public-id', 'tenantSlug');
     expect(repoMock.addBanner).toHaveBeenCalledWith('1', { url: 'cloud-url', public_id: 'cloud-id' });
   });
 });
