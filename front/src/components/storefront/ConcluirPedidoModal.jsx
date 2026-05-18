@@ -277,7 +277,7 @@ function ConcluirPedidoModal ({ carrinho, setConcluirPedidoModal, taxaEntrega })
 
               <div>
                 <label htmlFor="complemento" className="block text-sm font-medium text-gray-700 mb-2">
-                  Complemento
+                  Complemento (opcional)
                 </label>
                 <input 
                   id="complemento"
@@ -338,7 +338,7 @@ function ConcluirPedidoModal ({ carrinho, setConcluirPedidoModal, taxaEntrega })
 
               <div>
                 <label htmlFor="observacao" className="block text-sm font-medium text-gray-700 mb-2">
-                  Observações
+                  Observações (opcional)
                 </label>
                 <textarea 
                   id="observacao" 
