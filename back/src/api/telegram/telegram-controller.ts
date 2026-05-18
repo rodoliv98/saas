@@ -19,14 +19,13 @@ export class TelegramController {
         return res.sendStatus(403);
       }
       console.log('chegou no controlador');
-      console.log(req.body ?? req);
       res.sendStatus(200);
 
       const body = req.body.message.text;
       const chatId = req.body.message.chat.id;
 
       const pinRegex = /^\d{6}$/;
-      const activationCodeRegex = /^[A-Z0-9]{3}-[A-Z0-9]{3}-[A-Z0-9]{3}:[a-záàâãäéèêëíìîïóòôõöúùûüçñA-ZÁÀÂÃÄÉÈÊËÍÌÎÏÓÒÔÕÖÚÙÛÜÇÑ]+$/;
+      const activationCodeRegex = /^[A-Z0-9]{3}-[A-Z0-9]{3}-[A-Z0-9]{3}:[a-záàâãäéèêëíìîïóòôõöúùûüçñA-ZÁÀÂÃÄÉÈÊËÍÌÎÏÓÒÔÕÖÚÙÛÜÇÑ-]+$/;
       const finishOrderRegex = /^[a-zA-Z0-9]{6}\:(concluido|cancelado)$/i;
 
       // tem que lidar com erros 429'too many requests' e 403'bot bloqueado pelo usuário'
