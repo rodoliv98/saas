@@ -18,7 +18,7 @@ export const productSchema = z.object({
                 .trim(),
   descProduto: z.string({ message: 'Descrição do produto deve ser uma string' })
                 .min(1, 'Descrição do produto está faltando')
-                .max(100, 'Descrição do produto está muito longo')
+                .max(200, 'Descrição do produto está muito longo')
                 .regex(defaultRegex, 'Não são permitidos simbolos no campo descrição do produto')
                 .trim(),
   categoria: z.string({ message: 'Categoria do produto deve ser uma string' })

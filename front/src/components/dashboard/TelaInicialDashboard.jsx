@@ -68,7 +68,7 @@ function TelaInicialDashboard() {
             <div className="text-4xl font-bold text-red-700 mb-2">R$ {data?.totalValue?.toFixed(2).replace('.', ',')}</div>
           </div>
           <div className="text-center">
-            <div className="text-gray-600">Pedidos Realizados</div>
+            <div className="text-gray-600">Pedidos Realizados Hoje</div>
             <div className="text-4xl font-bold text-red-700 mb-2">{data?.ordersQuantity}</div>
           </div>
         </div>
