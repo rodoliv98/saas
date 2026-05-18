@@ -23,10 +23,7 @@ export function useRefreshHook () {
         ? await api[method](url, newConfig)
         : await api[method](url, data, newConfig);
 
-        if (retryRes.statusText === 'OK') {
-          return retryRes;
-        }
-      
+        return retryRes;
       }
     } catch (secErr) {
       const errStatus = secErr.response?.status;
