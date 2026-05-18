@@ -28,9 +28,11 @@ export class TelegramController {
       if (pinRegex.test(body)) {
         setImmediate(async () => {
           try {
+            console.log('entrou no if')
             const text = await this.service.getOrders(body, chatId);
+            console.log('cadastrou no banco');
             await botAnswer(chatId, text);
-            
+            console.log('enviou pelo bot');
           } catch (err) {
             console.log('Erro no TelegramController pinRegex\n', err);
           }
