@@ -11,6 +11,7 @@ function TelaInicialDashboard() {
     const fetchData = async () => {
       try {
         const res = await refreshHook('get', '/api/tenant/home');
+        console.log(res.data);
         setData(res.data);
       } catch (err) {
       } finally {
@@ -92,7 +93,7 @@ function TelaInicialDashboard() {
               Esse é o link da sua loja. Copie ele e use na sua mensagem automática do seu WhatsApp Business.
             </p>
             <div className="bg-gray-50 p-4 rounded-lg mb-4 break-all">
-              <p className="text-gray-700 text-sm">https://eldur.com.br/{data.tenantSlug}</p>
+              <p className="text-gray-700 text-sm">https://eldur.com.br/{data?.tenantSlug}</p>
             </div>
             <button
               onClick={handleCopyLink}
