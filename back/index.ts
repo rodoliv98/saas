@@ -1,3 +1,6 @@
+import logger from './src/winston/winston';
+process.on('uncaughtException', (err) => logger.error(err));
+process.on('unhandledRejection', (reason) => logger.error(reason));
 import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
@@ -21,7 +24,7 @@ import { ErrorCode } from './src/types/constants/error-codes-constants';
 import { requestLogger } from './src/middlewares/request-logger';
 import { apiLimiter, authLimiter } from './src/middlewares/rate-limiter';
 import { dbConnect } from './src/lib/client';
-import 'dotenv/config'
+import 'dotenv/config';
 
 const app = express();
 

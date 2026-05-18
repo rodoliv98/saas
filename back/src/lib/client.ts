@@ -1,18 +1,19 @@
 import { PrismaClient } from "../generated/prisma/client";
 import { CustomError } from "../middlewares/errorHandler";
 import { ErrorCode } from "../types/constants/error-codes-constants";
+import logger from "../winston/winston";
 
 const prisma = new PrismaClient();
 
 export async function dbConnect (retries = 5, delay = 5000) {
   for (let i = 0; i < retries; i++) {
     try {
-      console.log('Trying to connect');
+      logger.info('Trying to connect to DB');
       await prisma.$connect();
-      console.log('Connected');
+      logger.info('Connected');
       return;
     } catch (err) {
-      console.log(`Conexão com o banco falhou, tentativa ${i+1}/${retries}. Tentando novamente em ${delay}`);
+      logger.info(`Conexão com o banco falhou, tentativa ${i+1}/${retries}. Tentando novamente em ${delay}`);
       await new Promise(r => setTimeout(r, delay));
     }
   }
