@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 
-export const defaultRegex = /^[a-zA-ZáàâãäéèêëíìîïóòôõöúùûüçñÁÀÂÃÄÉÈÊËÍÌÎÏÓÒÔÕÖÚÙÛÜÇÑ0-9$ ,.\-]{0,100}$/;
+export const defaultRegex = /^[a-zA-ZáàâãäéèêëíìîïóòôõöúùûüçñÁÀÂÃÄÉÈÊËÍÌÎÏÓÒÔÕÖÚÙÛÜÇÑ0-9$ ,.\-]{0,200}$/;
 
 export const cuidSchema = z.string({ message: 'CUID deve ser uma string' })
                            .min(24)
