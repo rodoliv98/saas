@@ -1,9 +1,6 @@
 import { Request, Response, NextFunction } from "express"
 import { botAnswer } from "../../utils/bot-answer";
 import { ITelegramService } from "./telegram-service";
-import { CustomError } from "../../middlewares/errorHandler";
-import { ErrorCode } from "../../types/constants/error-codes-constants";
-import logger from "../../winston/winston";
 // ainda é necessário fazer o tratamento de erro
 // de forma apropriada nos setImmediate
 export class TelegramController {
@@ -15,10 +12,9 @@ export class TelegramController {
       const myToken = process.env.TELEGRAM_SECRET_TOKEN;                  // receber reqs de outras fontes além do bot
 
       if (secret !== myToken) {
-        console.log('foi bloqueado');
         return res.sendStatus(403);
       }
-      console.log('chegou no controlador');
+
       res.sendStatus(200);
 
       const body = req.body.message.text;
@@ -32,11 +28,8 @@ export class TelegramController {
       if (pinRegex.test(body)) {
         setImmediate(async () => {
           try {
-            console.log('entrou no if')
             const text = await this.service.getOrders(body, chatId);
-            console.log('cadastrou no banco');
             await botAnswer(chatId, text);
-            console.log('enviou pelo bot');
           } catch (err) {
             next(err);
           }
