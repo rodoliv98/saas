@@ -172,7 +172,7 @@ function ProductModalStore({ product, isOpen, onClose, onAddToCart, isStoreOpen 
               {currentCategory && categoryLimits[currentCategory] && (
                 <p className="text-xs text-gray-500 mt-1">
                   {selectedInCurrentCategory}/{categoryLimits[currentCategory]} selecionados
-                  {currentCategory === 'sabores' && ' (obrigatório)'}
+                  {currentCategory === 'sabores' ? ' (obrigatório)' : ' (opcional)'}
                 </p>
               )}
             </div>
