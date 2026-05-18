@@ -11,7 +11,7 @@ function TelaInicialDashboard() {
     const fetchData = async () => {
       try {
         const res = await refreshHook('get', '/api/tenant/home');
-        console.log(res.data);
+        console.log(res);
         setData(res.data);
       } catch (err) {
       } finally {
