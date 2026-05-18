@@ -52,7 +52,7 @@ export function errorHandler (err: any, req: Request, res: Response, _next: Next
     err instanceof PrismaClientValidationError
   ) {
     req.logger.crit(err.message, {
-      event: 'prisma_error',
+      code: ErrorCode.PRISMA_ERROR,
       body: req.body,
       error: err,
       stack: err.stack,
@@ -66,7 +66,7 @@ export function errorHandler (err: any, req: Request, res: Response, _next: Next
 
   if (err instanceof MulterError) {
     req.logger.warning(err.message, {
-      event: 'multer_error',
+      code: err.code,
       body: req.body,
       file: req.file,
       error: err,
@@ -81,7 +81,7 @@ export function errorHandler (err: any, req: Request, res: Response, _next: Next
 
   if (err instanceof CustomError) {
     req.logger.warning(err.message, {
-      event: 'api_error',
+      code: err.code,
       body: req.body,
       error: err,
       stack: err.stack,
@@ -91,6 +91,15 @@ export function errorHandler (err: any, req: Request, res: Response, _next: Next
       }
     });
     return res.status(err.status).json({ error: err.message, code: err.code });
+  }
+
+  if (res.headersSent) {
+    req.logger.warning(err.message, {
+      code: err.code ?? ErrorCode.TELEGRAM_ERROR,
+      body: req.body,
+      error: err
+    });
+    return;
   }
   
   logger.error(err.message ?? 'Erro desconhecido', {

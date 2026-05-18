@@ -3,6 +3,7 @@ import { botAnswer } from "../../utils/bot-answer";
 import { ITelegramService } from "./telegram-service";
 import { CustomError } from "../../middlewares/errorHandler";
 import { ErrorCode } from "../../types/constants/error-codes-constants";
+import logger from "../../winston/winston";
 // ainda é necessário fazer o tratamento de erro
 // de forma apropriada nos setImmediate
 export class TelegramController {
@@ -18,6 +19,7 @@ export class TelegramController {
         return res.sendStatus(403);
       }
       console.log('chegou no controlador');
+      console.log(req.body ?? req);
       res.sendStatus(200);
 
       const body = req.body.message.text;
@@ -37,7 +39,7 @@ export class TelegramController {
             await botAnswer(chatId, text);
             console.log('enviou pelo bot');
           } catch (err) {
-            throw new CustomError('Erro ao tentar verificar pedidos prontos', 500, ErrorCode.TELEGRAM_ERROR);
+            next(err);
           }
         });
 
@@ -61,7 +63,7 @@ export class TelegramController {
             await botAnswer(chatId, `Você agora está cadastrado como entregador da loja *${tenantSlug}*`);
             
           } catch (err) {
-            throw new CustomError('Erro ao tentar usar código de ativação', 500, ErrorCode.TELEGRAM_ERROR);
+            next(err);
           }
         });
 
@@ -75,7 +77,7 @@ export class TelegramController {
             await botAnswer(chatId, message);
             
           } catch (err) {
-            throw new CustomError('Erro ao tentar atualizar status de entrega', 500, ErrorCode.TELEGRAM_ERROR);
+            next(err);
           }
         });
 
@@ -83,7 +85,6 @@ export class TelegramController {
       }
   
     } catch (err) {
-      console.log('Erro no controlador TelegramController method getOrders:\n', err);
       next(err);
     }
   } 
