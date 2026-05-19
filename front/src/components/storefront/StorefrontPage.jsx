@@ -42,15 +42,14 @@ const TenantStore = () => {
     const fetchStoreData = async () => {
       try {
         setIsLoading(true);
-        const response = await fetch(`/api/cardapio/${slug}`, { credentials: 'omit' });
-        if (!res.ok) {
+        const response = await fetch(`http://localhost:3000/api/cardapio/${slug}`, { credentials: 'omit' });
+        if (!response.ok) {
           throw new Error('Erro ao buscar cardápio');
         }
 
         const res = await response.json();
-
-        setStoreData(res.data.store);
-        setProducts(res.data.products || []);
+        setStoreData(res.store);
+        setProducts(res.products || []);
         
       } catch (err) {
         setError('Ocorreu um erro ao carregar a loja. Verifique o link ou tente novamente mais tarde.');
