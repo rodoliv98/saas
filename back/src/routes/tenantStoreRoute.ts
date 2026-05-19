@@ -16,6 +16,6 @@ router.post('/tenant-delivery-code', checkTenant, controller.createDeliveryCode.
 
 router.patch('/tenant-is-open', checkTenant, controller.patchIsOpen.bind(controller));
 
-router.get('/:slug', controller.getData.bind(controller));
+router.get('/cardapio/:slug', controller.getData.bind(controller));
 
 export default router;

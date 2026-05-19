@@ -22,7 +22,7 @@ function LandingPage () {
 													<Link to="/cadastro" className="bg-white text-red-700 px-8 py-4 rounded-lg font-bold text-lg hover:bg-gray-100 transition-colors">
 															Começar Teste Grátis
 													</Link>
-													<Link to="/loja-exemplo" className="bg-white text-red-700 px-8 py-4 rounded-lg font-bold text-lg hover:bg-gray-100 transition-colors">
+													<Link to="/cardapio/loja-exemplo" className="bg-white text-red-700 px-8 py-4 rounded-lg font-bold text-lg hover:bg-gray-100 transition-colors">
 															Ver Demonstração
 													</Link>
 											</div>

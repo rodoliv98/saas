@@ -44,7 +44,7 @@ const TenantStore = () => {
       try {
         setIsLoading(true);
         
-        const res = await api.get(`/api/${slug}`);
+        const res = await api.get(`/api/cardapio/${slug}`);
         setStoreData(res.data.store);
         setProducts(res.data.products || []);
         

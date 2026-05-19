@@ -57,7 +57,7 @@ function App () {
             <Route path="/usuario-perfil" element={<UserProfile />} />
             <Route path="/usuario-cadastro" element={<UserRegister />} />
             <Route path="/usuario-login" element={<UserLogin />} />
-            <Route path="/:slug" element={<TenantStore />} />
+            <Route path="/cardapio/:slug" element={<TenantStore />} />
           </Route>
         </Routes>
       </Router>
