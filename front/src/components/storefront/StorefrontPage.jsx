@@ -42,7 +42,10 @@ const TenantStore = () => {
     const fetchStoreData = async () => {
       try {
         setIsLoading(true);
-        const response = await fetch(`http://localhost:3000/api/cardapio/${slug}`, { credentials: 'omit' });
+        const response = await fetch(
+          `${import.meta.env.VITE_API_URL}/api/cardapio/${slug}`, 
+          { credentials: 'omit' }
+        );
         if (!response.ok) {
           throw new Error('Erro ao buscar cardápio');
         }
