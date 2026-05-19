@@ -329,12 +329,12 @@ const TenantStore = () => {
 
             {/* Logo — posicionado sobre a borda inferior do banner, fora do overflow-hidden */}
             <div className="absolute bottom-0 left-0">
-              <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-xl shadow-lg overflow-hidden flex items-center justify-center">
+              <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-xl overflow-hidden flex items-center justify-center">
                 {storeData?.logoUrl && safeUrl(storeData?.logoUrl) ? (
                   <img
                     src={storeData.logoUrl}
                     alt="Logo da loja"
-                    className="w-full h-full object-fill"
+                    className="w-full object-fill"
                   />
                 ) : (
                   <img
