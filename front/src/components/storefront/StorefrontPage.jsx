@@ -1,4 +1,3 @@
-import api from '../../../intercepter/intercepter';
 import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import ProductModalStore from './ProductModalStore';
@@ -43,8 +42,13 @@ const TenantStore = () => {
     const fetchStoreData = async () => {
       try {
         setIsLoading(true);
-        
-        const res = await api.get(`/api/cardapio/${slug}`);
+        const response = await fetch(`/api/cardapio/${slug}`, { credentials: 'omit' });
+        if (!res.ok) {
+          throw new Error('Erro ao buscar cardápio');
+        }
+
+        const res = await response.json();
+
         setStoreData(res.data.store);
         setProducts(res.data.products || []);
         

@@ -116,7 +116,7 @@ function LandingPage () {
 					<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 							<div className="grid grid-cols-1 md:grid-cols-4 gap-8">
 									<div className="text-center">
-											<div className="text-4xl font-bold text-red-700 mb-2">30 Dias</div>
+											<div className="text-4xl font-bold text-red-700 mb-2">14 Dias</div>
 											<div className="text-gray-600">Teste Grátis</div>
 									</div>
 									<div className="text-center">
