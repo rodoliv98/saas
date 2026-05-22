@@ -15,6 +15,5 @@ export function handleZodError(err: ZodError, req: Request, res: Response) {
   req.logger.warning('Erro de validação', {
     ...logData(req, { code: ErrorCode.VALIDATION_ERROR, error: fields })
   });
-  console.log(err);
   return res.status(400).json({ error: fields, code: ErrorCode.VALIDATION_ERROR });
 }
