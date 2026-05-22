@@ -1,6 +1,6 @@
 import { PrismaClient } from "../generated/prisma/client"
 import { IProdutos, ProductDTO } from "../controllers/tenantProductsController";
-import { CustomError } from "../middlewares/errorHandler";
+import { CustomError } from "../errors/errorHandler";
 import { CloudinaryImageResult } from "../integrations/cloudinary/cloudinary-types";
 import { CreateProductData } from "../api/product/types/product-types";
 

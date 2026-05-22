@@ -3,7 +3,7 @@ import { UserDataController } from "../controllers/user-data-controller";
 import { UserDataService } from "../services/user-data-service";
 import { UserDataRepository } from "../repository/user-data-repo";
 import { checkUser } from "../middlewares/check-user";
-import prisma from "../lib/client";
+import prisma from "../lib/prisma/client";
 
 const router = Router();
 const repo = new UserDataRepository(prisma);

@@ -1,4 +1,4 @@
-import logger from './src/winston/winston';
+import logger from './src/lib/winston/winston';
 process.on('uncaughtException', (err) => logger.error(err));
 process.on('unhandledRejection', (reason) => logger.error(reason));
 import express from 'express';
@@ -19,11 +19,11 @@ import adminRoutes from './src/api/admin/admin-routes';
 import telegram from './src/api/telegram/telegram-routes';
 import http from 'node:http';
 import helmet from 'helmet';
-import { CustomError, errorHandler } from './src/middlewares/errorHandler'
+import { CustomError, errorHandler } from './src/errors/errorHandler'
 import { ErrorCode } from './src/types/constants/error-codes-constants';
 import { requestLogger } from './src/middlewares/request-logger';
 import { apiLimiter, authLimiter } from './src/middlewares/rate-limiter';
-import { dbConnect } from './src/lib/client';
+import { dbConnect } from './src/lib/prisma/client';
 import 'dotenv/config';
 
 const app = express();

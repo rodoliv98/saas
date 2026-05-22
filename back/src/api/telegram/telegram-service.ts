@@ -1,4 +1,4 @@
-import { CustomError } from "../../middlewares/errorHandler";
+import { CustomError } from "../../errors/errorHandler";
 import { ITelegramRepo } from "./telegram-repo";
 import { ErrorCode } from "../../types/constants/error-codes-constants";
 import { DeliveryManDTO } from "./dto/delivery-dtos";

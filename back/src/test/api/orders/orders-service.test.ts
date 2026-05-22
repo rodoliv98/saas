@@ -4,7 +4,7 @@ import { ICreateOrder, IOrderRepository } from "../../../api/orders/ordersReposi
 import { Orders } from "../../../api/orders/entities/order-entitie";
 import { Decimal } from "../../../generated/prisma/internal/prismaNamespace";
 import { OrderSchema } from "../../../api/orders/types/order-types";
-import { CustomError } from "../../../middlewares/errorHandler";
+import { CustomError } from "../../../errors/errorHandler";
 import { ErrorCode } from "../../../types/constants/error-codes-constants";
 
 describe('OrderService', () => {

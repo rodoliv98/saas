@@ -3,7 +3,7 @@ import { RegisterService } from "./register-service";
 import { RegisterRepository } from "./register-repo";
 import { dataValidator } from "../../middlewares/dataValidator";
 import { Router } from "express";
-import prisma from "../../lib/client";
+import prisma from "../../lib/prisma/client";
 
 const router = Router();
 const repository = new RegisterRepository(prisma);

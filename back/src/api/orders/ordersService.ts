@@ -3,7 +3,7 @@ import { OrderSchema } from "./types/order-types";
 import { Cuid } from "../../types/types-index";
 import { ICreateOrder, IOrderRepository, PricesFromDB } from "./ordersRepository";
 import { Decimal } from "../../generated/prisma/internal/prismaNamespace";
-import { CustomError } from "../../middlewares/errorHandler";
+import { CustomError } from "../../errors/errorHandler";
 import { ErrorCode } from "../../types/constants/error-codes-constants";
 import { customAlphabet } from "nanoid";
 import { Orders } from "./entities/order-entitie";

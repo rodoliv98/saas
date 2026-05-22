@@ -1,4 +1,4 @@
-import { CustomError } from "../../middlewares/errorHandler";
+import { CustomError } from "../../errors/errorHandler";
 import { ITenantDataRepository } from "./tenant-data-repo";
 import { ErrorCode } from "../../types/constants/error-codes-constants";
 import { TenantReportDTO } from "./dto/tenant-reports-dto";

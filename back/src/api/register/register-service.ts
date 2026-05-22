@@ -2,7 +2,7 @@ import bcrypt from "bcrypt";
 import { RegisterType } from "../../types/types-index";
 import { IRegisterRepository } from "./register-repo";
 import { Tenant } from "../../types/entities/tenant-entitie";
-import { CustomError } from "../../middlewares/errorHandler";
+import { CustomError } from "../../errors/errorHandler";
 import { ErrorCode } from "../../types/constants/error-codes-constants";
 
 export interface IRegisterService {

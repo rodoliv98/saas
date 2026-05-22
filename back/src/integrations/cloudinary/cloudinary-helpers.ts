@@ -1,6 +1,6 @@
 import { v2 as cloudinary } from 'cloudinary';
 import { ErrorCode } from '../../types/constants/error-codes-constants';
-import { CustomError } from '../../middlewares/errorHandler';
+import { CustomError } from '../../errors/errorHandler';
 import { CloudinaryImageResult } from './cloudinary-types';
 
 export async function uploadImageCloudinary(filePath: string, tenantSlug: string): Promise<CloudinaryImageResult> {

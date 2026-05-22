@@ -4,7 +4,7 @@ import { OrdersService } from "../orders/ordersService";
 import { OrderRepository } from "../orders/ordersRepository";
 import { checkTenant } from "../../middlewares/check-tenant";
 import { checkUser } from "../../middlewares/check-user";
-import prisma from "../../lib/client";
+import prisma from "../../lib/prisma/client";
 
 const router = Router();
 const repo = new OrderRepository(prisma);

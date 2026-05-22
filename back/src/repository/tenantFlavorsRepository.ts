@@ -2,7 +2,7 @@ import { Decimal } from "@prisma/client/runtime/library";
 import { PrismaClient } from "../generated/prisma/client";
 import { IFlavor } from "../controllers/tenantFlavorsController";
 import { Cuid } from "../types/types-index";
-import { CustomError } from "../middlewares/errorHandler";
+import { CustomError } from "../errors/errorHandler";
 import { PatchFlavorDTO } from "../api/tenant-flavor/dto/tenant-flavor-dto";
 import { Flavor } from "../api/tenant-flavor/entitie/flavor-entitie";
 import { PatchFlavorData, FlavorImageData, CreateFlavorData } from "../api/tenant-flavor/types/tenant-flavor-types";

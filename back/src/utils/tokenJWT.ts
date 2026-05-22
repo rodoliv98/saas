@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken'
-import { CustomError } from '../middlewares/errorHandler';
+import { CustomError } from '../errors/errorHandler';
 import { IdType, RoleType } from '../types/types-index';
 
 export function createLoginToken (id: string, idType: IdType, role: RoleType, slug?: string) {

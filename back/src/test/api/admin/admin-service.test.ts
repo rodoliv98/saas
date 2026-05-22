@@ -1,7 +1,7 @@
 import { describe, it, beforeEach, expect, vi, Mocked } from 'vitest';
 import { AdminService } from '../../../api/admin/admin-service';
 import type { IAdminRepository } from '../../../api/admin/admin-repo';
-import { CustomError } from '../../../middlewares/errorHandler';
+import { CustomError } from '../../../errors/errorHandler';
 import { ErrorCode } from '../../../types/constants/error-codes-constants';
 
 vi.mock('bcrypt', () => ({

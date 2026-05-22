@@ -1,5 +1,5 @@
 import { FormatUserData } from "../interfaces/users-interfaces/user-inter-index";
-import { CustomError } from "../middlewares/errorHandler";
+import { CustomError } from "../errors/errorHandler";
 import { IUserDataRepository, UserDataFromDB } from "../repository/user-data-repo";
 import { ErrorCode } from "../types/constants/error-codes-constants";
 

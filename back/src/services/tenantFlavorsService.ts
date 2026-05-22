@@ -1,6 +1,6 @@
 import { IFlavor } from "../controllers/tenantFlavorsController";
 import { Cuid } from "../types/types-index";
-import { CustomError } from "../middlewares/errorHandler";
+import { CustomError } from "../errors/errorHandler";
 import { ITenantFlavorsRepository } from "../repository/tenantFlavorsRepository";
 import { ErrorCode } from "../types/constants/error-codes-constants";
 import { CreateFlavorDTO, PatchFlavorDTO } from "../api/tenant-flavor/dto/tenant-flavor-dto";

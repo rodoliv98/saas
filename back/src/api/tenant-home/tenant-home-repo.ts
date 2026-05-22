@@ -1,5 +1,5 @@
 import { PrismaClient } from "../../generated/prisma/client";
-import { CustomError } from "../../middlewares/errorHandler";
+import { CustomError } from "../../errors/errorHandler";
 import { ErrorCode } from "../../types/constants/error-codes-constants";
 import { HomeData, HomeOrders } from "./entities/home-entities";
 

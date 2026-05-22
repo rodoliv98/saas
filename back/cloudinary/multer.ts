@@ -1,7 +1,7 @@
 import multer from "multer"
 import path from 'path'
 import crypto from 'crypto'
-import { CustomError } from "../src/middlewares/errorHandler";
+import { CustomError } from "../src/errors/errorHandler";
 
 const storage = multer.diskStorage({
   filename(_req, file, cb) {

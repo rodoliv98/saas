@@ -2,7 +2,7 @@ import { Router } from "express";
 import { TelegramController } from "./telegram-controller";
 import { TelegramService } from "./telegram-service";
 import { TelegramRepo } from "./telegram-repo";
-import prisma from "../../lib/client";
+import prisma from "../../lib/prisma/client";
 
 const router = Router();
 const repo = new TelegramRepo(prisma);

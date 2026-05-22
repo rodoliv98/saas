@@ -1,4 +1,4 @@
-import { CustomError } from "../../middlewares/errorHandler";
+import { CustomError } from "../../errors/errorHandler";
 import { ErrorCode } from "../../types/constants/error-codes-constants";
 import { IAdminRepository } from "./admin-repo";
 import { createLoginToken } from "../../utils/tokenJWT";

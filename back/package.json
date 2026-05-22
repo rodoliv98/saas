@@ -16,6 +16,7 @@
     "nanoid": "^5.1.6",
     "nodemailer": "^8.0.4",
     "winston": "^3.19.0",
+    "winston-loki": "^6.1.4",
     "zod": "^3.25.67"
   },
   "devDependencies": {

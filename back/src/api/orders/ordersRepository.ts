@@ -3,7 +3,7 @@ import { PedidosStatus, PrismaClient } from "../../generated/prisma/client";
 import { PedidoStatus } from "../../types/types-index";
 import { OrderSchema } from "./types/order-types";
 import { Cuid } from "../../types/types-index";
-import { CustomError } from "../../middlewares/errorHandler";
+import { CustomError } from "../../errors/errorHandler";
 import { IGetUserOrders } from "../../interfaces/orders-interfaces/orders-inter-index";
 import { Orders } from "./entities/order-entitie";
 

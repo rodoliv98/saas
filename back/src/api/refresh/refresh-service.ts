@@ -1,7 +1,7 @@
 import { createLoginToken, verifyToken } from "../../utils/tokenJWT";
 import { JwtPayload } from "jsonwebtoken";
 import { ErrorCode } from "../../types/constants/error-codes-constants";
-import { CustomError } from "../../middlewares/errorHandler";
+import { CustomError } from "../../errors/errorHandler";
 import { IRefreshRepository } from "./refresh-repo";
 import { Identity } from "./types/refresh-types";
 

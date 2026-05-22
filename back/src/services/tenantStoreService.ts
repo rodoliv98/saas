@@ -1,6 +1,6 @@
 import { ITenantData } from "../controllers/tenantStoreController";
 import { SlugType } from "../types/types-index";
-import { CustomError } from "../middlewares/errorHandler";
+import { CustomError } from "../errors/errorHandler";
 import { ITenantStoreRepository } from "../repository/tenantStoreRepository";
 import { IFormatStoreData } from "../interfaces/tenant-interfaces/tenant-inter-index";
 import { ProdutosWSabores } from "../controllers/tenantProductsController";

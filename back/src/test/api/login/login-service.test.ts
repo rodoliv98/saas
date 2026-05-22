@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { LoginService } from '../../../api/login/loginService';
 import type { ILoginRepository } from '../../../api/login/loginRepository';
-import { CustomError } from '../../../middlewares/errorHandler';
+import { CustomError } from '../../../errors/errorHandler';
 import { ErrorCode } from '../../../types/constants/error-codes-constants';
 
 vi.mock('bcrypt', () => ({

@@ -3,7 +3,7 @@ import { AdminService } from "./admin-service";
 import { AdminRepository } from "./admin-repo";
 import { Router } from "express";
 import { checkAdmin } from "../../middlewares/check-admin";
-import prisma from '../../lib/client';
+import prisma from '../../lib/prisma/client';
 
 const router = Router();
 const repo = new AdminRepository(prisma);

@@ -1,6 +1,6 @@
 import { describe, it, beforeEach, expect, vi } from 'vitest';
 import { TenantDataService } from '../../../api/tenant-data/tenant-data-service';
-import { CustomError } from '../../../middlewares/errorHandler';
+import { CustomError } from '../../../errors/errorHandler';
 import { ErrorCode } from '../../../types/constants/error-codes-constants';
 
 vi.mock('../../../integrations/cloudinary/cloudinary-upload', () => ({

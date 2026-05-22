@@ -1,16 +1,20 @@
 import { Request, Response, NextFunction } from "express";
 import { verifyToken } from "../utils/tokenJWT";
 import { JwtPayload } from "jsonwebtoken";
+import { CustomError } from "../errors/errorHandler";
+import { ErrorCode } from "../types/constants/error-codes-constants";
 
 export function checkTenant (req: Request, res: Response, next: NextFunction) {
   const token = req.headers.authorization?.split(' ')[1];
   if (!token || token == 'undefined') {
-    return res.status(401).json({ error: 'Não autorizado', code: 'NOT_AUTHORIZED' });
+    next(new CustomError('Token não encontrado', 401, ErrorCode.TOKEN_NOT_FOUND));
+    return;
   }
 
   const decoded = verifyToken(token) as JwtPayload;
   if (decoded.role != 'tenant') {
-    return res.status(403).json({ error: 'Não autorizado', code: 'NOT_AUTHORIZED' });
+    next(new CustomError('Não autorizado', 403, ErrorCode.NOT_AUTHORIZED));
+    return;
   }
 
   req.tenant = decoded.tenantId;

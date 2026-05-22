@@ -1,7 +1,8 @@
-import { PrismaClient } from "../generated/prisma/client";
-import { CustomError } from "../middlewares/errorHandler";
-import { ErrorCode } from "../types/constants/error-codes-constants";
+import { PrismaClient } from "../../generated/prisma/client";
+import { CustomError } from "../../errors/errorHandler";
+import { ErrorCode } from "../../types/constants/error-codes-constants";
 import logger from "../winston/winston";
+import { notifyDiscord } from "../../utils/notify-discord";
 
 const prisma = new PrismaClient();
 
@@ -13,7 +14,8 @@ export async function dbConnect (retries = 5, delay = 5000) {
       logger.info('Connected');
       return;
     } catch (err) {
-      logger.info(`Conexão com o banco falhou, tentativa ${i+1}/${retries}. Tentando novamente em ${delay}`);
+      logger.crit(`Conexão com o banco falhou, tentativa ${i+1}/${retries}. Tentando novamente em ${delay}`);
+      await notifyDiscord();
       await new Promise(r => setTimeout(r, delay));
     }
   }

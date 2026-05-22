@@ -4,7 +4,7 @@ import { IFormatProductsData } from "../interfaces/products-interfaces/products-
 import { uploadToCloudinary } from "../integrations/cloudinary/cloudinary-upload";
 import { IFormatProductById } from "../interfaces/products-interfaces/products-inter-index";
 import { IProdutos } from "../controllers/tenantProductsController";
-import { CustomError } from "../middlewares/errorHandler";
+import { CustomError } from "../errors/errorHandler";
 import { ErrorCode } from "../types/constants/error-codes-constants";
 import { PatchProductDTO } from "../api/product/dto/product-dto";
 

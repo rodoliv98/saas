@@ -1,7 +1,7 @@
 import { PrismaClient } from "../generated/prisma/client"
 import { ProdutosWSabores } from "../controllers/tenantProductsController";
 import { ITenantData } from "../controllers/tenantStoreController";
-import { CustomError } from "../middlewares/errorHandler";
+import { CustomError } from "../errors/errorHandler";
 import { DeliveryCode } from "../types/entities/delivery-code-entitie";
 import { ActivationCodeDTO, SlugType } from "../types/types-index";
 
