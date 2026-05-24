@@ -8,11 +8,15 @@ vi.mock("../../../utils/tokenJWT", () => ({
   createLoginToken: vi.fn(() => ['accessToken', 'refreshToken'])
 }));
 
+const mockedVerifyToken = vi.mocked(verifyToken);
+
 describe('RefreshService', () => {
   let service: RefreshService;
   let repoMock: Mocked<IRefreshRepository>;
 
   beforeEach(() => {
+    mockedVerifyToken.mockClear();
+
     repoMock = {
       refresh: vi.fn()
     }
@@ -22,7 +26,7 @@ describe('RefreshService', () => {
   });
 
   it('Should create both tokens for tenant', async () => {
-    (verifyToken as any).mockReturnValue({
+    mockedVerifyToken.mockReturnValue({
       tenantId: '123',
       tenantSlug: 'tenant-slug',
       role: 'tenant'
@@ -37,28 +41,28 @@ describe('RefreshService', () => {
   });
 
   it('Should create both tokens for admin', async () => {
-    (verifyToken as any).mockReturnValue({ adminId: '123', role: 'admin' });
+    mockedVerifyToken.mockReturnValue({ adminId: '123', role: 'admin' });
     repoMock.refresh.mockResolvedValue({ id: '123', role: 'admin' });
     expect(await service.refresh('token')).toEqual(['accessToken', 'refreshToken']);
     expect(repoMock.refresh).toHaveBeenCalledWith({ table: 'admins', id: '123' });
   });
 
   it('Should create both tokens for user', async () => {
-    (verifyToken as any).mockReturnValue({ userId: '123', role: 'user' });
+    mockedVerifyToken.mockReturnValue({ userId: '123', role: 'user' });
     repoMock.refresh.mockResolvedValue({ id: '123', role: 'user' });
     expect(await service.refresh('token')).toEqual(['accessToken', 'refreshToken']);
     expect(repoMock.refresh).toHaveBeenCalledWith({ table: 'users', id: '123' });
   });
 
   it('Should throw if user not found', async () => {
-    (verifyToken as any).mockReturnValue({ userId: '123', role: 'user' });
+    mockedVerifyToken.mockReturnValue({ userId: '123', role: 'user' });
     repoMock.refresh.mockResolvedValue(null);
     await expect(service.refresh('token')).rejects.toThrowError('Usuário não encontrado');
   });
 
   it('Should call identityBasedToken with correct identity for tenant', async () => {
     const spy = vi.spyOn(service, 'identityBasedToken');
-    (verifyToken as any).mockReturnValue({ tenantId: '123', tenantSlug: 'tenant-slug', role: 'tenant' });
+    mockedVerifyToken.mockReturnValue({ tenantId: '123', tenantSlug: 'tenant-slug', role: 'tenant' });
     repoMock.refresh.mockResolvedValue({ id: '123', tenantSlug: 'tenant-slug', role: 'tenant' });
     await service.refresh('token');
     expect(spy).toHaveBeenCalledWith({ id: '123', tenantSlug: 'tenant-slug', role: 'tenant' });
@@ -67,7 +71,7 @@ describe('RefreshService', () => {
 
   it('Should call identityBasedToken with correct identity for admin', async () => {
     const spy = vi.spyOn(service, 'identityBasedToken');
-    (verifyToken as any).mockReturnValue({ adminId: '123', role: 'admin' });
+    mockedVerifyToken.mockReturnValue({ adminId: '123', role: 'admin' });
     repoMock.refresh.mockResolvedValue({ id: '123', role: 'admin' });
     await service.refresh('token');
     expect(spy).toHaveBeenCalledWith({ id: '123', role: 'admin' });
@@ -76,7 +80,7 @@ describe('RefreshService', () => {
 
   it('Should call identityBasedToken with correct identity for user', async () => {
     const spy = vi.spyOn(service, 'identityBasedToken');
-    (verifyToken as any).mockReturnValue({ userId: '123', role: 'user' });
+    mockedVerifyToken.mockReturnValue({ userId: '123', role: 'user' });
     repoMock.refresh.mockResolvedValue({ id: '123', role: 'user' });
     await service.refresh('token');
     expect(spy).toHaveBeenCalledWith({ id: '123', role: 'user' });

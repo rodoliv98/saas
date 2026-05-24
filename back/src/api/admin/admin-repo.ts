@@ -1,9 +1,9 @@
 import { PrismaClient } from "../../generated/prisma/client";
-import { TenantAdminView } from "./types/admin-types";
-import { Admins, Tenant } from "../../generated/prisma/client";
+import { Admin, TenantAdminView } from "./types/admin-types";
+import { Tenant } from "../../generated/prisma/client";
 
 export interface IAdminRepository {
-  login (data: { email: string, senha: string }): Promise<Admins | null>;
+  login (data: { email: string, senha: string }): Promise<Admin | null>;
   findAllTenants (): Promise<TenantAdminView[]>;
   findTenant (tenantId: string): Promise<Tenant | null>;
   changeStoreStatus (tenantId: string, newStatus: boolean): Promise<Tenant>;

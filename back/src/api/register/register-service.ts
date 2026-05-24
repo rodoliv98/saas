@@ -4,6 +4,7 @@ import { IRegisterRepository } from "./register-repo";
 import { Tenant } from "../../types/entities/tenant-entitie";
 import { CustomError } from "../../errors/errorHandler";
 import { ErrorCode } from "../../types/constants/error-codes-constants";
+import logger from "../../lib/winston/winston";
 
 export interface IRegisterService {
   register (registerData: RegisterType): Promise<Tenant>;
@@ -23,12 +24,17 @@ export class RegisterService implements IRegisterService {
     };
     
     const tenant = await this.repo.register(tenantData);
-    await this.notifyDiscord(tenant);
+    
+    try {
+      await this.notifyDiscord(tenant);
+    } catch (err) {
+      logger.error('Falha ao enviar notificação no discord', { err })
+    }
     
     return tenant;
   }
 
-  async notifyDiscord (tenant: Tenant) {
+  private async notifyDiscord (tenant: Tenant) {
     const webhookUrl = process.env.DISCORD_WEBHOOK_URL;
     if (!webhookUrl) {
       throw new CustomError('Url do webhook não configurada', 500, ErrorCode.INTERNAL_SERVER_ERROR);

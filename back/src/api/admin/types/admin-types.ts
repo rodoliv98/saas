@@ -1,4 +1,4 @@
-import { Prisma } from "../../../generated/prisma/client";
+import { Admins, Prisma } from "../../../generated/prisma/client";
 
 export type TenantAdminView = Prisma.TenantGetPayload<{
   select: {
@@ -16,6 +16,8 @@ export type AdminRefresh = Prisma.AdminsGetPayload<{
 }> & {
   role: 'admin'
 }
+
+export type Admin = Omit<Admins, 'createdAt'>;
 
 export type ActiveStatusResult = 
 | "A conta do tenant foi ativada" 
