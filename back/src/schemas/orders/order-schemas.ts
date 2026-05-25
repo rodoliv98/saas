@@ -44,6 +44,7 @@ export const orderSchema = z.object({
            .regex(/^\d{1,4}$/, 'Número deve conter apenas números')
            .trim(),
   complemento: z.string({ message: 'Complemento deve ser uma string' })
+                .min(4, 'Complement é necessário')
                 .max(100, 'Número máximo de caracteres para o campo Complemento é 100')
                 .trim()
                 .regex(defaultRegex, 'Só são permitidos letras, números, vígulas e pontos no campo Complemento'),
