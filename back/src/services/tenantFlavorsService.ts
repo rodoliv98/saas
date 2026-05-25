@@ -11,7 +11,7 @@ export interface ITenantFlavorsService {
   getFlavorById (flavorId: string, tenantId: string): Promise<IFlavor>;
   create (flavorData: CreateFlavorDTO): Promise<IFlavor>;
   patch (data: PatchFlavorDTO): Promise<void>;
-  delete (productId: Cuid, tenantId: string): Promise<void>;
+  delete (flavorId: Cuid, tenantId: string): Promise<void>;
 }
 
 export class TenantFlavorsService implements ITenantFlavorsService {
@@ -105,8 +105,15 @@ export class TenantFlavorsService implements ITenantFlavorsService {
     return;
   }
 
-  async delete (productId: Cuid, tenantId: string) {
-    await this.repo.delete(productId, tenantId);
+  async delete (flavorId: Cuid, tenantId: string) {
+    const flavor = await this.repo.getFlavorById(flavorId, tenantId)
+    if (!flavor) {
+      throw new CustomError('Sabor não encontrado', 404, ErrorCode.FLAVOR_NOT_FOUND);
+    }
+
+    await this.repo.delete(flavorId, tenantId);
     return;
+    /* await this.repo.delete(productId, tenantId);
+    return; */
   }
 }

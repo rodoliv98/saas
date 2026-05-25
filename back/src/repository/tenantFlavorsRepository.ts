@@ -2,7 +2,6 @@ import { Decimal } from "@prisma/client/runtime/library";
 import { PrismaClient } from "../generated/prisma/client";
 import { IFlavor } from "../controllers/tenantFlavorsController";
 import { Cuid } from "../types/types-index";
-import { CustomError } from "../errors/errorHandler";
 import { PatchFlavorDTO } from "../api/tenant-flavor/dto/tenant-flavor-dto";
 import { Flavor } from "../api/tenant-flavor/entitie/flavor-entitie";
 import { PatchFlavorData, FlavorImageData, CreateFlavorData } from "../api/tenant-flavor/types/tenant-flavor-types";
@@ -13,7 +12,7 @@ export interface ITenantFlavorsRepository {
   findFlavor (data: PatchFlavorDTO): Promise<FlavorImageData | null> | null;
   create (flavorData: CreateFlavorData): Promise<IFlavor>;
   patch (data: PatchFlavorData, flavorId: string): Promise<Flavor>;
-  delete (productId: Cuid, tenantId: string): Promise<DeletedFlavor>;
+  delete (flavorId: Cuid, tenantId: string): Promise<DeletedFlavor>;
 }
 
 export interface DeletedFlavor {
@@ -85,21 +84,11 @@ export class TenantFlavorsRepository implements ITenantFlavorsRepository {
     });
   }
   
-  async delete (productId: Cuid, tenantId: string) {
-    const flavor = await this.prisma.sabores.findFirst({
-      where: {
-        id: productId,
-        tenantId: tenantId
-      }
-    });
-
-    if (!flavor) {
-      throw new CustomError('Sabor não encontrado', 404, 'FLAVOR_NOT_FOUND');
-    }
-    
+  async delete (flavorId: Cuid, tenantId: string) {
     return await this.prisma.sabores.delete({
       where: {
-        id: productId
+        id: flavorId,
+        tenantId
       }
     });
   }

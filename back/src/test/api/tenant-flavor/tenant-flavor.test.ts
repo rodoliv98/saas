@@ -2,6 +2,8 @@ import { vi, describe, Mocked, it, beforeEach, Mock, expect } from 'vitest';
 import { TenantFlavorsService } from "../../../services/tenantFlavorsService";
 import { ITenantFlavorsRepository } from "../../../repository/tenantFlavorsRepository";
 import { Decimal } from '@prisma/client/runtime/library'; 
+import { ErrorCode } from '../../../types/constants/error-codes-constants';
+import { CustomError } from '../../../errors/errorHandler';
 
 describe('FlavorService', () => {
   let service: TenantFlavorsService;
@@ -40,5 +42,49 @@ describe('FlavorService', () => {
     const result = await service.getFlavors(mockData.produtoId);
 
     expect(result).toStrictEqual([mockData]);
+    expect(repo.getFlavors).toHaveBeenCalledWith(mockData.produtoId);
+  });
+
+  it('getflavors should be []', async () => {
+    repo.getFlavors.mockResolvedValueOnce([]);
+    const result = await service.getFlavors('ad123das13asd');
+
+    expect(result).toEqual([]);
+    expect(repo.getFlavors).toHaveBeenCalledWith('ad123das13asd');
+  });
+
+  it('should return flavor by its id', async () => {
+    const mockFlavorId = 'flavor_id';
+    const mockProductId = 'product_id';
+    const mockFlavor = mockFlavorData();
+
+    repo.getFlavorById.mockResolvedValueOnce(mockFlavor);
+    const result = await service.getFlavorById(mockFlavorId, mockProductId);
+
+    expect(result).toEqual(mockFlavor);
+    expect(repo.getFlavorById).toHaveBeenCalledWith(mockFlavorId, mockProductId);
+  });
+
+  it('flavor should not be found', async () => {
+    const mockFlavorId = 'flavor_id';
+    const mockProductId = 'product_id';
+
+    repo.getFlavorById.mockResolvedValueOnce(null);
+    await expect (service.getFlavorById(mockFlavorId, mockProductId))
+      .rejects.toThrow(new CustomError('Nenhum sabor encontrado', 404, ErrorCode.FLAVOR_NOT_FOUND))
+
+    expect(repo.getFlavorById).toHaveBeenCalledWith(mockFlavorId, mockProductId);
+  });
+
+  it('should delete flavor', async () => {
+    const mockFlavorId = 'flavor_id';
+    const mockTenantId = 'tenant_id';
+    const mockFlavor = mockFlavorData();
+
+    repo.getFlavorById.mockResolvedValueOnce(mockFlavor);
+    const result = await service.delete(mockFlavorId, mockTenantId);
+
+    expect(result).toBe(undefined);
+    expect(repo.getFlavorById).toHaveBeenCalledWith(mockFlavorId, mockTenantId);
   })
 })
