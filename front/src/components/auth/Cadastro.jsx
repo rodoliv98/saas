@@ -46,6 +46,8 @@ function Cadastro () {
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [apiMessage, setApiMessage] = useState("");
 
+    const defaultRegex = /^[a-zA-ZáàâãäéèêëíìîïóòôõöúùûüçñÁÀÂÃÄÉÈÊËÍÌÎÏÓÒÔÕÖÚÙÛÜÇÑ0-9$ ,.\-]{0,200}$/;
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         let processedValue = value;
@@ -119,43 +121,264 @@ function Cadastro () {
     };
 
     const validateStep = (step) => {
-        const newErrors = {};
-        switch (step) {
-            case 1:
-                if (!form.razaoSocial) newErrors.razaoSocial = 'Razão Social é obrigatória';
-                if (!form.CNPJ) newErrors.CNPJ = 'CNPJ é obrigatório';
-                break;
-            case 2:
-                if (!form.nomeRepresentante) newErrors.nomeRepresentante = 'Nome do representante é obrigatório';
-                if (!form.CPF) newErrors.CPF = 'CPF é obrigatório';
-                if (!form.email) newErrors.email = 'Email é obrigatório';
-                else if (!/\S+@\S+\.\S+/.test(form.email)) newErrors.email = 'Email inválido';
-                if (!form.telefone) newErrors.telefone = 'Telefone é obrigatório';
-                if (!form.senha) newErrors.senha = 'Senha é obrigatória';
-                else if (form.senha.length < 10) newErrors.senha = 'Senha deve ter pelo menos 10 caracteres';
-                if (form.senha !== form.confirmarSenha) newErrors.confirmarSenha = 'As senhas não coincidem';
-                break;
-            case 3:
-                if (!form.CEP) newErrors.CEP = 'CEP é obrigatório';
-                if (!form.endereco) newErrors.endereco = 'Endereço é obrigatório';
-                if (!form.numero) newErrors.numero = 'Número é obrigatório';
-                if (!form.bairro) newErrors.bairro = 'Bairro é obrigatório';
-                if (!form.municipio) newErrors.municipio = 'Município é obrigatório';
-                if (!form.estado) newErrors.estado = 'Estado é obrigatório';
-                break;
-            case 4:
-                if (!form.tenantSlug) newErrors.tenantSlug = 'Subdomínio é obrigatório';
-                if (!form.nomeEstabelecimento) newErrors.nomeEstabelecimento = 'Nome do estabelecimento é obrigatório';
-                if (!form.whatsapp) newErrors.whatsapp = 'WhatsApp é obrigatório';
-                if (form.diasFuncionamento.length === 0) newErrors.diasFuncionamento = 'Selecione ao menos um dia';
-                if (!form.horarioFuncionamento) newErrors.horarioFuncionamento = 'Horário de funcionamento é obrigatório';
-                if (!form.tempoPreparo) newErrors.tempoPreparo = 'Tempo de preparo é obrigatório';
-                if (!form.taxaEntrega) newErrors.taxaEntrega = 'Taxa de entrega é obrigatória';
-                if (!form.aceitouTermos) newErrors.aceitouTermos = 'Você precisa aceitar os termos para continuar';
-                break;
+    const newErrors = {};
+
+    switch (step) {
+        case 1:
+            // razaoSocial: obrigatório, max 100, só letras e espaços
+            if (!form.razaoSocial || form.razaoSocial.trim() === '') {
+                newErrors.razaoSocial = 'Razão Social é obrigatória';
+            } else if (form.razaoSocial.length > 100) {
+                newErrors.razaoSocial = 'Razão social muito longa';
+            } else if (!defaultRegex.test(form.razaoSocial)) {
+                newErrors.razaoSocial = 'Razão social inválida';
+            }
+
+            // CNPJ: obrigatório, exatamente 18 chars, formato 00.000.000/0000-00
+            if (!form.CNPJ) {
+                newErrors.CNPJ = 'CNPJ é obrigatório';
+            } else if (form.CNPJ.length < 18) {
+                newErrors.CNPJ = 'CNPJ muito curto';
+            } else if (form.CNPJ.length > 18) {
+                newErrors.CNPJ = 'CNPJ muito longo';
+            } else if (!/^\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2}$/.test(form.CNPJ)) {
+                newErrors.CNPJ = 'Formato de CNPJ inválido';
+            }
+
+            // nomeFantasia: opcional — valida só se preenchido
+            if (form.nomeFantasia && form.nomeFantasia.trim() !== '') {
+                if (form.nomeFantasia.length > 100) {
+                    newErrors.nomeFantasia = 'Nome fantasia muito longo';
+                } else if (!defaultRegex.test(form.nomeFantasia)) {
+                    newErrors.nomeFantasia = 'Nome fantasia inválido';
+                }
+            }
+
+            // inscricaoEstadual: opcional — valida só se preenchido
+            if (form.inscricaoEstadual && form.inscricaoEstadual.trim() !== '') {
+                if (form.inscricaoEstadual.length > 100) {
+                    newErrors.inscricaoEstadual = 'Inscrição estadual muito longa';
+                } else if (!/^[0-9.]{1,100}$/.test(form.inscricaoEstadual)) {
+                    newErrors.inscricaoEstadual = 'Inscrição estadual inválida';
+                }
+            }
+            break;
+
+        case 2:
+            // nomeRepresentante: obrigatório, max 50, só letras e espaços
+            if (!form.nomeRepresentante || form.nomeRepresentante.trim() === '') {
+                newErrors.nomeRepresentante = 'Nome do representante é obrigatório';
+            } else if (form.nomeRepresentante.length > 200) {
+                newErrors.nomeRepresentante = 'Excesso de caracteres em Nome do Representante';
+            } else if (!defaultRegex.test(form.nomeRepresentante)) {
+                newErrors.nomeRepresentante = 'Nome deve conter apenas letras e espaços';
+            }
+
+            // CPF: obrigatório, exatamente 14 chars, formato 000.000.000-00
+            if (!form.CPF) {
+                newErrors.CPF = 'CPF é obrigatório';
+            } else if (form.CPF.length < 14) {
+                newErrors.CPF = 'CPF deve conter no mínimo 11 dígitos';
+            } else if (form.CPF.length > 14) {
+                newErrors.CPF = 'CPF deve conter no máximo 14 dígitos';
+            } else if (!/^\d{3}\.\d{3}\.\d{3}-\d{2}$/.test(form.CPF)) {
+                newErrors.CPF = 'CPF deve estar no formato XXX.XXX.XXX-XX';
+            }
+
+            // email: obrigatório, formato válido
+            if (!form.email) {
+                newErrors.email = 'Email é obrigatório';
+            } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
+                newErrors.email = 'Formato de email inválido';
+            }
+
+            // telefone: obrigatório, entre 14-15 chars, formato (XX) XXXX-XXXX ou (XX) XXXXX-XXXX
+            if (!form.telefone) {
+                newErrors.telefone = 'Telefone é obrigatório';
+            } else if (form.telefone.length < 14) {
+                newErrors.telefone = 'Número de telefone deve ter o formato (XX) XXXX-XXXX';
+            } else if (form.telefone.length > 15) {
+                newErrors.telefone = 'Número de telefone deve ter o formato (XX) XXXXX-XXXX';
+            } else if (!/^\(\d{2}\) \d{4,5}-\d{4}$/.test(form.telefone)) {
+                newErrors.telefone = 'Número de telefone no formato inválido';
+            }
+
+            // senha: todas as regras do Zod em sequência para mensagens individuais
+            if (!form.senha) {
+                newErrors.senha = 'Senha é obrigatória';
+            } else if (form.senha.length < 10) {
+                newErrors.senha = 'Senha deve ter pelo menos 10 caracteres';
+            } else if (form.senha.length > 30) {
+                newErrors.senha = 'Senha deve ter no máximo 30 caracteres';
+            } else if (!/[a-z]/.test(form.senha)) {
+                newErrors.senha = 'Senha deve conter pelo menos uma letra minúscula';
+            } else if (!/[A-Z]/.test(form.senha)) {
+                newErrors.senha = 'Senha deve conter pelo menos uma letra maiúscula';
+            } else if (!/\d/.test(form.senha)) {
+                newErrors.senha = 'Senha deve conter pelo menos um número';
+            } else if (!/[!@#$%^&*()_+\-=[\]{}|;:,.?]/.test(form.senha)) {
+                newErrors.senha = 'Senha deve conter pelo menos um símbolo';
+            } else if (!/^[a-zA-Z\d!@#$%^&*()_+\-=[\]{}|;:,.?]+$/.test(form.senha)) {
+                newErrors.senha = 'Você usou caracteres não permitidos no campo Senha';
+            } else if (/[<>'"\\]/.test(form.senha)) {
+                newErrors.senha = "Caracteres < > ' \" \\ não são permitidos no campo Senha";
+            }
+
+            // confirmarSenha
+            if (!form.confirmarSenha) {
+                newErrors.confirmarSenha = 'Confirmação de senha é obrigatória';
+            } else if (form.senha !== form.confirmarSenha) {
+                newErrors.confirmarSenha = 'As senhas não coincidem';
+            }
+            break;
+
+        case 3:
+            // CEP: obrigatório, exatamente 10 chars, formato XX.XXX-XXX
+            if (!form.CEP) {
+                newErrors.CEP = 'CEP é obrigatório';
+            } else if (form.CEP.length < 10) {
+                newErrors.CEP = 'CEP deve ter pelo menos 8 dígitos';
+            } else if (form.CEP.length > 10) {
+                newErrors.CEP = 'CEP deve ter no máximo 8 dígitos';
+            } else if (!/^\d{2}\.\d{3}-\d{3}$/.test(form.CEP)) {
+                newErrors.CEP = 'Formato do CEP deve ser XX.XXX-XXX';
+            }
+
+            // endereco: obrigatório, min 5, max 50, só letras e espaços
+            if (!form.endereco) {
+                newErrors.endereco = 'Endereço é obrigatório';
+            } else if (form.endereco.length < 5) {
+                newErrors.endereco = 'Endereço deve ser mais específico';
+            } else if (form.endereco.length > 50) {
+                newErrors.endereco = 'Endereço deve conter no máximo 50 caracteres';
+            } else if (!defaultRegex.test(form.endereco)) {
+                newErrors.endereco = 'Endereço não deve conter nenhum tipo de símbolo';
+            }
+
+            // numero: obrigatório, max 10, apenas dígitos (mínimo 2 dígitos pelo Zod)
+            if (!form.numero) {
+                newErrors.numero = 'Número é obrigatório';
+            } else if (form.numero.length > 10) {
+                newErrors.numero = 'Número deve ter no máximo 10 caracteres';
+            } else if (!/^\d{2,10}$/.test(form.numero)) {
+                newErrors.numero = 'O campo Número deve conter apenas dígitos (mínimo 2)';
+            }
+
+            // complemento: opcional — valida só se preenchido
+            if (form.complemento && form.complemento.trim() !== '') {
+                if (form.complemento.length > 100) {
+                    newErrors.complemento = 'Complemento deve conter no máximo 100 caracteres';
+                } else if (!/^[a-zA-ZÀ-ÿ\s-]{1,100}$/.test(form.complemento)) {
+                    newErrors.complemento = 'O campo Complemento não deve conter nenhum tipo de símbolo';
+                }
+            }
+
+            // bairro: obrigatório, min 3, max 30, só letras e espaços
+            if (!form.bairro) {
+                newErrors.bairro = 'Bairro é obrigatório';
+            } else if (form.bairro.length < 3) {
+                newErrors.bairro = 'Bairro está faltando';
+            } else if (form.bairro.length > 30) {
+                newErrors.bairro = 'Bairro deve conter no máximo 30 caracteres';
+            } else if (!defaultRegex.test(form.bairro)) {
+                newErrors.bairro = 'Bairro não deve conter nenhum tipo de símbolo';
+            }
+
+            // municipio: obrigatório, min 3, max 30, só letras e espaços
+            if (!form.municipio) {
+                newErrors.municipio = 'Município é obrigatório';
+            } else if (form.municipio.length < 3) {
+                newErrors.municipio = 'Município está faltando';
+            } else if (form.municipio.length > 30) {
+                newErrors.municipio = 'Município deve conter no máximo 30 caracteres';
+            } else if (!defaultRegex.test(form.municipio)) {
+                newErrors.municipio = 'Município não deve conter nenhum tipo de símbolo';
+            }
+
+            // estado: obrigatório, exatamente 2 letras maiúsculas
+            if (!form.estado) {
+                newErrors.estado = 'Estado é obrigatório';
+            } else if (!/^[A-Z]{2}$/.test(form.estado)) {
+                newErrors.estado = 'Estado deve conter apenas 2 caracteres';
+            }
+            break;
+
+        case 4:
+            // tenantSlug: obrigatório, apenas letras minúsculas, números e hífens
+            if (!form.tenantSlug) {
+                newErrors.tenantSlug = 'Subdomínio é obrigatório';
+            } else if (!/^[a-z0-9-]+$/.test(form.tenantSlug)) {
+                newErrors.tenantSlug = 'Subdomínio deve conter apenas letras minúsculas, números e hífens';
+            }
+
+            // nomeEstabelecimento: obrigatório, min 3, max 50, só letras e espaços
+            if (!form.nomeEstabelecimento) {
+                newErrors.nomeEstabelecimento = 'Nome do estabelecimento é obrigatório';
+            } else if (form.nomeEstabelecimento.length < 3) {
+                newErrors.nomeEstabelecimento = 'Nome do estabelecimento deve conter no mínimo 3 caracteres';
+            } else if (form.nomeEstabelecimento.length > 50) {
+                newErrors.nomeEstabelecimento = 'Nome do estabelecimento deve conter no máximo 50 caracteres';
+            } else if (!defaultRegex.test(form.nomeEstabelecimento)) {
+                newErrors.nomeEstabelecimento = 'Nome do estabelecimento deve conter apenas letras e espaços';
+            }
+
+            // whatsapp: obrigatório, entre 14-15 chars, formato (XX) XXXX-XXXX ou (XX) XXXXX-XXXX
+            if (!form.whatsapp) {
+                newErrors.whatsapp = 'WhatsApp é obrigatório';
+            } else if (form.whatsapp.length < 14) {
+                newErrors.whatsapp = 'Número de telefone deve ter o formato (XX) XXXX-XXXX';
+            } else if (form.whatsapp.length > 15) {
+                newErrors.whatsapp = 'Número de telefone deve ter o formato (XX) XXXXX-XXXX';
+            } else if (!/^\(\d{2}\) \d{4,5}-\d{4}$/.test(form.whatsapp)) {
+                newErrors.whatsapp = 'Número de telefone no formato inválido';
+            }
+
+            // diasFuncionamento: ao menos um dia selecionado
+            if (form.diasFuncionamento.length === 0) {
+                newErrors.diasFuncionamento = 'Selecione ao menos um dia';
+            }
+
+            // horarioFuncionamento: obrigatório, exatamente 11 chars, formato HH:MM-HH:MM
+            if (!form.horarioFuncionamento) {
+                newErrors.horarioFuncionamento = 'Horário de funcionamento é obrigatório';
+            } else if (form.horarioFuncionamento.length !== 11) {
+                newErrors.horarioFuncionamento = 'O horário de funcionamento deve estar no formato HH:MM-HH:MM';
+            } else if (!/^\d{2}:\d{2}-\d{2}:\d{2}$/.test(form.horarioFuncionamento)) {
+                newErrors.horarioFuncionamento = 'Horário de funcionamento deve ter o formato HH:MM-HH:MM';
+            }
+
+            // tempoPreparo: obrigatório, 1 a 3 dígitos numéricos
+            if (!form.tempoPreparo) {
+                newErrors.tempoPreparo = 'Tempo de preparo é obrigatório';
+            } else if (!/^\d{1,3}$/.test(form.tempoPreparo)) {
+                newErrors.tempoPreparo = 'O campo Tempo de Preparo deve conter apenas números';
+            }
+
+            // taxaEntrega: min 0 (0 é válido!), max 999.99, no máximo 2 casas decimais
+            // ⚠️ Não use !form.taxaEntrega aqui — o valor 0 (entrega grátis) passaria como inválido
+            const taxa = Number(form.taxaEntrega);
+            if (form.taxaEntrega === '' || form.taxaEntrega === null || form.taxaEntrega === undefined) {
+                newErrors.taxaEntrega = 'Taxa de entrega é obrigatória';
+            } else if (isNaN(taxa)) {
+                newErrors.taxaEntrega = 'Taxa de entrega inválida';
+            } else if (taxa < 0) {
+                newErrors.taxaEntrega = 'Taxa de entrega não pode ser negativa';
+            } else if (taxa > 999.99) {
+                newErrors.taxaEntrega = 'Taxa de entrega muito alta';
+            } else if (!Number.isInteger(Math.round(taxa * 100))) {
+                newErrors.taxaEntrega = 'Taxa de entrega deve ter no máximo duas casas decimais';
+            }
+
+            // aceitouTermos
+            if (!form.aceitouTermos) {
+                newErrors.aceitouTermos = 'Você precisa aceitar os termos para continuar';
+            }
+            break;
+
             default:
                 break;
         }
+
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
@@ -174,37 +397,39 @@ function Cadastro () {
     const handleSubmit = async (e) => {
         if (currentStep !== 4) return;
 
-				e.preventDefault();
+        e.preventDefault();
         if (!validateStep(4)) return;
 
-        delete form.confirmarSenha;
+        /* delete form.confirmarSenha;
         delete form.aceitouTermos;
         if (form.tenantSlug) {
             form.tenantSlug = form.tenantSlug.replace(' ', '-');
         }
-        form.taxaEntrega = Number(form.taxaEntrega);
+        form.taxaEntrega = Number(form.taxaEntrega); */
+
+        const { confirmarSenha, aceitouTermos, ...payload } = form;
+        payload.taxaEntrega = Number(payload.taxaEntrega);
+        if (payload.tenantSlug) {
+            payload.tenantSlug = payload.tenantSlug.replace(' ', '-');
+        }
 
         setIsLoading(true);
         setApiMessage("");
         try {
-            const res = await api.post('/api/auth/register', form);
+            const res = await api.post('/api/auth/register', payload);
             setApiMessage(res.data?.msg || "Cadastro realizado com sucesso!");
         } catch (err) {
-            const fieldError = err.response?.data?.error;
-
-            if (err.response.data.code === "VALIDATION_ERROR") {
+            if (err.response?.data?.code === "VALIDATION_ERROR") {
                 const message = err.response.data.error.map(err => err.message).join(', ');
                 setErrors({ general: message });
                 setApiMessage(message);
             } 
-            if (err.status === 500 || err.response?.status === 500) {
+            if (err.response?.data?.code === "INTERNAL_SERVER_ERROR" || err.response?.status === 500) {
                 setErrors({ general: 'Ocorreu um erro, tente mais tarde' });
-            }
-            if (fieldError) {
-                setErrors({ general: `Já existe uma conta com os dados inseridos no campo ${fieldError}` });
             }
         } finally {
             setIsLoading(false);
+            setForm(prev => ({...prev, aceitouTermos: false}));
         }
     };
     
@@ -368,6 +593,7 @@ function Cadastro () {
                                 <Globe className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                                 <input type="text" id="nomeEstabelecimento" name="nomeEstabelecimento" value={form.nomeEstabelecimento} onChange={handleChange} className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition-colors ${errors.nomeEstabelecimento ? 'border-red-500' : 'border-gray-300'}`} placeholder="Nome da sua loja"/>
                             </div>
+                            <p className="text-xs text-gray-500 mt-1">Nome que aparecerá no seu cardápio digital</p>
                             {errors.nomeEstabelecimento && <p className="text-red-500 text-sm mt-1">{errors.nomeEstabelecimento}</p>}
                         </div>
                         <div>

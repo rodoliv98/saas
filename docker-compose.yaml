@@ -17,7 +17,6 @@ services:
       context: ./back
       dockerfile: dockerfile.dev
     container_name: api
-    profiles: ["dev"]
     depends_on:
        - db
     environment:
@@ -32,7 +31,6 @@ services:
 
   front-dev:
     container_name: front
-    profiles: ["dev"]
     build:
       context: ./front
       dockerfile: dockerfile.dev
@@ -45,7 +43,7 @@ services:
   grafana:
     image: grafana/grafana:latest
     container_name: grafana
-    profiles: ["dev"]
+    profiles: ["obs"]
     restart: unless-stopped
     ports:
       - "3200:3000"
@@ -57,7 +55,7 @@ services:
   loki:
     image: grafana/loki:latest
     container_name: loki
-    profiles: ["dev"]
+    profiles: ["obs"]
     restart: unless-stopped
     expose:
       - "3300:3100"

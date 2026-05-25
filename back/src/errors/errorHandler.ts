@@ -80,16 +80,16 @@ export function errorHandler (err: any, req: Request, res: Response, _next: Next
 
   if (err instanceof PrismaClientInitializationError) {
     req.logger.error('PrismaClientInitializationError', prismaErrObj);
-    return res.status(500).json({ error: 'Internal Server Error' });
+    return res.status(500).json({ error: 'Internal Server Error', code: ErrorCode.INTERNAL_SERVER_ERROR });
   } else if (err instanceof PrismaClientKnownRequestError) {
     req.logger.error('PrismaClientKnownRequestError', { ...prismaErrObj, meta: err.meta });
-    return res.status(500).json({ error: 'Internal Server Error' });
+    return res.status(500).json({ error: 'Internal Server Error', code: ErrorCode.INTERNAL_SERVER_ERROR });
   } else if (err instanceof PrismaClientUnknownRequestError) {
     req.logger.error('PrismaClientUnknownRequestError', prismaErrObj);
-    return res.status(500).json({ error: 'Internal Server Error' });
+    return res.status(500).json({ error: 'Internal Server Error', code: ErrorCode.INTERNAL_SERVER_ERROR });
   } else if (err instanceof PrismaClientValidationError) {
     req.logger.error('PrismaClientValidationError', prismaErrObj);
-    return res.status(500).json({ error: 'Internal Server Error' });
+    return res.status(500).json({ error: 'Internal Server Error', code: ErrorCode.INTERNAL_SERVER_ERROR });
   }
   
   logger.crit(err.message ?? 'Erro desconhecido', {

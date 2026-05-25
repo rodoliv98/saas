@@ -12,7 +12,7 @@ export const registerSchema = z.object({
   // passo 1
   nomeFantasia: z.string()
                  .trim()
-                 .max(100, 'Nome fantasia muito longo')
+                 .max(200, 'Nome fantasia muito longo')
                  .transform(val => val === '' ? null : val)
                  .nullable()
                  .refine(val => val === null || defaultRegex.test(val), 'Nome fantasia inválido'),
@@ -35,7 +35,7 @@ export const registerSchema = z.object({
   // passo 2
   nomeRepresentante: z.string()
                       .min(1, 'Nome do representante está faltando')
-                      .max(50, 'Excesso de caracteres em Nome do Representante')
+                      .max(200, 'Excesso de caracteres em Nome do Representante')
                       .regex(defaultRegex, 'Nome deve conter apenas letras e espaços')
                       .trim(),
   CPF: z.string()
@@ -82,7 +82,7 @@ export const registerSchema = z.object({
                 .refine(val => val === null || /^[a-zA-ZÀ-ÿ\s-]{1,100}$/.test(val), 'O campo Complemento não deve conter nenhum tipo de simbolo'),
   endereco: z.string()
              .min(5, 'Endereço deve ser mais específico')
-             .max(50, 'Endereço deve conter apenas 50 caracteres')
+             .max(100, 'Endereço deve conter apenas 100 caracteres')
              .regex(defaultRegex, 'Endereço não deve conter nenhum tipo de simbolo')
              .trim(),
   numero: z.string()
@@ -99,7 +99,7 @@ export const registerSchema = z.object({
   tenantSlug: slugSchema,
   nomeEstabelecimento: z.string()
                         .min(3, 'Nome do estabelecimento deve conter no mínimo 3 caracteres')
-                        .max(50, 'Nome do estabelecimento deve conter no máximo 50 caracteres')
+                        .max(100, 'Nome do estabelecimento deve conter no máximo 100 caracteres')
                         .regex(defaultRegex, 'Nome do estabelecimento deve conter apenas letras e espaços')
                         .trim(),
   diasFuncionamento: z.array(
