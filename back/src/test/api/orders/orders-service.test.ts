@@ -91,6 +91,7 @@ describe('OrderService', () => {
       whatsapp: '11999999999',
       formaPagamento: "cartao",
       taxaEntrega: 5.00,
+      complemento: 'próximo do posto',
       items: [{
         id: 'item1',
         nomeProduto: 'Produto 1',
