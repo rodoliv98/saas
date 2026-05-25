@@ -237,7 +237,7 @@ function LandingPage () {
 									</h2>
 									<p className="text-xl text-gray-600 max-w-3xl mx-auto">
 											Escolha o plano ideal para o tamanho do seu comércio. 
-											Teste grátis por 30 dias, sem compromisso.
+											Teste grátis por 14 dias, sem compromisso.
 									</p>
 							</div>
 							
@@ -247,12 +247,11 @@ function LandingPage () {
 													<span className="bg-gray-900 text-white px-6 py-3 rounded-full text-lg font-bold transform rotate-[-5deg]">Em Breve!</span>
 											</div>
 											<div className="text-center mb-8">
-													<h3 className="text-2xl font-bold text-gray-900 mb-2">Intermediário</h3>
+													<h3 className="text-2xl font-bold text-gray-900 mb-2">INDISPONÍVEL</h3>
 													<p className="text-gray-600 mb-4">Para comércios médios</p>
 													<div className="text-4xl font-bold text-gray-900 mb-2">
 															R$ 80<span className="text-lg text-gray-600">/mês</span>
 													</div>
-													<p className="text-sm text-gray-600">Até 50 pedidos/dia</p>
 											</div>
 											<ul className="space-y-4 mb-8">
 													<li className="flex items-center gap-3">
@@ -294,7 +293,6 @@ function LandingPage () {
 													<div className="text-4xl font-bold text-gray-900 mb-2">
 															R$ 69,90<span className="text-lg text-gray-600">/mês</span>
 													</div>
-													<p className="text-sm text-gray-600">Até 1.500 pedidos/mês</p>
 											</div>
 											<ul className="space-y-4 mb-8">
 													<li className="flex items-center gap-3">
@@ -338,12 +336,11 @@ function LandingPage () {
 													<span className="bg-gray-900 text-white px-6 py-3 rounded-full text-lg font-bold transform rotate-[5deg]">Em Breve!</span>
 											</div>
 											<div className="text-center mb-8">
-													<h3 className="text-2xl font-bold text-gray-900 mb-2">Pro</h3>
+													<h3 className="text-2xl font-bold text-gray-900 mb-2">INDISPONÍVEL</h3>
 													<p className="text-gray-600 mb-4">Para comércios grandes</p>
 													<div className="text-4xl font-bold text-gray-900 mb-2">
 															R$ 100<span className="text-lg text-gray-600">/mês</span>
 													</div>
-													<p className="text-sm text-gray-600">Até 100+ pedidos/dia</p>
 											</div>
 											<ul className="space-y-4 mb-8">
 													<li className="flex items-center gap-3">
