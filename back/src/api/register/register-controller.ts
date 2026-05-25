@@ -10,10 +10,9 @@ export class RegisterController {
 			const data = registerSchema.parse(req.body);
 			await this.service.register(data);
 
-			res.status(200).json({ msg: 'Conta criada com sucesso, ela deve ser ativada em até 2 horas.' });
+			res.status(200).json({ msg: 'Conta criada com sucesso, ela será ativada em até 2 horas.' });
 
 		} catch (err) {
-			console.error('Erro no controlador register-controller register method:\n', err);
 			next(err);
 		}
 	}

@@ -24,7 +24,7 @@ function UserProfile() {
     
     const interval = setInterval(() => {
       fetch();
-    }, 30000);
+    }, 20000);
 
     return () => clearInterval(interval);
   }, []);

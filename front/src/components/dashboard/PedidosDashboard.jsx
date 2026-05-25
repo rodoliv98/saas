@@ -61,7 +61,7 @@ function PedidosDashboard() {
     
     const interval = setInterval(() => {
       fetchOrders();
-    }, 30000);
+    }, 20000);
 
     return () => clearInterval(interval);
   }, []);

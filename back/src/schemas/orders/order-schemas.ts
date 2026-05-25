@@ -46,8 +46,7 @@ export const orderSchema = z.object({
   complemento: z.string({ message: 'Complemento deve ser uma string' })
                 .max(100, 'Número máximo de caracteres para o campo Complemento é 100')
                 .trim()
-                .regex(defaultRegex, 'Só são permitidos letras, números, vígulas e pontos no campo Complemento')
-                .optional(),
+                .regex(defaultRegex, 'Só são permitidos letras, números, vígulas e pontos no campo Complemento'),
   whatsapp: z.string({ message: 'Número de telefone deve ser uma string' })
              .min(14, 'Número de telefone deve ter o formato (XX) XXXX-XXXX')
              .max(15, 'Número de telefone deve ter o formato (XX) XXXXX-XXXX')
