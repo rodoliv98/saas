@@ -2,8 +2,8 @@ import { createLogger, format, config, transports } from 'winston';
 import LokiTransport from 'winston-loki';
 /*
   {
-    emerg: 0, <-- nao aparece no grafana
-    alert: 1, <-- nao aparece no grafana
+    emerg: 0,
+    alert: 1,
     crit: 2,
     error: 3,
     warning: 4,
