@@ -27,18 +27,22 @@ const transportConsole = new transports.Console({
 });
 
 const transportList: any[] = [transportConsole];
-/* const lokiUrl = process.env.LOKI_HOST || 'http://loki:3100';
+const lokiUrl = process.env.GRAFANA_LOKI_HOST || 'http://loki:3100';
 
 transportList.push(
   new LokiTransport({
     host: lokiUrl,
+    basicAuth: `${process.env.GRAFANA_LOKI_USER}:${process.env.GRAFANA_LOKI_TOKEN}`,
     labels: { app: 'api.eldur' },
+    format: format.json(),
     replaceTimestamp: true,
     onConnectionError: (err) => {
-      console.error('Erro ao conectar no Loki', err);
+      process.env.NODE_ENV === 'production'
+      ? console.error('Erro ao conectar no Loki', err)
+      : null
     }
   })
-) */
+)
 
 const logger = createLogger({
   levels: config.syslog.levels,
