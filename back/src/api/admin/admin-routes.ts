@@ -6,7 +6,7 @@ import { checkAdmin } from "../../middlewares/check-admin";
 import prisma from '../../lib/prisma/client';
 
 const router = Router();
-const repo = new AdminRepository(prisma);
+const repo = new AdminRepository(prisma as any);
 const service = new AdminService(repo);
 const controller = new AdminController(service);
 

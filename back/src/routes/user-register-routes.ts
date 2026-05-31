@@ -5,7 +5,7 @@ import { Router } from "express";
 import prisma from "../lib/prisma/client";
 
 const router = Router();
-const repo = new UserRegisterRepository(prisma);
+const repo = new UserRegisterRepository(prisma as any);
 const service = new UserRegisterService(repo);
 const contrller = new UserRegisterController(service);
 

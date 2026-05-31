@@ -6,7 +6,7 @@ import { checkUser } from "../middlewares/check-user";
 import prisma from "../lib/prisma/client";
 
 const router = Router();
-const repo = new UserDataRepository(prisma);
+const repo = new UserDataRepository(prisma as any);
 const service = new UserDataService(repo);
 const controller = new UserDataController(service);
 

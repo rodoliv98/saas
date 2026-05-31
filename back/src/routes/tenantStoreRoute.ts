@@ -6,7 +6,7 @@ import { checkTenant } from '../middlewares/check-tenant';
 import prisma from '../lib/prisma/client';
 
 const router = Router();
-const repo = new TenantStoreRepository(prisma);
+const repo = new TenantStoreRepository(prisma as any);
 const service = new TenantStoreService(repo);
 const controller = new TenantStoreController(service);
 

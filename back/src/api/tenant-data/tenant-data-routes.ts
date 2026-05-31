@@ -8,7 +8,7 @@ import { validateImageType } from "../../middlewares/validateImageType";
 import prisma from "../../lib/prisma/client";
 
 const router = Router();
-const repository = new TenantDataRepository(prisma);
+const repository = new TenantDataRepository(prisma as any);
 const service = new TenantDataService(repository);
 const controller = new TenantDataController(service);
 

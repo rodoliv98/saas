@@ -1,12 +1,11 @@
 import { LoginController } from "./loginController";
 import { LoginService } from "./loginService";
 import { LoginRepository } from "./loginRepository";
-import { PrismaClient } from '../../generated/prisma/client';
 import { Router } from "express";
+import prisma from "../../lib/prisma/client";
 
 const router = Router();
-const prisma = new PrismaClient();
-const repository = new LoginRepository(prisma)
+const repository = new LoginRepository(prisma as any)
 const service = new LoginService(repository);
 const controller = new LoginController(service);
 

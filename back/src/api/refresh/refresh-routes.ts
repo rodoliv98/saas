@@ -1,12 +1,11 @@
 import { RefreshController } from "./refresh-controller";
 import { RefreshService } from "./refresh-service";
 import { RefreshRepository } from "./refresh-repo";
-import { PrismaClient } from '../../generated/prisma/client';
 import { Router } from "express";
+import prisma from "../../lib/prisma/client";
 
 const router = Router();
-const prisma = new PrismaClient();
-const repository = new RefreshRepository(prisma)
+const repository = new RefreshRepository(prisma as any)
 const service = new RefreshService(repository);
 const controller = new RefreshController(service);
 
