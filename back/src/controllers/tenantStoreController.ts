@@ -46,6 +46,7 @@ export class TenantStoreController {
   constructor (private service: ITenantStoreService) {}
 
   async getData (req: Request, res: Response, next: NextFunction) {
+    console.log('headers', req.headers);
     try {
       const slug = slugSchema.parse(req.params.slug);
       const data = await this.service.getData(slug);
