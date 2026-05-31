@@ -46,7 +46,10 @@ const corsOptions = {
   credentials: true,
   allowedHeaders: ["Content-Type", "Authorization"]
 }
-
+app.use('*', (req, res, next) => {
+  console.log('headers', req.headers);
+  next();
+})
 app.use(requestLogger);
 
 app.use('/static', express.static('public'));

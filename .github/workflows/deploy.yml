@@ -6,10 +6,10 @@ on:
       - main
 
 jobs:
-  test:
-    name: rodar testes
+  back:
+    name: Testes e Audit do back
     runs-on: ubuntu-latest
-    
+
     defaults:
       run:
         working-directory: back
@@ -28,5 +28,33 @@ jobs:
       - name: Instalar dependencias
         run: npm ci
       
+      - name: Audit
+        run: npm audit --audit-level=high
+
       - name: Rodar testes
         run: npm run test
+  
+  front:
+    name: Audit do front
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: front
+    
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+      
+      - name: Instalar Nodejs
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+          cache-dependency-path: front/package-lock.json
+      
+      - name: Instalar dependencias
+        run: npm ci
+      
+      - name: Audit
+        run: npm audit --audit-level=high
