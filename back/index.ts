@@ -23,7 +23,8 @@ import { CustomError, errorHandler } from './src/errors/errorHandler'
 import { ErrorCode } from './src/types/constants/error-codes-constants';
 import { requestLogger } from './src/middlewares/request-logger';
 import { apiLimiter, authLimiter } from './src/middlewares/rate-limiter';
-import { dbConnect } from './src/lib/prisma/client';
+import { prismaConnect } from './src/lib/prisma/client';
+import { redisConnect } from './src/lib/redis/redis-connect';
 import 'dotenv/config';
 
 const app = express();
@@ -72,14 +73,15 @@ app.use('/api', telegram);
 app.use('/api/health', (_req, res) => res.status(200).json({ message: 'oksss' }));
 app.use('/api', tenantStore);
 
-app.use(async(_req, _res, next) => {
+async function connectDb() {
   try {
-    await dbConnect();
-    next();
+    await prismaConnect();
+    await redisConnect();
   } catch (err) {
-    next(err);
+    throw err;
   }
-});
+}
+connectDb();
 
 app.use(errorHandler);
 

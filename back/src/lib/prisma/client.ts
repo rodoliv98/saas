@@ -6,7 +6,7 @@ import { notifyDiscord } from "../../utils/notify-discord";
 
 const prisma = new PrismaClient();
 
-export async function dbConnect (retries = 5, delay = 5000) {
+export async function prismaConnect (retries = 5, delay = 5000) {
   for (let i = 0; i < retries; i++) {
     try {
       logger.info('Trying to connect to DB');
@@ -15,12 +15,12 @@ export async function dbConnect (retries = 5, delay = 5000) {
       return;
     } catch (err) {
       logger.crit(`Conexão com o banco falhou, tentativa ${i+1}/${retries}. Tentando novamente em ${delay}`);
-      await notifyDiscord();
+      await notifyDiscord('Erro no Postgres', 'Falha ao conectar com Prisma');
       await new Promise(r => setTimeout(r, delay));
     }
   }
 
-  throw new CustomError('Falha ao conectar no banco', 500, ErrorCode.INTERNAL_SERVER_ERROR);
+  throw new CustomError('Falha ao conectar no banco', 500, ErrorCode.DB_CONNECT_ERROR);
 }
 
 export default prisma;
