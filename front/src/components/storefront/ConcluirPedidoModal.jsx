@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useRefreshHook } from "../utils/refresh-hook";
 
 function ConcluirPedidoModal ({ carrinho, setConcluirPedidoModal, taxaEntrega }) {
+  const idempotencyKeyRef = useRef(crypto.randomUUID());
+  const idempotencyKey = idempotencyKeyRef.current;
   const { slug } = useParams(); 
   const [entrega, setEntrega] = useState();
   const [form, setForm] = useState({
@@ -119,10 +121,9 @@ function ConcluirPedidoModal ({ carrinho, setConcluirPedidoModal, taxaEntrega })
     setIsLoading(true);
 
     try {
-      await refreshHook('post', '/api/orders', form);
+      await refreshHook('post', '/api/orders', form, idempotencyKey);
       redirect('/usuario-perfil');
       setConcluirPedidoModal(false);
-
     } catch (err) {
       if (err.response.data.code === "VALIDATION_ERROR") {
         return setError(err.response.data.error.map(e => e.message).join(', '));

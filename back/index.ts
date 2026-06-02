@@ -45,7 +45,7 @@ const corsOptions = {
   ? [FIRST_PROD_URL, SECOND_PROD_URL]
   : process.env.CORS_DEVELOPMENT,
   credentials: true,
-  allowedHeaders: ["Content-Type", "Authorization"]
+  allowedHeaders: ["Content-Type", "Authorization", "Idempotency-key"]
 }
 
 app.use(requestLogger);

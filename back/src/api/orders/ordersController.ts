@@ -40,6 +40,7 @@ export class OrdersController {
   }
 
   async create (req: Request, res: Response, next: NextFunction) {
+    console.log('chegou no controller');
     try {
       const userId = req.user;
       if (!userId) return res.status(401).json({ error: 'Não autorizado' });

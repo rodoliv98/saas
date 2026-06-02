@@ -5,6 +5,7 @@ import { OrderRepository } from "../orders/ordersRepository";
 import { checkTenant } from "../../middlewares/check-tenant";
 import { checkUser } from "../../middlewares/check-user";
 import prisma from "../../lib/prisma/client";
+import { idempotencyRequired } from "../../middlewares/idempotency";
 
 const router = Router();
 const repo = new OrderRepository(prisma as any);
@@ -13,7 +14,7 @@ const controller = new OrdersController(service);
 
 router.get('/orders', checkTenant, controller.getOrders.bind(controller));
 
-router.post('/orders', checkUser, controller.create.bind(controller));
+router.post('/orders', checkUser, idempotencyRequired, controller.create.bind(controller));
 
 router.patch('/orders/:orderId', checkTenant, controller.patchOrders.bind(controller));
 
