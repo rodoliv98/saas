@@ -1,16 +1,16 @@
-import { CustomError } from "../../errors/errorHandler";
 import { ITelegramRepo } from "./telegram-repo";
 import { ErrorCode } from "../../types/constants/error-codes-constants";
 import { DeliveryManDTO } from "./dto/delivery-dtos";
 import { UpdateDeliveryDTO } from "./dto/delivery-dtos";
 import { OrdersDelivery } from "./intities/order-entities";
-import { botAnswer } from "../../utils/bot-answer";
 import { DeliveryUpdate } from "./intities/delivery-entities";
+import { telegramQueue } from "../../lib/redis/redis-connect";
+import logger from "../../lib/winston/winston";
 
 export interface ITelegramService {
-  getOrders(pin: string, chat_id: bigint): Promise<string>;
-  updateDeliveryOrder(updateCode: string): Promise<string>;
-  useActivationCode(data: DeliveryManDTO): Promise<string>;
+  getOrders(pin: string, chat_id: bigint): Promise<void>;
+  updateDeliveryOrder(updateCode: string, chat_id: string): Promise<void>;
+  useActivationCode(data: DeliveryManDTO): Promise<void>;
 }
 
 export class TelegramService implements ITelegramService {
@@ -19,35 +19,83 @@ export class TelegramService implements ITelegramService {
   async getOrders (pin: string, chat_id: bigint) {
     const deliveryMan = await this.repo.findDeliveryMan(pin, chat_id);
     if (!deliveryMan) {
-      throw new CustomError('Nenhum entragador com esse chatId encontrado', 404, ErrorCode.DELIVERY_ERROR);
+      logger.warning('Nenhum entragador com esse chatId encontrado', {
+        status: 404,
+        code: ErrorCode.TELEGRAM_ERROR
+      });
+      return;
     }
-    console.log("deliveryMan:", deliveryMan);
+
     const orders = await this.repo.getOrders(pin);
     if (!orders) {
-      throw new CustomError('Nenhum tenant com esse pin foi encontrado', 404, ErrorCode.DELIVERY_ERROR);
+      logger.warning('Entregador digitou um pin incorreto', {
+        status: 404,
+        code: ErrorCode.TELEGRAM_ERROR
+      });
+      await telegramQueue.add(
+        'telegram-bot',
+        { chat_id, response: 'Pin incorreto' }
+      );
+      return;
     };
+    
+    if (orders.length === 0) {
+      await telegramQueue.add(
+        'telegram-bot', 
+        { chat_id, response: 'Nenhuma entrega no momento' }
+      );
+      return;  
+    }
 
-    return this.formatData(orders);
+    const formatedRes = this.formatData(orders);
+    await telegramQueue.add(
+      'telegram-bot', 
+      { chat_id, response: formatedRes }
+    );
+    return;
   }
 
-  async updateDeliveryOrder (updateCode: string) {
+  async updateDeliveryOrder (updateCode: string, chat_id: string) {
     const updateObj = this.formatUpdateObject(updateCode);
+    if (!updateObj) {
+      await telegramQueue.add(
+        'telegram-bot',
+        { chat_id, response: 'Status fornecido é inválido' }
+      );
+      return;
+    }
+    
     const updated = await this.repo.updateDeliveryOrder(updateObj);
 
     const message = this.formatUpdateDelivery(updated);
-    return message;
+    await telegramQueue.add(
+      'telegram-bot',
+      { chat_id, response: message }
+    )
+    return;
   }
 
   async useActivationCode (data: DeliveryManDTO) {
     const code = await this.repo.findActivationCode(data.codigo_ativacao);
     if (!code) {
-      throw new CustomError('Código não encontrado', 404, ErrorCode.DELIVERY_ERROR);
+      logger.warning('Código de ativação não criado ou não encontrado', {
+        status: 404,
+        code: ErrorCode.TELEGRAM_ERROR
+      });
+      return;
     }
 
     const now = new Date().getTime();
     if (code.expire_date.getTime() < now || code.utilizado !== false) {
-      await botAnswer(data.chat_id, `Seu código expirou, você precisa de um novo`);
-      throw new CustomError('Código de ativação expirou', 410, ErrorCode.DELIVERY_ERROR);
+      await telegramQueue.add(
+        'telegram-bot', 
+        { chat_id: data.chat_id, response: `Seu código expirou, você precisa de um novo` }
+      );
+      logger.warning('Código de ativação expirou', {
+        status: 410,
+        code: ErrorCode.TELEGRAM_ERROR
+      });
+      return;
     }
 
     const body = {
@@ -59,7 +107,11 @@ export class TelegramService implements ITelegramService {
 
     await this.repo.registerDeliveryMan(body);
     const tenantSlug = data.codigo_ativacao.split(':')[1];
-    return tenantSlug;
+    await telegramQueue.add(
+      'telegram-bot',
+      { chat_id: data.chat_id, response: `Você agora está cadastrado como entregador da loja *${tenantSlug}*` }
+    )
+    return;
   }
 
   private formatUpdateObject (updateCode: string) {
@@ -69,7 +121,11 @@ export class TelegramService implements ITelegramService {
 
     const validStatus = ['concluido', 'cancelado'];
     if (!validStatus.includes(lowerStatus)) {
-      throw new CustomError('Status fornecido é inválido', 400, ErrorCode.DELIVERY_ERROR);
+      logger.warn('Status fornecido é inválido', {
+        status: 400,
+        code: ErrorCode.TELEGRAM_ERROR
+      });
+      return;
     }
 
     return { code: lowerCode, status: lowerStatus } as UpdateDeliveryDTO;

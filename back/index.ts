@@ -25,6 +25,7 @@ import { requestLogger } from './src/middlewares/request-logger';
 import { apiLimiter, authLimiter } from './src/middlewares/rate-limiter';
 import { prismaConnect } from './src/lib/prisma/client';
 import { redisConnect } from './src/lib/redis/redis-connect';
+import './src/api/telegram/worker/telegram-worker';
 import 'dotenv/config';
 
 const app = express();

@@ -113,8 +113,8 @@ describe('AdminService', () => {
   it('should change store status if tenant exists', async () => {
     const mockTenant = mockTenantData();
     repoMock.findTenant.mockResolvedValue(mockTenant);
-    (repoMock.changeStoreStatus as any).mockResolvedValue({ id: '1', isOpen: true });
+    repoMock.changeStoreStatus.mockResolvedValue(mockTenant);
     const result = await service.changeStoreStatus('1', true);
-    expect(result).toEqual({ id: '1', isOpen: true });
+    expect(result).toEqual(mockTenant);
   });
 });

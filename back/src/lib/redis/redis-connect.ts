@@ -1,14 +1,18 @@
-import { createClient } from "redis";
-import logger from "../winston/winston";
 import { notifyDiscord } from "../../utils/notify-discord";
 import { CustomError } from "../../errors/errorHandler";
 import { ErrorCode } from "../../types/constants/error-codes-constants";
+import { Queue, createNodeRedisClient } from "bullmq";
+import { createClient } from "redis";
+import logger from "../winston/winston";
 
 const redis = createClient({
   url: process.env.REDIS_URL
 });
 
 redis.on('error', err => logger.emerg('Erro no Redis', err));
+
+export const redisConnection = createNodeRedisClient(redis as any);
+export const telegramQueue = new Queue('telegram-bot', { connection: redisConnection });
 
 export async function redisConnect(retries = 5, delay = 5000) {
   for(let i = 0; i < retries; i++){
