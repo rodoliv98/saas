@@ -51,6 +51,14 @@ export function createErrorObject(err: any) {
 }
 
 export function errorHandler (err: any, req: Request, res: Response, _next: NextFunction) {
+  if (res.headersSent) {
+    logger.alert(err.message ?? 'Erro desconhecido', {
+      ...createErrorObject(err),
+      ...logData(req)
+    });
+    return;
+  }
+
   if (err instanceof ZodError) {
     return handleZodError(err, req, res);
   }

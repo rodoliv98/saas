@@ -34,7 +34,7 @@ app.set('trust proxy', 1);
 app.use(helmet());
 
 const FIRST_PROD_URL = process.env.CORS_PRODUCTION1;
-const SECOND_PROD_URL =process.env.CORS_PRODUCTION2;
+const SECOND_PROD_URL = process.env.CORS_PRODUCTION2;
 
 if (!FIRST_PROD_URL || !SECOND_PROD_URL) {
   throw new CustomError('Prod url não configurada', 500, ErrorCode.INTERNAL_SERVER_ERROR);

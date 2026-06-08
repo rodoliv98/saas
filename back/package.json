@@ -31,6 +31,7 @@
     "prisma": "6.10.1",
     "ts-node": "10.9.2",
     "tsc-alias": "1.8.16",
+    "tsup": "8.5.1",
     "tsx": "4.20.3",
     "typescript": "5.8.3",
     "vitest": "4.1.2"
@@ -38,14 +39,14 @@
   "name": "back-meu-saas",
   "version": "1.0.0",
   "description": "",
-  "main": "./dist/index.js",
+  "main": "./dist/index.cjs",
   "scripts": {
     "test": "vitest",
-    "build": "tsc && node fix-imports.mjs",
+    "build": "tsup",
     "postbuild": "cp -r src/generated/prisma/. dist/src/generated/prisma/",
     "dev": "tsx watch index.ts",
     "container": "tsx watch index.ts --poll",
-    "start": "node ./dist/index.js"
+    "start": "node ./dist/index.cjs"
   },
   "keywords": [],
   "author": "",
