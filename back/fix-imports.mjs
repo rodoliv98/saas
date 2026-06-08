@@ -21,12 +21,17 @@ function fixImports(dir) {
                 /from\s+['"](\.[^'"]*?)(?<!\.js)['"]/g,
                 "from '$1.js'"
             );
+
+            content = content.replace(
+                /^import\s+['"](\.[^'"]*?)(?<!\.js)['"]/gm,
+                "import '$1.js'"
+            );
             
             // Fix dynamic imports
             content = content.replace(
-                /import\s*\(\s*['"](\.[^'"]*?)(?<!\.js)['"]\s*\)/g,
-                "import('$1.js')"
-            );
+								/import\s*\(\s*['"](\.[^'"]*?)(?<!\.js)['"]\s*\)/g,
+								"import('$1.js')"
+						);
             
             fs.writeFileSync(filePath, content);
         }
