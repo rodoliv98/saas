@@ -1,0 +1,35 @@
+name: Security check
+
+on: [push, pull_request]
+
+jobs:
+  snyk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      
+      - name: Install back deps
+        run: npm ci
+        working-directory: ./back
+      
+      - name: Install front deps
+        run: npm ci
+        working-directory: ./front
+      
+      - uses: snyk/actions/setup@master
+
+      - name: Snyk - back
+        run: snyk test --severity-threshold=high
+        working-directory: ./back
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      
+      - name: Snyk - front
+        run: snyk test --severity-threshold=high
+        working-directory: ./front
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
