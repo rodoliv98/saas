@@ -11,8 +11,8 @@ const redis = createClient({
 
 redis.on('error', err => logger.emerg('Erro no Redis', err));
 
-export const redisConnection = createNodeRedisClient(redis as any);
-export const telegramQueue = new Queue('telegram-bot', { connection: redisConnection });
+export const connection = createNodeRedisClient(redis as any);
+export const telegramQueue = new Queue('telegram-bot', { connection });
 
 export async function redisConnect(retries = 5, delay = 5000) {
   for(let i = 0; i < retries; i++){
