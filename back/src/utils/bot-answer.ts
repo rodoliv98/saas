@@ -1,4 +1,3 @@
-// vai ter que usar try/catch aqui provavelmente
 export async function botAnswer (chatId: bigint, text: any) { 
   const botToken = process.env.TELEGRAM_BOT_TOKEN;
   await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {

@@ -1,0 +1,30 @@
+{
+  "name": "worker",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc && node fix-imports.mjs",
+    "postbuild": "cp -r src/generated/prisma/. dist/generated/prisma/"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@prisma/client": "6.10.1",
+    "bullmq": "5.79.0",
+    "dotenv": "17.4.2",
+    "redis": "6.0.0",
+    "winston": "3.19.0",
+    "winston-loki": "6.1.4"
+  },
+  "devDependencies": {
+    "@types/node": "25.9.3",
+    "prisma": "6.10.1",
+    "tsx": "4.20.3",
+    "typescript": "5.8.3"
+  }
+}

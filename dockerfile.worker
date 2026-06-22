@@ -1,0 +1,22 @@
+FROM node:22 AS build
+WORKDIR /app
+
+COPY worker/package*.json .
+COPY worker/.npmrc .
+RUN npm ci
+
+COPY back/prisma ./prisma
+COPY worker/src ./src
+COPY worker/tsconfig.json .
+COPY worker/fix-imports.mjs .
+
+RUN npx prisma generate --schema ./prisma/schema.prisma
+RUN npm run build
+
+FROM node:22 AS runtime
+WORKDIR /app
+
+COPY --from=build /app/dist ./dist
+COPY --from=build /app/node_modules ./node_modules
+
+CMD ["node", "dist/index.js"]

@@ -163,22 +163,22 @@ describe('OrderService', () => {
   });
 
   it('Aditional prices should not match', async () => {
-  const mockBody = mockOrderSchema();
-  mockBody.totalOrderPrice = 15.00; // 10 produto + 5 adicional + 5 taxa
+    const mockBody = mockOrderSchema();
+    mockBody.totalOrderPrice = 15.00; // 10 produto + 5 adicional + 5 taxa
 
-  repoMock.getTenantPin.mockResolvedValue({ pin: '123123' });
-  repoMock.getProductsPrice.mockResolvedValue([
-    { precoProduto: 10.00 } as unknown as { precoProduto: Decimal }
-  ]);
-  repoMock.getAditionalsPrice.mockResolvedValue([
-    { precoProduto: 5.00 } as unknown as { precoProduto: Decimal }
-  ]);
-  repoMock.create.mockResolvedValue(mockICreateOrder());
+    repoMock.getTenantPin.mockResolvedValue({ pin: '123123' });
+    repoMock.getProductsPrice.mockResolvedValue([
+      { precoProduto: 10.00 } as unknown as { precoProduto: Decimal }
+    ]);
+    repoMock.getAditionalsPrice.mockResolvedValue([
+      { precoProduto: 5.00 } as unknown as { precoProduto: Decimal }
+    ]);
+    repoMock.create.mockResolvedValue(mockICreateOrder());
 
-  await expect(service.create(mockBody, 'userId')).rejects.toThrow(
-    new CustomError('Preços não batem', 400, ErrorCode.BAD_REQUEST)
-  );
-});
+    await expect(service.create(mockBody, 'userId')).rejects.toThrow(
+      new CustomError('Preços não batem', 400, ErrorCode.BAD_REQUEST)
+    );
+  });
 
   it('Should create order with adicionais', async () => {
     const bodyComAdicional = mockOrderSchema();

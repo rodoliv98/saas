@@ -31,42 +31,14 @@ export class TenantFlavorsService implements ITenantFlavorsService {
   }
 
   async create (flavorData: CreateFlavorDTO) {
-    if (flavorData.multerImagePath) {
-      const cloudinaryData = await uploadToCloudinary(
-        flavorData.multerImagePath, 
-        null, 
-        flavorData.tenantSlug
-      );
-
-      const createFlavorData = {
-        ...flavorData.data,
-        tenantId: flavorData.tenantId,
-        productId: flavorData.productId,
-        imagePublicId: cloudinaryData.public_id,
-        imageUrl: cloudinaryData.url
-      }
-
-      const flavor = await this.repo.create(createFlavorData);
-      return flavor;
-    }
-
-    const defaultImage = process.env.NODE_ENV === 'production'
-    ? process.env.PROD_DEFAULT_IMAGE
-    : process.env.DEFAULT_IMAGE
-    
-    if (!defaultImage) {
-      throw new CustomError('Imagem padrão não configurada', 500, ErrorCode.INTERNAL_SERVER_ERROR);
-    }
-
-    const createFlavorData = {
+    const imageData = await this.resolveCreateImage(flavorData); 
+    return this.repo.create({
       ...flavorData.data,
       tenantId: flavorData.tenantId,
       productId: flavorData.productId,
-      imagePublicId: null,
-      imageUrl: defaultImage
-    }
-    const flavor = await this.repo.create(createFlavorData);
-    return flavor;
+      imagePublicId: imageData.imagePublicId,
+      imageUrl: imageData.imageUrl
+    });
   }
 
   async patch (flavorData: PatchFlavorDTO) {
@@ -113,7 +85,37 @@ export class TenantFlavorsService implements ITenantFlavorsService {
 
     await this.repo.delete(flavorId, tenantId);
     return;
-    /* await this.repo.delete(productId, tenantId);
-    return; */
+  }
+
+  private async resolveCreateImage (flavorData: CreateFlavorDTO) {
+    if (flavorData.multerImagePath) {
+      const cloudinaryData = await uploadToCloudinary(
+        flavorData.multerImagePath, 
+        null, 
+        flavorData.tenantSlug
+      );
+
+      return {
+        imagePublicId: cloudinaryData.public_id,
+        imageUrl: cloudinaryData.url
+      }
+    }
+
+    return {
+      imagePublicId: null,
+      imageUrl: this.getDefaultImage()
+    }
+  }
+
+  private getDefaultImage () {
+    const defaultImage = process.env.NODE_ENV === 'production'
+    ? process.env.PROD_DEFAULT_IMAGE
+    : process.env.DEFAULT_IMAGE
+    
+    if (!defaultImage) {
+      throw new CustomError('Imagem padrão não configurada', 500, ErrorCode.INTERNAL_SERVER_ERROR);
+    }
+
+    return defaultImage;
   }
 }

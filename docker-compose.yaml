@@ -42,6 +42,25 @@ services:
       - local
       - backend
 
+  worker:
+    build:
+      context: .
+      dockerfile: dockerfile.worker
+    container_name: worker
+    depends_on:
+      - api
+      - db
+      - redis
+    env_file:
+      - ./worker/.env
+    ports:
+      - '127.0.0.1:3001:3001'
+    # volumes:
+    #   - ./worker:/app:delegated
+    #   - /app/node_modules
+    networks:
+      - backend
+
   front-dev:
     container_name: front
     build:
@@ -111,4 +130,3 @@ volumes:
 networks:
   local:
   backend:
-    internal: true

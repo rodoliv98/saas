@@ -1,15 +1,16 @@
 import { Request, Response, NextFunction } from "express"
-import { ITelegramService } from "./telegram-service";
+// import { ITelegramService } from "./telegram-service";
+import { telegramGetOrders, telegramUpdateDeliveryOrder, telegramUseActivationCod } from "../../lib/redis/redis-connect";
 // ainda é necessário fazer o tratamento de erro
 // de forma apropriada nos setImmediate
 export class TelegramController {
-  constructor (private service: ITelegramService) {}
+  // constructor (private service: ITelegramService) {}
   // não coloquei os types que são usados apenas aqui numa nova pasta types
   async getOrders (req: Request, res: Response, next: NextFunction) {
     try {
       const secret = req.headers['x-telegram-bot-api-secret-token'];      // A checagem de tokens é necessária porque o endpoint pode
       const myToken = process.env.TELEGRAM_SECRET_TOKEN;                  // receber reqs de outras fontes além do bot
-
+      console.log('chegou');
       if (secret !== myToken) {
         return res.sendStatus(403);
       }
@@ -17,7 +18,7 @@ export class TelegramController {
       res.sendStatus(200);
       
       const body = req.body.message.text;
-      const chatId = req.body.message.chat.id;
+      const chat_id = req.body.message.chat.id;
 
       const pinRegex = /^\d{6}$/;
       const activationCodeRegex = /^[A-Z0-9]{3}-[A-Z0-9]{3}-[A-Z0-9]{3}:[a-záàâãäéèêëíìîïóòôõöúùûüçñA-ZÁÀÂÃÄÉÈÊËÍÌÎÏÓÒÔÕÖÚÙÛÜÇÑ-]+$/;
@@ -27,7 +28,12 @@ export class TelegramController {
       if (pinRegex.test(body)) {
         setImmediate(async () => {
           try {
-            await this.service.getOrders(body, chatId);
+            console.log('entrou aqui', body);
+            await telegramGetOrders.add(
+              'get-orders',
+              { body, chat_id }
+            )
+            // await this.service.getOrders(body, chat_id);
           } catch (err) {
             next(err);
           }
@@ -45,11 +51,15 @@ export class TelegramController {
   
             const data = {
               nome_telegram: fullName,
-              chat_id: chatId,
+              chat_id,
               codigo_ativacao: body
             };
-  
-            await this.service.useActivationCode(data);
+            
+            await telegramUseActivationCod.add(
+              'activation-code',
+              { data }
+            )
+            // await this.service.useActivationCode(data);
 
           } catch (err) {
             next(err);
@@ -62,7 +72,11 @@ export class TelegramController {
       if (finishOrderRegex.test(body)) {
         setImmediate(async () => {
           try {
-            await this.service.updateDeliveryOrder(body, chatId);
+            await telegramUpdateDeliveryOrder.add(
+              'order-update',
+              { body, chat_id }
+            )
+            // await this.service.updateDeliveryOrder(body, chat_id);
             
           } catch (err) {
             next(err);
