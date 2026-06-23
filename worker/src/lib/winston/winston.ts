@@ -33,7 +33,7 @@ transportList.push(
   new LokiTransport({
     host: lokiUrl,
     basicAuth: `${process.env.GRAFANA_LOKI_USER}:${process.env.GRAFANA_LOKI_TOKEN}`,
-    labels: { app: 'api.eldur' },
+    labels: { app: 'worker.eldur' },
     format: format.json(),
     replaceTimestamp: true,
     onConnectionError: (err) => {

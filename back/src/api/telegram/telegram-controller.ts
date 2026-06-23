@@ -1,5 +1,4 @@
 import { Request, Response, NextFunction } from "express"
-// import { ITelegramService } from "./telegram-service";
 import { telegramGetOrders, telegramUpdateDeliveryOrder, telegramUseActivationCod } from "../../lib/redis/redis-connect";
 // ainda é necessário fazer o tratamento de erro
 // de forma apropriada nos setImmediate
@@ -10,7 +9,7 @@ export class TelegramController {
     try {
       const secret = req.headers['x-telegram-bot-api-secret-token'];      // A checagem de tokens é necessária porque o endpoint pode
       const myToken = process.env.TELEGRAM_SECRET_TOKEN;                  // receber reqs de outras fontes além do bot
-      console.log('chegou');
+
       if (secret !== myToken) {
         return res.sendStatus(403);
       }
@@ -28,7 +27,6 @@ export class TelegramController {
       if (pinRegex.test(body)) {
         setImmediate(async () => {
           try {
-            console.log('entrou aqui', body);
             await telegramGetOrders.add(
               'get-orders',
               { body, chat_id }
