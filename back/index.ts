@@ -10,7 +10,7 @@ import registerRoutes from './src/api/register/register-routes';
 import tenantData from './src/api/tenant-data/tenant-data-routes';
 import tenantHome from './src/api/tenant-home/tenant-home-routes'
 import tenantStore from './src/routes/tenantStoreRoute';
-import tenantFlavors from './src/routes/tenantFlavorsRoutes';
+import tenantFlavors from './src/api/tenant-flavor/tenantFlavorsRoutes';
 import orderRoutes from './src/api/orders/ordersRoutes';
 import userRegister from './src/routes/user-register-routes';
 import userData from './src/routes/user-data-routes';
@@ -25,7 +25,6 @@ import { requestLogger } from './src/middlewares/request-logger';
 import { apiLimiter, authLimiter } from './src/middlewares/rate-limiter';
 import { prismaConnect } from './src/lib/prisma/client';
 import { redisConnect } from './src/lib/redis/redis-connect';
-import './src/api/telegram/worker/telegram-worker';
 import 'dotenv/config';
 
 const app = express();

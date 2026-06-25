@@ -1,15 +1,15 @@
-import { IFlavor } from "../controllers/tenantFlavorsController";
-import { Cuid } from "../types/types-index";
-import { CustomError } from "../errors/errorHandler";
-import { ITenantFlavorsRepository } from "../repository/tenantFlavorsRepository";
-import { ErrorCode } from "../types/constants/error-codes-constants";
-import { CreateFlavorDTO, PatchFlavorDTO } from "../api/tenant-flavor/dto/tenant-flavor-dto";
-import { uploadToCloudinary } from "../integrations/cloudinary/cloudinary-upload";
+import { Flavor } from "./entitie/flavor-entitie";
+import { Cuid } from "../../types/types-index";
+import { CustomError } from "../../errors/errorHandler";
+import { ITenantFlavorsRepository } from "./tenantFlavorsRepository";
+import { ErrorCode } from "../../types/constants/error-codes-constants";
+import { CreateFlavorDTO, PatchFlavorDTO } from "./dto/tenant-flavor-dto";
+import { uploadToCloudinary } from "../../integrations/cloudinary/cloudinary-upload";
 
 export interface ITenantFlavorsService {
-  getFlavors (productId: string): Promise<IFlavor[] | []>;
-  getFlavorById (flavorId: string, tenantId: string): Promise<IFlavor>;
-  create (flavorData: CreateFlavorDTO): Promise<IFlavor>;
+  getFlavors (productId: string): Promise<Flavor[] | []>;
+  getFlavorById (flavorId: string, tenantId: string): Promise<Flavor>;
+  create (flavorData: CreateFlavorDTO): Promise<Flavor>;
   patch (data: PatchFlavorDTO): Promise<void>;
   delete (flavorId: Cuid, tenantId: string): Promise<void>;
 }
