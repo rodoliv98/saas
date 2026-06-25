@@ -1,6 +1,6 @@
 import { vi, describe, Mocked, it, beforeEach, Mock, expect } from 'vitest'; 
-import { TenantFlavorsService } from "../../../services/tenantFlavorsService";
-import { ITenantFlavorsRepository } from "../../../repository/tenantFlavorsRepository";
+import { TenantFlavorsService } from "../../../api/tenant-flavor/tenantFlavorsService";
+import { ITenantFlavorsRepository } from "../../../api/tenant-flavor/tenantFlavorsRepository";
 import { Decimal } from '@prisma/client/runtime/library'; 
 import { ErrorCode } from '../../../types/constants/error-codes-constants';
 import { CustomError } from '../../../errors/errorHandler';

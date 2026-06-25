@@ -1,6 +1,7 @@
 import { Decimal } from "@prisma/client/runtime/library";
+import { Sabores } from "../../../generated/prisma/client";
 
-export interface Flavor {
+/* export interface Flavor {
   tenantId: string;
   id: string;
   produtoId: string;
@@ -10,3 +11,5 @@ export interface Flavor {
   categoria: string;
   imageUrl: string;
 }
+ */
+export type Flavor = Sabores;

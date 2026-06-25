@@ -1,32 +1,6 @@
-import { ITenantFlavorsService } from "../services/tenantFlavorsService";
+import { ITenantFlavorsService } from "./tenantFlavorsService";
 import { Request, Response, NextFunction } from "express";
-import { Decimal } from "@prisma/client/runtime/library";
-import { createProductSchema, cuidSchema } from "../schemas/products/products-schemas";
-
-export interface IFlavor {
-  id: string;
-  nomeProduto: string;
-  descProduto: string;
-  precoProduto: Decimal;
-  categoria: string;
-  imageUrl: string;
-}
-
-export interface FlavorDTO {
-  nomeProduto: string;
-  descProduto: string;
-  precoProduto: number;
-  categoria: string;
-  imageUrl: string;
-}
-
-export interface FlavorHasImage {
-  nomeProduto: string;
-  descProduto: string;
-  precoProduto: number;
-  categoria: string;
-  imageUrl?: string;
-}
+import { createProductSchema, cuidSchema } from "../../schemas/products/products-schemas";
 
 export class TenantFlavorsController {
   constructor (private service: ITenantFlavorsService) {}
