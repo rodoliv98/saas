@@ -1,15 +1,16 @@
-import { PrismaClient } from "../generated/prisma/client"
-import { ProductsWithFlavors } from "../api/product/entitie/product-entitie";
-import { ITenantData } from "../controllers/tenantStoreController";
-import { CustomError } from "../errors/errorHandler";
-import { DeliveryCode } from "../types/entities/delivery-code-entitie";
-import { ActivationCodeDTO, SlugType } from "../types/types-index";
+import { PrismaClient } from "../../generated/prisma/client"
+import { ProductsWithFlavors } from "../product/entities/product-entitie";
+import { Tenant } from "../../generated/prisma/client";
+import { CustomError } from "../../errors/errorHandler";
+import { DeliveryCode } from "../../types/entities/delivery-code-entitie";
+import { ActivationCodeDTO, SlugType } from "../../types/types-index";
+import { TenantStoreInfo, TenantWithProducts } from "./entities/store-entitie";
 
 export interface ITenantStoreRepository {
-  getData (slug: SlugType): Promise<ITenantData | null>;
+  getData (slug: SlugType): Promise<TenantWithProducts | null>;
   getProducts (id: string): Promise<ProductsWithFlavors[] | []>;
-  isOpen (id: string): Promise<Pick <ITenantData, 'isOpen' | 'tenantSlug' | 'logoUrl' | 'bannerUrl'> | null>;
-  patchIsOpen (data: boolean, tenantId: string): Promise<ITenantData>;
+  isOpen (id: string): Promise<TenantStoreInfo | null>;
+  patchIsOpen (data: boolean, tenantId: string): Promise<Tenant>;
   createDeliveryCode (activationCode: ActivationCodeDTO): Promise<DeliveryCode>;
 }
 
@@ -20,6 +21,13 @@ export class TenantStoreRepository implements ITenantStoreRepository {
     return this.prisma.tenant.findFirst({
       where: {
         tenantSlug: slug 
+      },
+      include: {
+        produtos: {
+          include: {
+            sabores: true
+          }
+        }
       }
     });
   }

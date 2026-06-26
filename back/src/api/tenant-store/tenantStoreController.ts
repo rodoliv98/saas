@@ -1,46 +1,6 @@
 import { Request, Response, NextFunction } from "express";
-import { ITenantStoreService } from "../services/tenantStoreService";
-import { Produtos } from "../generated/prisma/client";
-import { slugSchema, tenantIsOpen } from "../schemas/users/user-schemas";
-import { Decimal } from "@prisma/client/runtime/library";
-
-export interface ITenantData {
-  id: string;
-  // passo 1
-  nomeFantasia: string | null;
-  razaoSocial: string;
-  CNPJ: string;
-  inscricaoEstadual: string | null;
-  // passo 2
-  nomeRepresentante: string;
-  CPF: string;
-  email: string;
-  senha: string; // Senha não deve ser retornada
-  telefone: string;
-  // passo 3
-  endereco: string;
-  numero: string;
-  complemento: string | null;
-  bairro: string;
-  municipio: string;
-  estado: string;
-  CEP: string;
-  // passo 4
-  tenantSlug: string;
-  nomeEstabelecimento: string | null;
-  logoUrl: string | null;
-  bannerUrl: string | null;
-  whatsapp: string;
-  diasFuncionamento: string;
-  horarioFuncionamento: string;
-  tempoPreparo: string;
-  taxaEntrega: Decimal;
-
-  // Informações adicionais
-  isOpen: boolean;
-  pin: string | null;
-  produtos?: Produtos[]
-}
+import { ITenantStoreService } from "./tenantStoreService";
+import { slugSchema, tenantIsOpen } from "../../schemas/users/user-schemas";
 
 export class TenantStoreController {
   constructor (private service: ITenantStoreService) {}

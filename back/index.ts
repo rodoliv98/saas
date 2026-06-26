@@ -9,7 +9,7 @@ import loginRoutes from './src/api/login/loginRoutes';
 import registerRoutes from './src/api/register/register-routes';
 import tenantData from './src/api/tenant-data/tenant-data-routes';
 import tenantHome from './src/api/tenant-home/tenant-home-routes'
-import tenantStore from './src/routes/tenantStoreRoute';
+import tenantStore from './src/api/tenant-store/tenantStoreRoute';
 import tenantFlavors from './src/api/tenant-flavor/tenantFlavorsRoutes';
 import orderRoutes from './src/api/orders/ordersRoutes';
 import userRegister from './src/routes/user-register-routes';

@@ -1,16 +1,16 @@
-import { ITenantData } from "../controllers/tenantStoreController";
-import { SlugType } from "../types/types-index";
-import { CustomError } from "../errors/errorHandler";
-import { ITenantStoreRepository } from "../repository/tenantStoreRepository";
-import { IFormatStoreData } from "../interfaces/tenant-interfaces/tenant-inter-index";
-import { ProductsWithFlavors } from "../api/product/entitie/product-entitie";
+import { Tenant } from "../../generated/prisma/client";
+import { SlugType } from "../../types/types-index";
+import { CustomError } from "../../errors/errorHandler";
+import { ITenantStoreRepository } from "./tenantStoreRepository";
+import { IFormatStoreData } from "../../interfaces/tenant-interfaces/tenant-inter-index";
 import { randomBytes } from "node:crypto";
-import { ErrorCode } from "../types/constants/error-codes-constants";
+import { ErrorCode } from "../../types/constants/error-codes-constants";
+import { TenantWithProducts } from "./entities/store-entitie";
 
 export interface ITenantStoreService {
   getData (slug: SlugType): Promise<IFormatStoreData>;
   isOpen (id: string): Promise<{ isStoreOpen: boolean; storeName: string }>; // criar interface dps
-  patchIsOpen (data: boolean, tenantId: string): Promise<ITenantData>;
+  patchIsOpen (data: boolean, tenantId: string): Promise<Tenant>;
   createDeliveryCode (tenantSlug: string, tenantId: string): Promise<string>;
 }
 
@@ -18,17 +18,12 @@ export class TenantStoreService implements ITenantStoreService {
   constructor (private repo: ITenantStoreRepository) {}
 
   async getData (slug: SlugType) {
-    const tenant = await this.repo.getData(slug);
-    if (!tenant) {
+    const tenantWithProducts = await this.repo.getData(slug);
+    if (!tenantWithProducts) {
       throw new CustomError('Tenant não encontrado', 404, ErrorCode.TENANT_NOT_FOUND);
     }
 
-    const products = await this.repo.getProducts(tenant.id);
-    if (!products || products.length === 0) {
-      throw new CustomError('Nenhum produto cadastrado nesse tenant', 404, ErrorCode.PRODUCT_NOT_FOUND);
-    }
-
-    const formatedData = this.formatStoreData(tenant, products);
+    const formatedData = this.formatStoreData(tenantWithProducts);
     return formatedData;
   }
 
@@ -81,20 +76,20 @@ export class TenantStoreService implements ITenantStoreService {
     return `${part1}-${part2}-${part3}:${tenantSlug}`;
   }
 
-  private formatStoreData (tenant: ITenantData, products: ProductsWithFlavors[]): IFormatStoreData {
+  private formatStoreData (tenantWithProducts: TenantWithProducts): IFormatStoreData {
     return {
       store: {
-        nomeFantasia: tenant.nomeFantasia,
-        nomeEstabelecimento: tenant.nomeEstabelecimento,
-        endereco: tenant.endereco,
-        isOpen: tenant.isOpen,
-        tempoPreparo: tenant.tempoPreparo,
-        taxaEntrega: Number(tenant.taxaEntrega),
-        whatsapp: tenant.whatsapp,
-        logoUrl: tenant.logoUrl,
-        bannerUrl: tenant.bannerUrl
+        nomeFantasia: tenantWithProducts.nomeFantasia,
+        nomeEstabelecimento: tenantWithProducts.nomeEstabelecimento,
+        endereco: tenantWithProducts.endereco,
+        isOpen: tenantWithProducts.isOpen,
+        tempoPreparo: tenantWithProducts.tempoPreparo,
+        taxaEntrega: Number(tenantWithProducts.taxaEntrega),
+        whatsapp: tenantWithProducts.whatsapp,
+        logoUrl: tenantWithProducts.logoUrl,
+        bannerUrl: tenantWithProducts.bannerUrl
       },
-      products: products.map(item => ({
+      products: tenantWithProducts.produtos.map(item => ({
         id: item.id,
         nomeProduto: item.nomeProduto,
         descProduto: item.descProduto,
