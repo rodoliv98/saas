@@ -3,7 +3,7 @@ import { TenantStoreController } from './tenantStoreController';
 import { TenantStoreService } from './tenantStoreService';
 import { TenantStoreRepository } from './tenantStoreRepository';
 import { checkTenant } from '../../middlewares/check-tenant';
-import prisma from '../../lib/prisma/client';
+import prisma from '../../lib/prisma/prisma';
 
 const router = Router();
 const repo = new TenantStoreRepository(prisma as any);

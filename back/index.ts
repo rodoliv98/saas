@@ -23,8 +23,8 @@ import { CustomError, errorHandler } from './src/errors/errorHandler'
 import { ErrorCode } from './src/types/constants/error-codes-constants';
 import { requestLogger } from './src/middlewares/request-logger';
 import { apiLimiter, authLimiter } from './src/middlewares/rate-limiter';
-import { prismaConnect } from './src/lib/prisma/client';
-import { redisConnect } from './src/lib/redis/redis-connect';
+import { prismaConnect } from './src/lib/prisma/prisma';
+import { redisConnect } from './src/lib/redis/redis';
 import 'dotenv/config';
 
 const app = express();

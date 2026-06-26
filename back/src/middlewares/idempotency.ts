@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import redis from "../lib/redis/redis-connect";
+import redis from "../lib/redis/redis";
 
 export async function idempotencyOptional(req: Request, res: Response, next: NextFunction) {
   const key = req.headers['idempotency-key'] as string | undefined;

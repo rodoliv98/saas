@@ -2,7 +2,7 @@ import { RefreshController } from "./refresh-controller";
 import { RefreshService } from "./refresh-service";
 import { RefreshRepository } from "./refresh-repo";
 import { Router } from "express";
-import prisma from "../../lib/prisma/client";
+import prisma from "../../lib/prisma/prisma";
 
 const router = Router();
 const repository = new RefreshRepository(prisma as any)

@@ -1,5 +1,5 @@
 import { Prisma } from "../../../generated/prisma/client";
-import prisma from "../../../lib/prisma/client";
+import prisma from "../../../lib/prisma/prisma";
 
 const args = {
   include: {

@@ -2,7 +2,7 @@ import { LoginController } from "./loginController";
 import { LoginService } from "./loginService";
 import { LoginRepository } from "./loginRepository";
 import { Router } from "express";
-import prisma from "../../lib/prisma/client";
+import prisma from "../../lib/prisma/prisma";
 
 const router = Router();
 const repository = new LoginRepository(prisma as any)

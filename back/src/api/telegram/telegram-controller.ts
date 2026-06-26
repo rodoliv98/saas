@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express"
-import { telegramGetOrders, telegramUpdateDeliveryOrder, telegramUseActivationCod } from "../../lib/redis/redis-connect";
+import { telegramGetOrders, telegramUpdateDeliveryOrder, telegramUseActivationCod } from "../../lib/redis/redis";
 // ainda é necessário fazer o tratamento de erro
 // de forma apropriada nos setImmediate
 export class TelegramController {

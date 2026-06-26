@@ -5,7 +5,7 @@ import { Router } from "express";
 import { upload } from "../../../cloudinary/multer";
 import { checkTenant } from "../../middlewares/check-tenant";
 import { validateImageType } from "../../middlewares/validateImageType";
-import prisma from "../../lib/prisma/client";
+import prisma from "../../lib/prisma/prisma";
 
 const router = Router();
 const repo = new TenantFlavorsRepository(prisma as any);

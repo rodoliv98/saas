@@ -1,5 +1,5 @@
 import { Tenant, Prisma } from "../../../generated/prisma/client";
-import prisma from "../../../lib/prisma/client";
+import prisma from "../../../lib/prisma/prisma";
 
 export type TenantStoreInfo = Pick<Tenant, 'isOpen' | 'tenantSlug' | 'logoUrl' | 'bannerUrl'>;
 
