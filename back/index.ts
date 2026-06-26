@@ -4,7 +4,7 @@ process.on('unhandledRejection', (reason) => logger.error(reason));
 import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
-import tenantProducts from './src/routes/tenantProductsRoutes';
+import tenantProducts from './src/api/product/tenantProductsRoutes';
 import loginRoutes from './src/api/login/loginRoutes';
 import registerRoutes from './src/api/register/register-routes';
 import tenantData from './src/api/tenant-data/tenant-data-routes';

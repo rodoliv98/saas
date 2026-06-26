@@ -3,7 +3,7 @@ import { SlugType } from "../types/types-index";
 import { CustomError } from "../errors/errorHandler";
 import { ITenantStoreRepository } from "../repository/tenantStoreRepository";
 import { IFormatStoreData } from "../interfaces/tenant-interfaces/tenant-inter-index";
-import { ProdutosWSabores } from "../controllers/tenantProductsController";
+import { ProdutosWSabores } from "../api/product/tenantProductsController";
 import { randomBytes } from "node:crypto";
 import { ErrorCode } from "../types/constants/error-codes-constants";
 

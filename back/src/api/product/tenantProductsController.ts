@@ -1,19 +1,8 @@
 import { Request, Response, NextFunction } from "express"
-import { ITenantProductsService } from "../services/tenantProductsService";
-import { createProductSchema } from "../schemas/products/products-schemas";
-import { cuidSchema } from "../schemas/products/products-schemas";
+import { ITenantProductsService } from "./tenantProductsService";
+import { createProductSchema } from "../../schemas/products/products-schemas";
+import { cuidSchema } from "../../schemas/products/products-schemas";
 import { Decimal } from "@prisma/client/runtime/library";
-
-export interface IProdutos { // <- interface de objeto que vem do db
-  id: string;
-  nomeProduto: string;
-  descProduto: string;
-  categoria: string;
-  precoProduto: Decimal; // <- tipo é transformado em decimal ao introduzir no db
-  imageUrl: string;
-  imagePublicId: string | null;
-  tenantId: string;
-}
 
 export interface ProdutosWSabores { // <- interface de objeto que vem do db
   id: string;

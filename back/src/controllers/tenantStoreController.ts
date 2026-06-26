@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { ITenantStoreService } from "../services/tenantStoreService";
-import { IProdutos } from "./tenantProductsController";
+import { Produtos } from "../generated/prisma/client";
 import { slugSchema, tenantIsOpen } from "../schemas/users/user-schemas";
 import { Decimal } from "@prisma/client/runtime/library";
 
@@ -39,7 +39,7 @@ export interface ITenantData {
   // Informações adicionais
   isOpen: boolean;
   pin: string | null;
-  produtos?: IProdutos[]
+  produtos?: Produtos[]
 }
 
 export class TenantStoreController {

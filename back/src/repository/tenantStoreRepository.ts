@@ -1,5 +1,5 @@
 import { PrismaClient } from "../generated/prisma/client"
-import { ProdutosWSabores } from "../controllers/tenantProductsController";
+import { ProdutosWSabores } from "../api/product/tenantProductsController";
 import { ITenantData } from "../controllers/tenantStoreController";
 import { CustomError } from "../errors/errorHandler";
 import { DeliveryCode } from "../types/entities/delivery-code-entitie";

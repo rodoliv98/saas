@@ -31,7 +31,7 @@ jobs:
       - name: Audit
         run: npm audit --audit-level=high
 
-      - name: Rodar testes
+      - name: Testes
         run: npm run test
   
   front:
@@ -58,3 +58,28 @@ jobs:
       
       # - name: Audit
       #   run: npm audit --audit-level=high
+
+  worker:
+    name: Audit do worker
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: worker
+    
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+      
+      - name: Instalar Nodejs
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+          cache-dependency-path: worker/package-lock.json
+      
+      - name: Instalar dependencias
+        run: npm ci
+      
+      - name: Audit
+        run: npm audit --audit-level=high

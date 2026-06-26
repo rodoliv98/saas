@@ -1,11 +1,11 @@
-import { TenantProductsController } from "../controllers/tenantProductsController"
-import { TenantProductsService } from "../services/tenantProductsService"
-import { TenantProductsRepository } from "../repository/tenantProductsRepository"
-import { checkTenant } from "../middlewares/check-tenant"
-import { upload } from "../../cloudinary/multer"
+import { TenantProductsController } from "./tenantProductsController"
+import { TenantProductsService } from "./tenantProductsService"
+import { TenantProductsRepository } from "./tenantProductsRepository"
+import { checkTenant } from "../../middlewares/check-tenant"
+import { upload } from "../../../cloudinary/multer"
 import { Router } from "express"
-import { validateImageType } from "../middlewares/validateImageType"
-import prisma from "../lib/prisma/client"
+import { validateImageType } from "../../middlewares/validateImageType"
+import prisma from "../../lib/prisma/client"
 
 const router = Router();
 const repository = new TenantProductsRepository(prisma as any);

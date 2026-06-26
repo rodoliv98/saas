@@ -20,6 +20,10 @@ jobs:
         run: npm ci
         working-directory: ./front
       
+      - name: Install worker deps
+        run: npm ci
+        working-directory: ./worker
+      
       - uses: snyk/actions/setup@master
 
       - name: Snyk - back
@@ -31,5 +35,11 @@ jobs:
       - name: Snyk - front
         run: snyk test --severity-threshold=high
         working-directory: ./front
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      
+      - name: Snyk - worker
+        run: snyk test --severity-threshold=high
+        working-directory: ./worker
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}

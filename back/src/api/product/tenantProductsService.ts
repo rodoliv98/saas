@@ -1,19 +1,19 @@
-import { ProductDTO } from "../controllers/tenantProductsController";
-import { ITenantProductsRepository } from "../repository/tenantProductsRepository"
-import { IFormatProductsData } from "../interfaces/products-interfaces/products-inter-index";
-import { uploadToCloudinary } from "../integrations/cloudinary/cloudinary-upload";
-import { IFormatProductById } from "../interfaces/products-interfaces/products-inter-index";
-import { IProdutos } from "../controllers/tenantProductsController";
-import { CustomError } from "../errors/errorHandler";
-import { ErrorCode } from "../types/constants/error-codes-constants";
-import { PatchProductDTO } from "../api/product/dto/product-dto";
+import { ProductDTO } from "./tenantProductsController";
+import { Produtos } from "../../generated/prisma/client";
+import { ITenantProductsRepository } from "./tenantProductsRepository"
+import { IFormatProductsData } from "../../interfaces/products-interfaces/products-inter-index";
+import { uploadToCloudinary } from "../../integrations/cloudinary/cloudinary-upload";
+import { IFormatProductById } from "../../interfaces/products-interfaces/products-inter-index";
+import { CustomError } from "../../errors/errorHandler";
+import { ErrorCode } from "../../types/constants/error-codes-constants";
+import { PatchProductDTO } from "./dto/product-dto";
 
 export interface ITenantProductsService {
   getProducts (id: string): Promise<IFormatProductsData[] | []>;
   getProductById (productId: string, tenantId: string): Promise<IFormatProductById>;
-  create (product: ProductDTO): Promise<IProdutos>;
+  create (product: ProductDTO): Promise<Produtos>;
   patch (productData: PatchProductDTO): Promise<void>;
-  delete (id: string, tenantId: string): Promise<IProdutos | null>;
+  delete (id: string, tenantId: string): Promise<Produtos | null>;
 }
 
 export class TenantProductsService implements ITenantProductsService {
@@ -93,7 +93,7 @@ export class TenantProductsService implements ITenantProductsService {
     return this.repo.delete(id, tenantId);
   }
 
-  private formatProductsData (data: IProdutos[]): IFormatProductsData[] {
+  private formatProductsData (data: Produtos[]): IFormatProductsData[] {
     return data.map(product => ({
       id: product.id,
       nomeProduto: product.nomeProduto,
@@ -104,7 +104,7 @@ export class TenantProductsService implements ITenantProductsService {
     }));
   }
 
-  private formatProductById (data: IProdutos): IFormatProductById {
+  private formatProductById (data: Produtos): IFormatProductById {
     return {
       id: data.id,
       nomeProduto: data.nomeProduto,

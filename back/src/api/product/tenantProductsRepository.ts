@@ -1,21 +1,21 @@
-import { PrismaClient } from "../generated/prisma/client"
-import { IProdutos, ProductDTO } from "../controllers/tenantProductsController";
-import { CustomError } from "../errors/errorHandler";
-import { CloudinaryImageResult } from "../integrations/cloudinary/cloudinary-types";
-import { CreateProductData } from "../api/product/types/product-types";
+import { PrismaClient, Produtos } from "../../generated/prisma/client";
+import { ProductDTO } from "./tenantProductsController";
+import { CustomError } from "../../errors/errorHandler";
+import { CloudinaryImageResult } from "../../integrations/cloudinary/cloudinary-types";
+import { CreateProductData } from "./types/product-types";
 
 export interface ITenantProductsRepository {
-  getProducts (id: string): Promise<IProdutos[] | []>;
-  getProductById (productId: string, tenantId: string): Promise<IProdutos | null>;
-  create (product: ProductDTO, cloudinaryData: CloudinaryImageResult): Promise<IProdutos>;
+  getProducts (id: string): Promise<Produtos[] | []>;
+  getProductById (productId: string, tenantId: string): Promise<Produtos | null>;
+  create (product: ProductDTO, cloudinaryData: CloudinaryImageResult): Promise<Produtos>;
   patch (productData: CreateProductData): Promise<void>;
-  delete (id: string, tenantId: string): Promise<IProdutos | null>;
+  delete (id: string, tenantId: string): Promise<Produtos | null>;
 }
 
 export class TenantProductsRepository implements ITenantProductsRepository {
   constructor (private readonly prisma: PrismaClient) {}
   
-  async getProducts (id: string): Promise<IProdutos[]> {
+  async getProducts (id: string) {
     return this.prisma.produtos.findMany({
       where: {
         tenantId: id
