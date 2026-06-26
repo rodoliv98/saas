@@ -1,6 +1,6 @@
 import { describe, it, vi, beforeEach, Mocked, expect } from 'vitest';
 import { TenantProductsService } from "../../../api/product/tenantProductsService";
-import { ITenantProductsRepository } from "../../../repository/tenantProductsRepository";
+import { ITenantProductsRepository } from "../../../api/product/tenantProductsRepository";
 import { Decimal } from '@prisma/client/runtime/library';
 
 describe('ProductsService', () => {

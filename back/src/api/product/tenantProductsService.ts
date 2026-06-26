@@ -1,4 +1,4 @@
-import { ProductDTO } from "./tenantProductsController";
+import { ProductDTO } from "./dto/product-dto";
 import { Produtos } from "../../generated/prisma/client";
 import { ITenantProductsRepository } from "./tenantProductsRepository"
 import { IFormatProductsData } from "../../interfaces/products-interfaces/products-inter-index";

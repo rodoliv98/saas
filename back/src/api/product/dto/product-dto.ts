@@ -8,3 +8,13 @@ export interface PatchProductDTO {
   tenantSlug: string;
   productId: string;
 }
+
+export interface ProductDTO {
+  categoria: string;
+  descProduto: string;
+  nomeProduto: string;
+  precoProduto: number;
+  tenantId: string;
+  tenantSlug: string;
+  imagePath: string;
+}

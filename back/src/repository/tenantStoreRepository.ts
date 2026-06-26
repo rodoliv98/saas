@@ -1,5 +1,5 @@
 import { PrismaClient } from "../generated/prisma/client"
-import { ProdutosWSabores } from "../api/product/tenantProductsController";
+import { ProductsWithFlavors } from "../api/product/entitie/product-entitie";
 import { ITenantData } from "../controllers/tenantStoreController";
 import { CustomError } from "../errors/errorHandler";
 import { DeliveryCode } from "../types/entities/delivery-code-entitie";
@@ -7,7 +7,7 @@ import { ActivationCodeDTO, SlugType } from "../types/types-index";
 
 export interface ITenantStoreRepository {
   getData (slug: SlugType): Promise<ITenantData | null>;
-  getProducts (id: string): Promise<ProdutosWSabores[] | []>;
+  getProducts (id: string): Promise<ProductsWithFlavors[] | []>;
   isOpen (id: string): Promise<Pick <ITenantData, 'isOpen' | 'tenantSlug' | 'logoUrl' | 'bannerUrl'> | null>;
   patchIsOpen (data: boolean, tenantId: string): Promise<ITenantData>;
   createDeliveryCode (activationCode: ActivationCodeDTO): Promise<DeliveryCode>;

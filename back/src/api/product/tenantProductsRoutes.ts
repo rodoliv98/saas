@@ -2,9 +2,9 @@ import { TenantProductsController } from "./tenantProductsController"
 import { TenantProductsService } from "./tenantProductsService"
 import { TenantProductsRepository } from "./tenantProductsRepository"
 import { checkTenant } from "../../middlewares/check-tenant"
+import { validateImageType } from "../../middlewares/validateImageType"
 import { upload } from "../../../cloudinary/multer"
 import { Router } from "express"
-import { validateImageType } from "../../middlewares/validateImageType"
 import prisma from "../../lib/prisma/client"
 
 const router = Router();

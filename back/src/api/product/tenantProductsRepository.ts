@@ -1,5 +1,5 @@
 import { PrismaClient, Produtos } from "../../generated/prisma/client";
-import { ProductDTO } from "./tenantProductsController";
+import { ProductDTO } from "./dto/product-dto";
 import { CustomError } from "../../errors/errorHandler";
 import { CloudinaryImageResult } from "../../integrations/cloudinary/cloudinary-types";
 import { CreateProductData } from "./types/product-types";

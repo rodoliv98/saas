@@ -3,7 +3,7 @@ import { SlugType } from "../types/types-index";
 import { CustomError } from "../errors/errorHandler";
 import { ITenantStoreRepository } from "../repository/tenantStoreRepository";
 import { IFormatStoreData } from "../interfaces/tenant-interfaces/tenant-inter-index";
-import { ProdutosWSabores } from "../api/product/tenantProductsController";
+import { ProductsWithFlavors } from "../api/product/entitie/product-entitie";
 import { randomBytes } from "node:crypto";
 import { ErrorCode } from "../types/constants/error-codes-constants";
 
@@ -81,7 +81,7 @@ export class TenantStoreService implements ITenantStoreService {
     return `${part1}-${part2}-${part3}:${tenantSlug}`;
   }
 
-  private formatStoreData (tenant: ITenantData, products: ProdutosWSabores[]): IFormatStoreData {
+  private formatStoreData (tenant: ITenantData, products: ProductsWithFlavors[]): IFormatStoreData {
     return {
       store: {
         nomeFantasia: tenant.nomeFantasia,
