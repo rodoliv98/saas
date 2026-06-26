@@ -1,20 +1,3 @@
-import { Decimal } from "@prisma/client/runtime/library";
-import { PedidoStatus } from "../../types/types-index";
-
-export interface IFormatTenantData {
-  endereco: string;
-  numero: string;
-  complemento: string | null;
-  bairro: string;
-  municipio: string;
-  estado: string;
-  whatsapp: string;
-  diasFuncionamento: string;
-  horarioFuncionamento: string;
-  tempoPreparo: string;
-  taxaEntrega: number;
-}
-
 export interface IFormatStoreData {
   store: {
     nomeFantasia: string | null;

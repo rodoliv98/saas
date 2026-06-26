@@ -1,4 +1,4 @@
-export interface IFormatProductsData {
+export interface FormatProductsData {
   id: string;
   nomeProduto: string;
   descProduto: string;
@@ -7,7 +7,7 @@ export interface IFormatProductsData {
   imageUrl: string
 }
 
-export interface IFormatProductById {
+export interface FormatProductById {
   id: string;
   nomeProduto: string;
   precoProduto: number;

@@ -1,17 +1,18 @@
 import { PedidoStatus } from "../../types/types-index";
 import { OrderSchema } from "./types/order-types";
 import { Cuid } from "../../types/types-index";
-import { ICreateOrder, IOrderRepository, PricesFromDB } from "./ordersRepository";
+import { IOrderRepository, PricesFromDB } from "./ordersRepository";
 import { Decimal } from "../../generated/prisma/internal/prismaNamespace";
 import { CustomError } from "../../errors/errorHandler";
 import { ErrorCode } from "../../types/constants/error-codes-constants";
 import { customAlphabet } from "nanoid";
 import { Orders } from "./entities/order-entitie";
+import { Pedidos } from "../../generated/prisma/client";
 
 export interface IOrdersService {
   getOrders (tenantSlug: string): Promise<Orders[] | []>;
-  patchOrders (orderId: Cuid, body: PedidoStatus, tenantSlug: string): Promise<ICreateOrder>;
-  create (body: OrderSchema, userId: string): Promise<ICreateOrder>;
+  patchOrders (orderId: Cuid, body: PedidoStatus, tenantSlug: string): Promise<Pedidos>;
+  create (body: OrderSchema, userId: string): Promise<Pedidos>;
 } 
 
 export class OrdersService implements IOrdersService {

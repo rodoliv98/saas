@@ -2,7 +2,7 @@ import { Tenant } from "../../generated/prisma/client";
 import { SlugType } from "../../types/types-index";
 import { CustomError } from "../../errors/errorHandler";
 import { ITenantStoreRepository } from "./tenantStoreRepository";
-import { IFormatStoreData } from "../../interfaces/tenant-interfaces/tenant-inter-index";
+import { IFormatStoreData } from "./interfaces/store-interfaces";
 import { randomBytes } from "node:crypto";
 import { ErrorCode } from "../../types/constants/error-codes-constants";
 import { TenantWithProducts } from "./entities/store-entitie";

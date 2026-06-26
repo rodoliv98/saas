@@ -1,7 +1,7 @@
-import { IUserRegisterRepository } from "../repository/user-register-repo";
-import { UserRegisterType } from "../types/types-index";
-import * as bcrypt from 'bcrypt';
-import { createLoginToken } from "../utils/tokenJWT";
+import { IUserRegisterRepository } from "./user-register-repo";
+import { UserRegisterType } from "../../types/types-index";
+import { createLoginToken } from "../../utils/tokenJWT";
+import bcrypt from 'bcrypt';
 
 export interface IUserRegisterService {
   register (body: UserRegisterType): Promise<string[]>;

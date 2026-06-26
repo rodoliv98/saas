@@ -1,4 +1,4 @@
-import { FormatUserData } from "../../interfaces/users-interfaces/user-inter-index";
+import { FormatUserData } from "./interfaces/user-interfaces";
 import { CustomError } from "../../errors/errorHandler";
 import { IUserDataRepository } from "./user-data-repo";
 import { UserAndItsRelations } from "./entities/user-entities";
@@ -11,7 +11,7 @@ export interface IUserDataService {
 export class UserDataService implements IUserDataService {
   constructor (private repo: IUserDataRepository) {}
   
-  async getData (userId: string): Promise<FormatUserData> {
+  async getData (userId: string) {
     const data = await this.repo.getData(userId);
     if (!data) {
       throw new CustomError('Usuário não encontrado', 404, ErrorCode.USER_NOT_FOUND);

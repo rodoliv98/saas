@@ -1,4 +1,4 @@
-import { PedidoStatus } from "../../types/types-index";
+import { PedidoStatus } from "../../../types/types-index";
 
 export interface FormatUserData {
   user: {
@@ -33,11 +33,4 @@ export interface FormatUserData {
       }[]
     }[]
   }[]
-}
-
-export interface UserFromDB {
-  id: string;
-  nomeCompleto: string;
-  email: string;
-  senha: string;
 }
