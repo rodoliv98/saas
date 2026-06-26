@@ -129,9 +129,3 @@ export const registerSchema = z.object({
 });
 
 export const tenantIsOpen = z.object({ isStoreOpen: z.boolean() });
-
-export const userRegisterSchema = z.object({
-  nomeCompleto: registerSchema.shape.nomeRepresentante,
-  email: registerSchema.shape.email,
-  senha: registerSchema.shape.senha
-});

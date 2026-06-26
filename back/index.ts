@@ -12,8 +12,8 @@ import tenantHome from './src/api/tenant-home/tenant-home-routes'
 import tenantStore from './src/api/tenant-store/tenantStoreRoute';
 import tenantFlavors from './src/api/tenant-flavor/tenantFlavorsRoutes';
 import orderRoutes from './src/api/orders/ordersRoutes';
-import userRegister from './src/routes/user-register-routes';
-import userData from './src/routes/user-data-routes';
+import userRegister from './src/api/user-register/user-register-routes';
+import userData from './src/api/user-data/user-data-routes';
 import refreshRoutes from './src/api/refresh/refresh-routes';
 import adminRoutes from './src/api/admin/admin-routes';
 import telegram from './src/api/telegram/telegram-routes';

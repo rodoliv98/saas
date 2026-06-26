@@ -1,85 +1,21 @@
 import { Decimal } from "@prisma/client/runtime/library";
-import { PedidosStatus, PrismaClient } from "../../generated/prisma/client";
+import { Pedidos, PedidosStatus, PrismaClient } from "../../generated/prisma/client";
 import { PedidoStatus } from "../../types/types-index";
 import { OrderSchema } from "./types/order-types";
 import { Cuid } from "../../types/types-index";
 import { CustomError } from "../../errors/errorHandler";
-import { IGetUserOrders } from "../../interfaces/orders-interfaces/orders-inter-index";
 import { Orders } from "./entities/order-entitie";
 
 export interface PricesFromDB {
   precoProduto: Decimal
 }
 
-export interface ICreateOrder {
-  id: string;
-  tenantSlug: string;
-  nomeCompleto: string;
-  endereco: string;
-  bairro: string;
-  cep: string;
-  numero: string;
-  complemento: string | null;
-  whatsapp: string;
-  formaPagamento: string;
-  tipoEntrega: string;
-  taxaEntrega: Decimal;
-  totalOrderPrice: Decimal;
-  observacao: string | null;
-  status: PedidoStatus;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-export interface OrdersFromRepo {
-  id: string;
-  short_id: string | null;
-  tenantSlug: string;
-  nomeCompleto: string;
-  endereco: string;
-  bairro: string;
-  cep: string;
-  numero: string;
-  complemento: string | null;
-  whatsapp: string;
-  formaPagamento: string;
-  tipoEntrega: string;
-  taxaEntrega: Decimal;
-  totalOrderPrice: Decimal;
-  observacao: string | null;
-  status: PedidoStatus;
-  createdAt: Date;
-  updatedAt: Date;
-  pin: string | null;
-  userId: string;
-  pedidosItens: {
-    id: string;
-    produtoId: string;
-    pedidosId: string;
-    nomeProduto: string;
-    descProduto: string;
-    categoria: string;
-    quantidade: number;
-    precoProduto: Decimal;
-    subTotal: Decimal;
-    imageUrl: string;
-    itensAdicionais: {
-      id: string;
-      nomeProduto: string;
-      descProduto: string;
-      precoProduto: Decimal;
-      categoria: string;
-      itens_dos_pedidos: string;
-    }[];
-  }[]
-}
-
 export interface IOrderRepository {
   getOrders (tenantSlug: string): Promise<Orders[] | []>;
   getTenantPin (tenantSlug: string): Promise<{ pin: string | null } | null>;
-  getUserOrders (userId: string): Promise<IGetUserOrders[]>;
-  patchOrders (orderId: Cuid, body: PedidoStatus, tenantSlug: string): Promise<ICreateOrder>;
-  create (body: OrderSchema, userId: string, pin: string, shortId: string): Promise<ICreateOrder>;
+  getUserOrders (userId: string): Promise<Pedidos[]>;
+  patchOrders (orderId: Cuid, body: PedidoStatus, tenantSlug: string): Promise<Pedidos>;
+  create (body: OrderSchema, userId: string, pin: string, shortId: string): Promise<Pedidos>;
   getProductsPrice (productsIds: string[]): Promise<PricesFromDB[] | []>;
   getAditionalsPrice (aditionalsIds: string[]): Promise<PricesFromDB[] | []>;
 } 
@@ -89,7 +25,7 @@ export class OrderRepository implements IOrderRepository {
   
   // modificado para totalOrderPrice ser number e não Decimal, para evitar problemas de serialização e facilitar o consumo no front-end. 
   // O valor é convertido para number antes de retornar os dados.
-  async getOrders (tenantSlug: string): Promise<Orders[] | []> {
+  async getOrders (tenantSlug: string) {
     const statusList: PedidosStatus[] = [
       PedidosStatus.pendente,
       PedidosStatus.preparando,
@@ -173,7 +109,7 @@ export class OrderRepository implements IOrderRepository {
     })
   }
 
-  async patchOrders (orderId: Cuid, body: PedidoStatus, tenantSlug: string): Promise<ICreateOrder> {
+  async patchOrders (orderId: Cuid, body: PedidoStatus, tenantSlug: string) {
     const order = await this.prisma.pedidos.findFirst({
       where: {
         tenantSlug: tenantSlug,
@@ -195,7 +131,7 @@ export class OrderRepository implements IOrderRepository {
     })
   }
   
-  async create (body: OrderSchema, userId: string, pin: string, shortId: string): Promise<ICreateOrder> {
+  async create (body: OrderSchema, userId: string, pin: string, shortId: string) {
     return this.prisma.pedidos.create({
       data: {
         tenantSlug: body.tenantSlug,

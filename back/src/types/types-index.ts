@@ -1,10 +1,9 @@
-import { registerSchema, slugSchema, userRegisterSchema } from "../schemas/users/user-schemas";
+import { registerSchema, slugSchema } from "../schemas/users/user-schemas";
+import { userRegisterSchema } from "../api/user-register/schemas/user-register-schema";
 import { orderSchema } from "../schemas/orders/order-schemas";
 import { orderStatusSchema } from "../api/orders/schemas/order-schema";
 import { cuidSchema } from "../schemas/products/products-schemas";
 import { z } from "zod";
-import { BasicPlanFeatures, Plan } from "./entities/plan-entitie";
-//import { AbacateQrCodeCreationResponseFail, AbacateQrCodeCreationResponseSuccess } from "./externals/abacate/qr-code-creation";
 
 // login and register types
 export type RegisterType = z.infer<typeof registerSchema>;
@@ -29,9 +28,3 @@ export type ActivationCodeDTO = {
   utilizado: boolean;
   expire_date: Date;
 }
-
-// payment types
-export type AnyPlan = Plan<BasicPlanFeatures>;
-/* export type AbacateQrCodeResponse = 
-| AbacateQrCodeCreationResponseSuccess
-| AbacateQrCodeCreationResponseFail */

@@ -1,9 +1,9 @@
-import { UserRegisterType } from "../types/types-index";
-import { PrismaClient } from "../generated/prisma/client";
-import { UserFromDB } from "../interfaces/users-interfaces/user-inter-index";
+import { UserRegisterType } from "../../types/types-index";
+import { PrismaClient } from "../../generated/prisma/client";
+import { Users } from "../../generated/prisma/client";
 
 export interface IUserRegisterRepository {
-  register (data: UserRegisterType, hashPass: string): Promise<UserFromDB>;
+  register (data: UserRegisterType, hashPass: string): Promise<Users>;
 } 
 
 export class UserRegisterRepository implements IUserRegisterRepository {

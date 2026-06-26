@@ -1,16 +1,15 @@
 import { ProductDTO } from "./dto/product-dto";
 import { Produtos } from "../../generated/prisma/client";
-import { ITenantProductsRepository } from "./tenantProductsRepository"
-import { IFormatProductsData } from "../../interfaces/products-interfaces/products-inter-index";
+import { ITenantProductsRepository } from "./tenantProductsRepository";
+import { FormatProductById, FormatProductsData } from "./interfaces/products-interfaces";
 import { uploadToCloudinary } from "../../integrations/cloudinary/cloudinary-upload";
-import { IFormatProductById } from "../../interfaces/products-interfaces/products-inter-index";
 import { CustomError } from "../../errors/errorHandler";
 import { ErrorCode } from "../../types/constants/error-codes-constants";
 import { PatchProductDTO } from "./dto/product-dto";
 
 export interface ITenantProductsService {
-  getProducts (id: string): Promise<IFormatProductsData[] | []>;
-  getProductById (productId: string, tenantId: string): Promise<IFormatProductById>;
+  getProducts (id: string): Promise<FormatProductsData[] | []>;
+  getProductById (productId: string, tenantId: string): Promise<FormatProductById>;
   create (product: ProductDTO): Promise<Produtos>;
   patch (productData: PatchProductDTO): Promise<void>;
   delete (id: string, tenantId: string): Promise<Produtos | null>;
@@ -93,7 +92,7 @@ export class TenantProductsService implements ITenantProductsService {
     return this.repo.delete(id, tenantId);
   }
 
-  private formatProductsData (data: Produtos[]): IFormatProductsData[] {
+  private formatProductsData (data: Produtos[]): FormatProductsData[] {
     return data.map(product => ({
       id: product.id,
       nomeProduto: product.nomeProduto,
@@ -104,7 +103,7 @@ export class TenantProductsService implements ITenantProductsService {
     }));
   }
 
-  private formatProductById (data: Produtos): IFormatProductById {
+  private formatProductById (data: Produtos): FormatProductById {
     return {
       id: data.id,
       nomeProduto: data.nomeProduto,

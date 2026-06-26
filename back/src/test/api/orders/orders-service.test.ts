@@ -1,11 +1,12 @@
 import { describe, it, vi, expect, beforeEach, type Mocked } from "vitest";
 import { OrdersService } from "../../../api/orders/ordersService";
-import { ICreateOrder, IOrderRepository } from "../../../api/orders/ordersRepository";
+import { IOrderRepository } from "../../../api/orders/ordersRepository";
 import { Orders } from "../../../api/orders/entities/order-entitie";
 import { Decimal } from "../../../generated/prisma/internal/prismaNamespace";
 import { OrderSchema } from "../../../api/orders/types/order-types";
 import { CustomError } from "../../../errors/errorHandler";
 import { ErrorCode } from "../../../types/constants/error-codes-constants";
+import { Pedidos } from "../../../generated/prisma/client";
 
 describe('OrderService', () => {
   let service: OrdersService;
@@ -55,10 +56,14 @@ describe('OrderService', () => {
     }
   }
 
-  function mockICreateOrder (overrides: Partial<ICreateOrder> = {}): ICreateOrder {
+  function mockICreateOrder (overrides: Partial<Pedidos> = {}): Pedidos {
     return {
       id: 'order1',
       tenantSlug: 'tenant-slug',
+      userId: 'user',
+      pin: '121212',
+      short_id: 'asd213',
+      finished: false,
       nomeCompleto: 'Cliente 1',
       endereco: 'Rua 1',
       bairro: 'Centro',
