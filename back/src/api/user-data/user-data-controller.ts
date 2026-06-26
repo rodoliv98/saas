@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { IUserDataService } from "../services/user-data-service";
+import { IUserDataService } from "./user-data-service";
 
 export class UserDataController {
   constructor (private service: IUserDataService) {}

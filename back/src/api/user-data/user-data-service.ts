@@ -1,7 +1,8 @@
-import { FormatUserData } from "../interfaces/users-interfaces/user-inter-index";
-import { CustomError } from "../errors/errorHandler";
-import { IUserDataRepository, UserDataFromDB } from "../repository/user-data-repo";
-import { ErrorCode } from "../types/constants/error-codes-constants";
+import { FormatUserData } from "../../interfaces/users-interfaces/user-inter-index";
+import { CustomError } from "../../errors/errorHandler";
+import { IUserDataRepository } from "./user-data-repo";
+import { UserAndItsRelations } from "./entities/user-entities";
+import { ErrorCode } from "../../types/constants/error-codes-constants";
 
 export interface IUserDataService {
   getData (userId: string): Promise<FormatUserData>;
@@ -20,7 +21,7 @@ export class UserDataService implements IUserDataService {
     return user;
   }
 
-  private formatUserData (data: UserDataFromDB): FormatUserData {
+  private formatUserData (data: UserAndItsRelations): FormatUserData {
     return {
       user: {
         nomeCompleto: data.nomeCompleto,
